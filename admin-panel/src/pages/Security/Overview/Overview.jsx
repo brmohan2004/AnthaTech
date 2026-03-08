@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Overview.css';
 import {
     ShieldCheck,
@@ -21,22 +22,16 @@ import {
     Settings,
 } from 'lucide-react';
 import { getAuditLog, getActiveSessions } from '../../../api/content';
-import { listMFAFactors } from '../../../api/auth';
-
-const quickNavItems = [
-    { label: 'Active Sessions', icon: MonitorSmartphone, path: '/security/sessions', badge: '1' },
-    { label: 'MFA Settings', icon: KeyRound, path: '/security/mfa', badge: null },
-    { label: 'Audit Log', icon: FileText, path: '/security/audit-log', badge: null },
-    { label: 'IP Blocklist', icon: Ban, path: '/security/ip-blocklist', badge: null },
-    { label: 'Password Policy', icon: Lock, path: '/security/password-policy', badge: null },
-];
+import { listMFAFactors, getVerifiedTotpFactors } from '../../../api/auth';
 
 const SecurityOverview = () => {
+    const navigate = useNavigate();
     const [alerts, setAlerts] = useState([]);
     const [selectedAlert, setSelectedAlert] = useState(null);
     const [statusCards, setStatusCards] = useState([]);
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
+    const [sessionCount, setSessionCount] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -47,15 +42,16 @@ const SecurityOverview = () => {
                     getAuditLog({}),
                     listMFAFactors(),
                 ]);
-                const failedLogs = logs.filter(l => l.action_type === 'failed_login');
-                const lastLogin = logs.find(l => l.action_type === 'login');
-                const mfaActive = (factors?.totp || factors || []).length > 0;
+                setSessionCount(sessions.length);
+                const failedLogs = logs.filter((l) => l.event_type === 'auth' && l.result === 'failure');
+                const lastLogin = logs.find((l) => l.event_type === 'auth' && l.result === 'success');
+                const mfaActive = getVerifiedTotpFactors(factors).length > 0;
 
                 setStatusCards([
-                    { id: 'sessions', label: 'Active Sessions', value: `${sessions.length} active`, sub: 'Current device', icon: MonitorSmartphone, color: 'blue', link: '/security/sessions' },
-                    { id: 'failed', label: 'Failed Login Attempts', value: String(failedLogs.length), sub: 'Last 24 hours', icon: Ban, color: failedLogs.length > 5 ? 'red' : 'green', link: '/security/ip-blocklist' },
-                    { id: 'last-login', label: 'Last Successful Login', value: lastLogin ? new Date(lastLogin.created_at).toLocaleTimeString() : '—', sub: lastLogin?.ip_address ? `IP: ${lastLogin.ip_address}` : '', icon: Clock, color: 'blue', link: '/security/audit-log' },
-                    { id: 'mfa', label: 'MFA Status', value: mfaActive ? 'Enabled' : 'Disabled', sub: mfaActive ? 'TOTP active' : 'Not configured', icon: KeyRound, color: mfaActive ? 'green' : 'red', link: '/security/mfa' },
+                    { id: 'sessions', label: 'Active Sessions', value: `${sessions.length} active`, sub: 'Current account', icon: MonitorSmartphone, color: 'blue', link: '/admin/security/sessions' },
+                    { id: 'failed', label: 'Failed Login Attempts', value: String(failedLogs.length), sub: 'Recorded auth failures', icon: Ban, color: failedLogs.length > 5 ? 'red' : 'green', link: '/admin/security/alerts' },
+                    { id: 'last-login', label: 'Last Successful Login', value: lastLogin ? new Date(lastLogin.created_at).toLocaleTimeString() : '—', sub: lastLogin?.description || '', icon: Clock, color: 'blue', link: '/admin/security/audit-log' },
+                    { id: 'mfa', label: 'MFA Status', value: mfaActive ? 'Enabled' : 'Disabled', sub: mfaActive ? 'TOTP active' : 'Not configured', icon: KeyRound, color: mfaActive ? 'green' : 'red', link: '/admin/security/mfa' },
                 ]);
 
                 // Compute a simple score
@@ -280,10 +276,10 @@ const SecurityOverview = () => {
                         </div>
                     </div>
                     <ul className="quicknav-list">
-                        {quickNavItems.map((item) => {
+                        {quickNavItems(sessionCount).map((item) => {
                             const Icon = item.icon;
                             return (
-                                <li key={item.label} className="quicknav-item">
+                                    <li key={item.label} className="quicknav-item" onClick={() => navigate(item.path)}>
                                     <span className="qn-icon-wrap"><Icon size={16} /></span>
                                     <span className="qn-label">{item.label}</span>
                                     {item.badge && (
@@ -403,5 +399,13 @@ const SecurityOverview = () => {
         </div>
     );
 };
+
+const quickNavItems = (sessionCount) => [
+    { label: 'Active Sessions', icon: MonitorSmartphone, path: '/admin/security/sessions', badge: String(sessionCount) },
+    { label: 'MFA Settings', icon: KeyRound, path: '/admin/security/mfa', badge: null },
+    { label: 'Audit Log', icon: FileText, path: '/admin/security/audit-log', badge: null },
+    { label: 'IP Blocklist', icon: Ban, path: '/admin/security/ip-blocklist', badge: null },
+    { label: 'Password Policy', icon: Lock, path: '/admin/security/passwords', badge: null },
+];
 
 export default SecurityOverview;

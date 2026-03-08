@@ -1,13 +1,48 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle, Loader2, ShieldCheck } from 'lucide-react';
-import { signIn, listMFAFactors, verifyMFA } from '../../api/auth';
+import { signIn, listMFAFactors, verifyMFA, getVerifiedTotpFactors, getCurrentUser, getSession } from '../../api/auth';
+import { insertAuditLog, upsertAdminSession } from '../../api/content';
 import ForgotPassword from './ForgotPassword';
 import './Login.css';
 import logo from '../../assets/logo.png';
 
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_SECONDS = 600;
+
+function parseJwtId(accessToken) {
+    try {
+        const payload = JSON.parse(atob((accessToken || '').split('.')[1] || ''));
+        return payload?.session_id || payload?.jti || null;
+    } catch {
+        return null;
+    }
+}
+
+function parseUserAgent() {
+    const ua = navigator.userAgent || '';
+    const browser = ua.includes('Edg/')
+        ? 'Edge'
+        : ua.includes('Chrome/')
+            ? 'Chrome'
+            : ua.includes('Firefox/')
+                ? 'Firefox'
+                : ua.includes('Safari/')
+                    ? 'Safari'
+                    : 'Unknown';
+    const os = ua.includes('Windows')
+        ? 'Windows'
+        : ua.includes('Mac OS')
+            ? 'macOS'
+            : ua.includes('Linux')
+                ? 'Linux'
+                : ua.includes('Android')
+                    ? 'Android'
+                    : ua.includes('iPhone') || ua.includes('iPad')
+                        ? 'iOS'
+                        : 'Unknown';
+    return { browser, os };
+}
 
 const Login = () => {
     const navigate = useNavigate();
@@ -40,8 +75,8 @@ const Login = () => {
             const { session } = await signIn(email, password);
 
             // Check if MFA is required
-            const { totp } = await listMFAFactors();
-            const verifiedFactors = totp?.filter(f => f.status === 'verified') || [];
+            const factorsData = await listMFAFactors();
+            const verifiedFactors = getVerifiedTotpFactors(factorsData);
 
             if (verifiedFactors.length > 0) {
                 setMfaFactorId(verifiedFactors[0].id);
@@ -50,9 +85,40 @@ const Login = () => {
                 return;
             }
 
+            try {
+                const user = await getCurrentUser();
+                const { browser, os } = parseUserAgent();
+                await upsertAdminSession({
+                    admin_id: user?.id,
+                    browser,
+                    os,
+                    device: `${browser} on ${os}`,
+                    jwt_id: parseJwtId(session?.access_token),
+                    is_current: true,
+                });
+                await insertAuditLog({
+                    admin_id: user?.id,
+                    event_type: 'auth',
+                    description: 'Admin login successful',
+                    result: 'success',
+                });
+            } catch {
+                // Keep login resilient even if optional tracking fails.
+            }
+
             // No MFA — login complete, AuthContext will pick up the session
             navigate('/admin/dashboard');
         } catch (err) {
+            try {
+                await insertAuditLog({
+                    event_type: 'auth',
+                    description: `Admin login failed for ${email || 'unknown email'}`,
+                    result: 'failure',
+                });
+            } catch {
+                // Ignore audit failures during login error handling.
+            }
+
             const newAttempts = attempts + 1;
             setAttempts(newAttempts);
 
@@ -94,6 +160,27 @@ const Login = () => {
 
         try {
             await verifyMFA(mfaFactorId, code);
+            try {
+                const latestSession = await getSession();
+                const user = await getCurrentUser();
+                const { browser, os } = parseUserAgent();
+                await upsertAdminSession({
+                    admin_id: user?.id,
+                    browser,
+                    os,
+                    device: `${browser} on ${os}`,
+                    jwt_id: parseJwtId(latestSession?.access_token),
+                    is_current: true,
+                });
+                await insertAuditLog({
+                    admin_id: user?.id,
+                    event_type: 'auth',
+                    description: 'Admin login successful with MFA',
+                    result: 'success',
+                });
+            } catch {
+                // Keep MFA verification resilient even if tracking fails.
+            }
             navigate('/admin/dashboard');
         } catch (err) {
             setError('Invalid verification code. Please try again.');

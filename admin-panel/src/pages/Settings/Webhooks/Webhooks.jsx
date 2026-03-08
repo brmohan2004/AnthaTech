@@ -80,6 +80,19 @@ const BLANK = {
 const Webhooks = () => {
     const [hooks, setHooks] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    
+    // DEBUG: Monitor drawer state
+    useEffect(() => {
+        console.log('Current Drawer State:', drawerOpen);
+        if (drawerOpen) {
+            document.body.style.overflow = 'hidden';
+            console.log('Drawer should be visible in DOM now.');
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => { document.body.style.overflow = 'auto'; };
+    }, [drawerOpen]);
+
     const [form, setForm] = useState(BLANK);
     const [isEditing, setIsEditing] = useState(false);
     const [showSecret, setShowSecret] = useState(false);
@@ -242,9 +255,24 @@ const Webhooks = () => {
                         Notify external services when content events occur in your admin panel.
                     </p>
                 </div>
-                <Button variant="primary" icon={<Plus size={15} />} onClick={openAdd}>
-                    Add Webhook
-                </Button>
+                <button 
+                    className="btn btn--primary btn--md" 
+                    style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px', 
+                        cursor: 'pointer',
+                        zIndex: 10
+                    }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        console.log('Opening Add Webhook Drawer');
+                        openAdd();
+                    }}
+                >
+                    <Plus size={15} />
+                    <span>Add Webhook</span>
+                </button>
             </header>
 
             {/* ── Webhooks Table ── */}
@@ -253,9 +281,23 @@ const Webhooks = () => {
                     <Webhook size={40} className="wh-empty-icon" />
                     <h3>No webhooks yet</h3>
                     <p>Connect Slack, Zapier, or any HTTP endpoint to receive real-time events.</p>
-                    <Button variant="primary" icon={<Plus size={15} />} onClick={openAdd}>
-                        Add your first webhook
-                    </Button>
+                    <button 
+                        className="btn btn--primary btn--md" 
+                        style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '8px', 
+                            cursor: 'pointer' 
+                        }}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            console.log('Opening Add Webhook Drawer (Empty State)');
+                            openAdd();
+                        }}
+                    >
+                        <Plus size={15} />
+                        <span>Add your first webhook</span>
+                    </button>
                 </div>
             ) : (
                 <div className="wh-table-wrap">
@@ -272,7 +314,7 @@ const Webhooks = () => {
                         </thead>
                         <tbody>
                             {hooks.map((h) => (
-                                <tr key={h.id} className={h.status === 'paused' ? 'row--paused' : ''}>
+                                <tr key={h.id || (h.url + h.name)} className={h.status === 'paused' ? 'row--paused' : ''}>
                                     {/* Name */}
                                     <td className="td-name">
                                         <span className="hook-dot" data-status={h.status} />
@@ -360,7 +402,14 @@ const Webhooks = () => {
                 ADD / EDIT DRAWER
                 ════════════════════════════════════════ */}
             {drawerOpen && (
-                <div className="drawer-overlay" onClick={() => setDrawerOpen(false)}>
+                <div 
+                    className="drawer-overlay" 
+                    style={{ display: 'flex !important', visibility: 'visible !important', opacity: 1 }}
+                    onClick={() => {
+                        console.log('Closing drawer via overlay click');
+                        setDrawerOpen(false);
+                    }}
+                >
                     <aside className="wh-drawer" onClick={(e) => e.stopPropagation()}>
 
                         {/* Drawer header */}

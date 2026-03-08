@@ -73,7 +73,7 @@ export default function Progress() {
         title: s.title || '',
         description: s.description || s.text || '',
         step: s.step || String(i + 1).padStart(2, '0'),
-        image: s.image_url || LOCAL_IMAGES[i] || progress1,
+        image: s.image || s.image_url || LOCAL_IMAGES[i] || progress1,
     })) : [];
 
     return (

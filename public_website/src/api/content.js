@@ -22,6 +22,13 @@ async function withCache(key, fetchFn) {
   return data;
 }
 
+export function clearCommunityCache() {
+  cache.delete('community_teaser');
+  cache.delete('community_how_it_works');
+  cache.delete('community_perks');
+  cache.delete('community_all');
+}
+
 // ─── Throttling Logic ────────────────────────────────────────
 const SUBMISSION_COOLDOWN = 60 * 1000; // 1 minute cooldown
 let lastSubmissionTime = 0;
@@ -49,11 +56,6 @@ function updateSubmissionTime() {
 
 function mapHero(d) {
   if (!d) return null;
-  // Extract URLs if d.logos is an array of objects {url: '...'}
-  const logos = Array.isArray(d.logos) 
-    ? d.logos.map(l => typeof l === 'string' ? l : l.url).filter(Boolean)
-    : [];
-
   return {
     badge_text: d.badge || '',
     title_line_1: d.title1 || '',
@@ -63,7 +65,7 @@ function mapHero(d) {
     cta_primary_text: d.primary_cta_text || '',
     cta_primary_route: d.primary_cta_link || '/',
     cta_secondary_text: d.secondary_cta_text || '',
-    client_logos: logos,
+    client_logos: Array.isArray(d.logos) ? d.logos.map(l => (typeof l === 'object' && l !== null) ? l.url : l) : [],
   };
 }
 
@@ -115,7 +117,10 @@ function mapBlogPost(b) {
 
 function mapCommunityRow(d) {
   if (!d) return null;
-  const c = d.content || {};
+  // content can be an array (how_it_works, perks stored as array directly)
+  // or an object (teaser stored as { title1, title2, ... })
+  const c = Array.isArray(d.content) ? {} : (d.content || {});
+  const contentArray = Array.isArray(d.content) ? d.content : null;
   return {
     ...d,
     title_1: c.title1 || '',
@@ -124,8 +129,10 @@ function mapCommunityRow(d) {
     cta_text: c.ctaText || '',
     stats: Array.isArray(c.stats) ? c.stats : [],
     tracks: Array.isArray(c.tracks) ? c.tracks : [],
-    steps: Array.isArray(c.steps) ? c.steps : [],
-    perks: Array.isArray(c.perks) ? c.perks : [],
+    // how_it_works: admin stores as array [{id, title, desc}], or legacy {steps:[]}
+    steps: contentArray || (Array.isArray(c.steps) ? c.steps : []),
+    // perks: admin stores as array [{id, title, desc, icon}], or legacy {perks:[]}
+    perks: contentArray || (Array.isArray(c.perks) ? c.perks : []),
   };
 }
 
@@ -174,6 +181,7 @@ export async function fetchAboutContent(section) {
       badge_text: c.badge || '',
       title_1: c.title1 || '',
       title_2: c.title2 || '',
+      description: c.description || '',
       stats: Array.isArray(c.stats) ? c.stats : []
     };
   });
@@ -221,7 +229,6 @@ export async function fetchServices() {
     const { data, error } = await supabase
       .from('services')
       .select('*')
-      .eq('status', 'published')
       .order('display_order');
     if (error) {
       console.error('Error fetching services:', error);
@@ -269,19 +276,7 @@ export async function fetchProcessSteps() {
     throw new Error(`Failed to load process steps: ${error.message}`);
   }
   if (!data) return null;
-
-  const mappedSteps = (data.steps || []).map(s => ({
-    ...s,
-    image_url: s.image || s.image_url || null
-  }));
-
-  return { 
-    ...data, 
-    badge_text: data.badge, 
-    title_1: data.title1, 
-    title_2: data.title2,
-    steps: mappedSteps
-  };
+  return { ...data, badge_text: data.badge, title_1: data.title1, title_2: data.title2 };
 }
 
 // ─── Reviews ─────────────────────────────────────────────────
@@ -406,6 +401,26 @@ export async function fetchPageHero(page) {
         description: tableData.description || '',
         cta_label: tableData.cta_label || ''
       };
+    }
+
+    // Fallback constants if no DB entry exists
+    const fallbacks = {
+      projects: {
+        badge_text: 'Our Projects',
+        title_1: 'Latest Projects',
+        title_2: 'solutions',
+        description: "Every project is a journey. From the first spark of an idea to a brand identity that resonates across digital and physical spaces."
+      },
+      insights: {
+        badge_text: 'Blogs',
+        title_1: 'Insights',
+        title_2: 'solutions',
+        description: 'Explore the ever-evolving digital landscape with insights on design, development, and business strategies.'
+      }
+    };
+
+    if (fallbacks[page]) {
+      return fallbacks[page];
     }
 
     // If tableError is not "table not found" (PGRST205), log it

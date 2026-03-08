@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Highlights.css';
 import {
     Save, RotateCcw, Plus, X, GripVertical,
-    Sparkles, Code, Eye
+    Sparkles, Code, Eye, ChevronUp, ChevronDown
 } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
@@ -123,6 +123,15 @@ const HighlightsManager = () => {
         }));
     };
 
+    const moveItem = (index, direction) => {
+        const newItems = [...formData.items];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newItems.length) return;
+
+        [newItems[index], newItems[targetIndex]] = [newItems[targetIndex], newItems[index]];
+        setFormData(prev => ({ ...prev, items: newItems }));
+    };
+
     return (
         <div className="highlights-manager">
             <header className="page-header">
@@ -172,7 +181,15 @@ const HighlightsManager = () => {
                             {formData.items.map((item, idx) => (
                                 <div className="highlight-item-card" key={item.id}>
                                     <div className="card-top">
-                                        <div className="drag-handle"><GripVertical size={16} /><span>Item {idx + 1}</span></div>
+                                        <div className="move-controls">
+                                            <button className="move-btn" onClick={() => moveItem(idx, 'up')} disabled={idx === 0}>
+                                                <ChevronUp size={14} />
+                                            </button>
+                                            <span className="item-badge">Item {idx + 1}</span>
+                                            <button className="move-btn" onClick={() => moveItem(idx, 'down')} disabled={idx === formData.items.length - 1}>
+                                                <ChevronDown size={14} />
+                                            </button>
+                                        </div>
                                         <button className="icon-btn-danger" onClick={() => removeItem(item.id)}><X size={16} /></button>
                                     </div>
 

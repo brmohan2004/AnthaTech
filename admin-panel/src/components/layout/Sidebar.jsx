@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     LayoutDashboard, ShieldCheck, FolderOpen, Mail, Image,
     BarChart3, Settings, Key, HardDrive, Users,
@@ -20,18 +20,22 @@ const navSections = [
         path: '/admin/dashboard',
     },
     {
-        id: 'security',
-        label: 'Security',
-        icon: <ShieldCheck size={18} />,
-        badge: true,
+        id: 'messages',
+        label: 'Messages',
+        icon: <Mail size={18} />,
         children: [
-            { id: 'sec-overview', label: 'Overview', icon: <Eye size={16} />, path: '/admin/security/overview' },
-            { id: 'sec-sessions', label: 'Sessions', icon: <MonitorSmartphone size={16} />, path: '/admin/security/sessions' },
-            { id: 'sec-mfa', label: 'MFA', icon: <Fingerprint size={16} />, path: '/admin/security/mfa' },
-            { id: 'sec-passwords', label: 'Passwords', icon: <Lock size={16} />, path: '/admin/security/passwords' },
-            { id: 'sec-ipblock', label: 'IP Blocklist', icon: <ShieldAlert size={16} />, path: '/admin/security/ip-blocklist' },
-            { id: 'sec-audit', label: 'Audit Log', icon: <ScrollText size={16} />, path: '/admin/security/audit-log' },
-            { id: 'sec-alerts', label: 'Alerts', icon: <AlertTriangle size={16} />, path: '/admin/security/alerts' },
+            { id: 'msg-inbox', label: 'Inbox', icon: <Mail size={16} />, path: '/admin/messages' },
+            { id: 'msg-contact-analytics', label: 'Contact Form Analytics', icon: <BarChart3 size={16} />, path: '/admin/messages/contact-analytics' },
+        ],
+    },
+    {
+        id: 'community',
+        label: 'Community',
+        icon: <UsersRound size={18} />,
+        children: [
+            { id: 'cm-apps', label: 'Applications', icon: <FileText size={16} />, path: '/admin/community/applications' },
+            { id: 'cm-content', label: 'Content Manager', icon: <Settings size={16} />, path: '/admin/content/community' },
+            { id: 'cm-analytics', label: 'Analytics', icon: <BarChart3 size={16} />, path: '/admin/analytics/community' },
         ],
     },
     {
@@ -46,30 +50,8 @@ const navSections = [
             { id: 'cnt-highlights', label: 'Highlights', icon: <Sparkles size={16} />, path: '/admin/content/highlights' },
             { id: 'cnt-process', label: 'Process', icon: <ListOrdered size={16} />, path: '/admin/content/process' },
             { id: 'cnt-reviews', label: 'Reviews', icon: <Star size={16} />, path: '/admin/content/reviews' },
-            {
-                id: 'cnt-community',
-                label: 'Community',
-                icon: <UsersRound size={16} />,
-                path: '/admin/content/community',
-                children: [
-                    { id: 'cnt-comm-teaser', label: 'Teaser & Tracks', path: '/admin/content/community' },
-                    { id: 'cnt-comm-members', label: 'Members', path: '/admin/content/community/members' },
-                ]
-            },
             { id: 'cnt-blog', label: 'Blog', icon: <FileText size={16} />, path: '/admin/content/blog' },
         ],
-    },
-    {
-        id: 'messages',
-        label: 'Messages',
-        icon: <Mail size={18} />,
-        path: '/admin/messages',
-    },
-    {
-        id: 'media',
-        label: 'Media Lib',
-        icon: <Image size={18} />,
-        path: '/admin/media',
     },
     {
         id: 'analytics',
@@ -78,8 +60,27 @@ const navSections = [
         children: [
             { id: 'an-traffic', label: 'Traffic', path: '/admin/analytics/traffic' },
             { id: 'an-perf', label: 'Performance', path: '/admin/analytics/performance' },
-            { id: 'an-contact', label: 'Contact', path: '/admin/analytics/contact' },
-            { id: 'an-community', label: 'Community', path: '/admin/analytics/community' },
+        ],
+    },
+    {
+        id: 'media',
+        label: 'Media Lib',
+        icon: <Image size={18} />,
+        path: '/admin/media',
+    },
+    {
+        id: 'security',
+        label: 'Security',
+        icon: <ShieldCheck size={18} />,
+        badge: true,
+        children: [
+            { id: 'sec-overview', label: 'Overview', icon: <Eye size={16} />, path: '/admin/security/overview' },
+            { id: 'sec-sessions', label: 'Sessions', icon: <MonitorSmartphone size={16} />, path: '/admin/security/sessions' },
+            { id: 'sec-mfa', label: 'MFA', icon: <Fingerprint size={16} />, path: '/admin/security/mfa' },
+            { id: 'sec-passwords', label: 'Passwords', icon: <Lock size={16} />, path: '/admin/security/passwords' },
+            { id: 'sec-ipblock', label: 'IP Blocklist', icon: <ShieldAlert size={16} />, path: '/admin/security/ip-blocklist' },
+            { id: 'sec-audit', label: 'Audit Log', icon: <ScrollText size={16} />, path: '/admin/security/audit-log' },
+            { id: 'sec-alerts', label: 'Alerts', icon: <AlertTriangle size={16} />, path: '/admin/security/alerts' },
         ],
     },
     {
@@ -98,8 +99,26 @@ const navSections = [
 ];
 
 const Sidebar = ({ collapsed, onToggle, activePath = '/admin/dashboard' }) => {
-    const [openSections, setOpenSections] = useState(['content', 'security']);
+    const [openSections, setOpenSections] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (collapsed) {
+            setOpenSections([]);
+            return;
+        }
+
+        const activeSection = navSections.find((section) =>
+            section.path === activePath || section.children?.some((child) => child.path === activePath)
+        );
+
+        if (activeSection?.children?.length) {
+            setOpenSections([activeSection.id]);
+        } else {
+            // Keep dashboard (and other root pages) clean with all groups collapsed.
+            setOpenSections([]);
+        }
+    }, [activePath, collapsed]);
 
     const toggleSection = (id) => {
         setOpenSections((prev) =>

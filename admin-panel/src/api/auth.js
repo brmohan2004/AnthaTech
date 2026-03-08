@@ -60,6 +60,20 @@ export async function listMFAFactors() {
   return data;
 }
 
+// Normalize Supabase MFA listFactors() output to a consistent TOTP factor array.
+export function getTotpFactors(factorsData) {
+  if (Array.isArray(factorsData)) return factorsData;
+  if (Array.isArray(factorsData?.totp)) return factorsData.totp;
+  if (Array.isArray(factorsData?.all)) {
+    return factorsData.all.filter((f) => (f?.factor_type || '').toLowerCase() === 'totp');
+  }
+  return [];
+}
+
+export function getVerifiedTotpFactors(factorsData) {
+  return getTotpFactors(factorsData).filter((f) => f?.status === 'verified');
+}
+
 // MFA: Unenroll a factor
 export async function unenrollMFA(factorId) {
   const { data, error } = await supabase.auth.mfa.unenroll({ factorId });
@@ -81,18 +95,6 @@ export async function getAdminProfile(userId) {
 // Update Password
 export async function updatePassword(newPassword) {
   const { data, error } = await supabase.auth.updateUser({ password: newPassword });
-  if (error) throw error;
-  return data;
-}
-
-/**
- * Sends a password reset email to the specified user.
- * used in ForgotPassword.jsx
- */
-export async function sendPasswordResetEmail(email) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/admin/login`,
-  });
   if (error) throw error;
   return data;
 }

@@ -9,22 +9,43 @@ import {
 } from 'lucide-react';
 import { getActiveSessions, revokeSession } from '../../../api/content';
 
+const formatDateTime = (value) => {
+  if (!value) return '—';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleString();
+};
+
+const normalizeSession = (s) => ({
+  ...s,
+  current: !!s.is_current,
+  ip: s.ip_address || 'Unknown',
+  loginTime: formatDateTime(s.login_at),
+  lastActive: formatDateTime(s.last_active),
+  risk: s.is_current ? 'Current' : 'Active',
+  duration: s.last_active ? `Updated ${formatDateTime(s.last_active)}` : '—',
+});
+
 const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const loadSessions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getActiveSessions();
+      setSessions((data || []).map(normalizeSession));
+    } catch (err) {
+      setError(err.message || 'Failed to load active sessions. Check your Supabase connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getActiveSessions();
-        setSessions(data);
-      } catch (err) {
-        setError(err.message || 'Failed to load active sessions. Check your Supabase connection.');
-      } finally { setLoading(false); }
-    })();
+    loadSessions();
   }, []);
 
   const currentSession = useMemo(() => sessions.find((s) => s.current), [sessions]);
@@ -89,7 +110,7 @@ const ActiveSessions = () => {
           </div>
         </div>
         <div className="as-hero-right">
-          <button className="btn-ghost">
+          <button className="btn-ghost" onClick={loadSessions}>
             <RefreshCcw size={14} /> Refresh list
           </button>
           <button

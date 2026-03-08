@@ -11,7 +11,7 @@ import Highlights from './pages/Content/Highlights/Highlights';
 import ProcessSteps from './pages/Content/ProcessSteps/ProcessSteps';
 import Reviews from './pages/Content/Reviews/Reviews';
 import Community from './pages/Content/Community/Community';
-import Members from './pages/Content/Community/Members';
+import CommunityApplications from './pages/Community/Applications';
 import Blog from './pages/Content/Blog/Blog';
 import Inbox from './pages/Messages/Inbox';
 import SiteSettings from './pages/Settings/SiteSettings/SiteSettings';
@@ -49,7 +49,7 @@ const AppLayout = ({ children }) => {
         '/admin/content/process': 'Process Steps Manager',
         '/admin/content/reviews': 'Reviews Manager',
         '/admin/content/community': 'Community Manager',
-        '/admin/content/community/members': 'Community Members & Applications',
+        '/admin/community/applications': 'Community Applications',
         '/admin/content/blog': 'Blog / Insights Manager',
         '/admin/messages': 'Messages Inbox',
         '/admin/media': 'Media Library',
@@ -64,6 +64,7 @@ const AppLayout = ({ children }) => {
         '/admin/analytics/traffic': 'Traffic Overview',
         '/admin/analytics/performance': 'Performance Metrics',
         '/admin/analytics/contact': 'Contact Analytics',
+        '/admin/messages/contact-analytics': 'Contact Form Analytics',
         '/admin/analytics/community': 'Community Analytics',
         '/admin/settings/general-info': 'General Info',
         '/admin/settings/maintenance': 'Maintenance Mode',
@@ -119,7 +120,7 @@ function AppRoutes() {
             <Route path="/admin/content/process" element={<ProtectedRoute><AppLayout><ProcessSteps /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/reviews" element={<ProtectedRoute><AppLayout><Reviews /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/community" element={<ProtectedRoute><AppLayout><Community /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/community/members" element={<ProtectedRoute><AppLayout><Members /></AppLayout></ProtectedRoute>} />
+            <Route path="/admin/community/applications" element={<ProtectedRoute><AppLayout><CommunityApplications /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/blog" element={<ProtectedRoute><AppLayout><Blog /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/messages" element={<ProtectedRoute><AppLayout><Inbox /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/media" element={<ProtectedRoute><AppLayout><MediaLibrary /></AppLayout></ProtectedRoute>} />
@@ -134,6 +135,7 @@ function AppRoutes() {
             <Route path="/admin/analytics/traffic" element={<ProtectedRoute><AppLayout><TrafficOverview /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/analytics/performance" element={<ProtectedRoute><AppLayout><PerformanceMetrics /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/analytics/contact" element={<ProtectedRoute><AppLayout><ContactAnalytics /></AppLayout></ProtectedRoute>} />
+            <Route path="/admin/messages/contact-analytics" element={<ProtectedRoute><AppLayout><ContactAnalytics /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/analytics/community" element={<ProtectedRoute><AppLayout><CommunityAnalytics /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/settings/maintenance" element={<ProtectedRoute><AppLayout><Maintenance /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/settings/webhooks" element={<ProtectedRoute><AppLayout><Webhooks /></AppLayout></ProtectedRoute>} />

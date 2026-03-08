@@ -214,19 +214,7 @@ const ProjectsManager = () => {
             }));
             setToast({ type: 'success', message: 'Image added to gallery from library.' });
         }
-        setMediaTarget(null);
-    };
-
-    const toggleRelatedProject = (projectId) => {
-        const id = parseInt(projectId);
-        setFormData(prev => {
-            const current = prev.relatedProjects || [];
-            if (current.includes(id)) {
-                return { ...prev, relatedProjects: current.filter(pId => pId !== id) };
-            } else {
-                return { ...prev, relatedProjects: [...current, id] };
-            }
-        });
+        setMediaTarget(null); // Close the modal
     };
 
     const saveProject = async (status) => {
@@ -466,26 +454,41 @@ const ProjectsManager = () => {
                             <select
                                 className="form-input"
                                 value=""
-                                onChange={(e) => toggleRelatedProject(e.target.value)}
+                                onChange={(e) => {
+                                    const projectId = e.target.value;
+                                    const project = projects.find(p => p.id === projectId);
+                                    if (project && !formData.relatedProjects.some(rp => rp.id === projectId)) {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            relatedProjects: [...prev.relatedProjects, { id: project.id, title: project.title }]
+                                        }));
+                                    }
+                                }}
                             >
-                                <option value="" disabled>Select project to link...</option>
+                                <option value="" disabled>Select related project... ▾</option>
                                 {projects
-                                    .filter(p => p.id !== formData.id && !(formData.relatedProjects || []).includes(p.id))
+                                    .filter(p => p.id !== formData.id) // Don't relate to self
                                     .map(p => <option key={p.id} value={p.id}>{p.title}</option>)
                                 }
                             </select>
                             <div className="tags-container mt-3">
-                                {(formData.relatedProjects || []).map(pId => {
-                                    const p = projects.find(proj => proj.id === pId);
-                                    if (!p) return null;
-                                    return (
-                                        <span className="pill-tag" key={pId}>
-                                            {p.title} <X size={12} onClick={() => toggleRelatedProject(pId)} />
-                                        </span>
-                                    );
-                                })}
-                                {(formData.relatedProjects || []).length === 0 && (
-                                    <span className="text-secondary" style={{ fontSize: '13px' }}>No related projects linked.</span>
+                                {formData.relatedProjects.map(rp => (
+                                    <span className="pill-tag" key={rp.id}>
+                                        {rp.title}
+                                        <X
+                                            size={12}
+                                            style={{ cursor: 'pointer', marginLeft: '6px' }}
+                                            onClick={() => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    relatedProjects: prev.relatedProjects.filter(p => p.id !== rp.id)
+                                                }));
+                                            }}
+                                        />
+                                    </span>
+                                ))}
+                                {formData.relatedProjects.length === 0 && (
+                                    <span className="text-secondary" style={{ fontSize: '13px' }}>No related projects selected.</span>
                                 )}
                             </div>
                         </div>
@@ -504,6 +507,12 @@ const ProjectsManager = () => {
                         setToast({ type: 'success', message: `Restored to version ${version.versionNum} successfully.` });
                         setHistoryOpen(false);
                     }}
+                />
+
+                <MediaPickerModal
+                    isOpen={!!mediaTarget}
+                    onClose={() => setMediaTarget(null)}
+                    onSelect={handleMediaSelect}
                 />
             </div>
         );

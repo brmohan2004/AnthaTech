@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './ProcessSteps.css';
 import {
     Save, RotateCcw, Plus, X, GripVertical,
-    UploadCloud, Image as ImageIcon, ArrowRight
+    UploadCloud, Image as ImageIcon, ArrowRight,
+    ChevronUp, ChevronDown
 } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
@@ -111,6 +112,7 @@ const ProcessStepsManager = () => {
     const handleMediaSelect = (url) => {
         if (mediaTargetStepId) {
             updateStep(mediaTargetStepId, 'image', url);
+            setMediaTargetStepId(null);
             setToast({ type: 'success', message: 'Step image updated from library.' });
         }
     };
@@ -142,6 +144,15 @@ const ProcessStepsManager = () => {
             ...$,
             steps: $.steps.filter(s => s.id !== id)
         }));
+    };
+
+    const moveStep = (index, direction) => {
+        const newSteps = [...formData.steps];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newSteps.length) return;
+
+        [newSteps[index], newSteps[targetIndex]] = [newSteps[targetIndex], newSteps[index]];
+        setFormData(prev => ({ ...prev, steps: newSteps }));
     };
 
     return (
@@ -189,7 +200,15 @@ const ProcessStepsManager = () => {
                             {formData.steps.map((step, idx) => (
                                 <div className="step-card" key={step.id}>
                                     <div className="card-top">
-                                        <div className="drag-handle"><GripVertical size={16} /><span>STEP {String(idx + 1).padStart(2, '0')}</span></div>
+                                        <div className="move-controls">
+                                            <button className="move-btn" onClick={() => moveStep(idx, 'up')} disabled={idx === 0}>
+                                                <ChevronUp size={14} />
+                                            </button>
+                                            <span className="item-badge">STEP {String(idx + 1).padStart(2, '0')}</span>
+                                            <button className="move-btn" onClick={() => moveStep(idx, 'down')} disabled={idx === formData.steps.length - 1}>
+                                                <ChevronDown size={14} />
+                                            </button>
+                                        </div>
                                         <button className="icon-btn-danger" onClick={() => removeStep(step.id)}><X size={16} /></button>
                                     </div>
 
@@ -207,18 +226,31 @@ const ProcessStepsManager = () => {
 
                                         <div className="step-media">
                                             <label>Step Image</label>
-                                            <div className="media-placeholder-box">
-                                                {step.image ? <img src={step.image} alt="" className="step-preview-img" /> : <><ImageIcon size={24} /> <span>No image</span></>}
+                                            <div 
+                                                className="media-placeholder-box"
+                                                onClick={() => setMediaTargetStepId(step.id)}
+                                            >
+                                                {step.image ? (
+                                                    <img src={step.image} alt="" className="step-preview-img" />
+                                                ) : (
+                                                    <>
+                                                        <ImageIcon size={28} strokeWidth={1.5} />
+                                                        <span style={{ fontSize: '12px', fontWeight: '500' }}>Add Image</span>
+                                                    </>
+                                                )}
                                             </div>
-                                            <div className="flex-col gap-2 mt-2">
+                                            <div className="media-actions">
                                                 <button
                                                     type="button"
-                                                    className="btn-link"
-                                                    onClick={() => setMediaTargetStepId(step.id)}
+                                                    className="btn-link media-lib-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setMediaTargetStepId(step.id);
+                                                    }}
                                                 >
-                                                    📁 Media Library
+                                                    <span style={{ fontSize: '14px' }}>📁</span> Media Library
                                                 </button>
-                                                <label className="btn-link cursor-pointer">
+                                                <label className="btn-link upload-btn cursor-pointer">
                                                     <UploadCloud size={14} /> Change Image
                                                     <input
                                                         type="file"

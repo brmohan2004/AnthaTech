@@ -84,7 +84,15 @@
 .highlight-item-card {
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: var(--bg-page);
+    background: var(--bg-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.highlight-item-card:hover {
+    border-color: var(--accent-blue-light);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card-top {
@@ -97,14 +105,44 @@
     align-items: center;
 }
 
-.drag-handle {
+.move-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+}
+
+.move-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
     color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.move-btn:hover:not(:disabled) {
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    background: var(--bg-blue-tint);
+}
+
+.move-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.item-badge {
     font-size: 12px;
-    font-weight: 600;
-    cursor: grab;
+    font-weight: 700;
+    color: var(--text-secondary);
+    background: var(--bg-hover);
+    padding: 2px 10px;
+    border-radius: 20px;
 }
 
 .card-body {
@@ -122,8 +160,10 @@
 
 .svg-textarea {
     font-family: monospace;
-    font-size: 12px;
-    height: 80px;
+    font-size: 11px;
+    height: 100px;
+    line-height: 1.4;
+    resize: vertical;
 }
 
 .svg-preview {
@@ -143,8 +183,9 @@
 }
 
 .mini-svg-box svg {
-    width: 32px;
-    height: 32px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .form-row {

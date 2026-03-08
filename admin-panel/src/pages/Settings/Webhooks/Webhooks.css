@@ -249,29 +249,38 @@
    SLIDE-IN DRAWER
    ══════════════════════════════════════════ */
 .drawer-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 900;
-    display: flex;
-    justify-content: flex-end;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 99999 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    visibility: visible !important;
+    pointer-events: all !important;
 }
 
 .wh-drawer {
-    width: 100%;
-    max-width: 500px;
-    height: 100%;
-    background: var(--bg-card);
-    display: flex;
-    flex-direction: column;
-    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.12);
-    animation: slide-in 0.22s ease;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    height: 100vh !important;
+    background: #ffffff !important; /* Force white background for visibility */
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5) !important;
+    z-index: 100000 !important;
+    animation: slide-in-debug 0.3s ease-out !important;
 }
 
-@keyframes slide-in {
-    from { transform: translateX(100%); }
-    to   { transform: translateX(0); }
+@keyframes slide-in-debug {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
 }
 
 /* Drawer header */

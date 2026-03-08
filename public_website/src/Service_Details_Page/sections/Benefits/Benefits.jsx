@@ -11,7 +11,7 @@ const Benefits = ({ benefits }) => {
                         {benefits.map((benefit, index) => (
                             <div key={index} className="benefit-item">
                                 <span className="check-icon">✓</span>
-                                <span className="benefit-text">{benefit}</span>
+                                <span className="benefit-text">{typeof benefit === 'object' ? benefit.text : benefit}</span>
                             </div>
                         ))}
                     </div>

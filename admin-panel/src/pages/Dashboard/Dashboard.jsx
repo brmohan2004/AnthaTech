@@ -60,12 +60,12 @@ const Dashboard = () => {
     }, []);
 
     const quickActions = [
-        { label: 'New Project', icon: <Plus size={24} />, color: 'var(--primary-blue)', path: '/admin/content/projects' },
-        { label: 'New Blog Post', icon: <Plus size={24} />, color: 'var(--primary-blue)', path: '/admin/content/blog' },
-        { label: 'Messages Inbox', icon: <Mail size={24} />, color: 'var(--text-grey)', path: '/admin/messages' },
-        { label: 'Upload Media', icon: <ImageIcon size={24} />, color: 'var(--text-grey)', path: '/admin/media' },
-        { label: 'Edit Hero Section', icon: <Edit size={24} />, color: 'var(--text-grey)', path: '/admin/content/hero' },
-        { label: 'Site Settings', icon: <Settings size={24} />, color: 'var(--text-grey)', path: '/admin/settings/general-info' },
+        { label: 'Add new project', icon: <Plus size={20} />, bgColor: '#DBEAFE', iconColor: '#2563EB', path: '/admin/content/projects' },
+        { label: 'New blog Post', icon: <FileText size={20} />, bgColor: '#DCFCE7', iconColor: '#16A34A', path: '/admin/content/blog' },
+        { label: 'View messages', icon: <Mail size={20} />, bgColor: '#FEF9C3', iconColor: '#854D0E', path: '/admin/messages' },
+        { label: 'Media library', icon: <ImageIcon size={20} />, bgColor: '#E0E7FF', iconColor: '#4338CA', path: '/admin/media' },
+        { label: 'Edit hero section', icon: <Edit size={20} />, bgColor: '#FFE4E6', iconColor: '#BE123C', path: '/admin/content/hero' },
+        { label: 'config Settings', icon: <Settings size={20} />, bgColor: '#E5E7EB', iconColor: '#374151', path: '/admin/settings/general-info' },
     ];
 
     return (
@@ -130,7 +130,9 @@ const Dashboard = () => {
                     <div className="actions-grid">
                         {quickActions.map((action, i) => (
                             <button className="action-btn" key={i} onClick={() => navigate(action.path)}>
-                                <span className="action-icon" style={{ color: action.color }}>{action.icon}</span>
+                                <span className="action-icon-wrap" style={{ backgroundColor: action.bgColor, color: action.iconColor }}>
+                                    {action.icon}
+                                </span>
                                 <span className="action-label">{action.label}</span>
                             </button>
                         ))}

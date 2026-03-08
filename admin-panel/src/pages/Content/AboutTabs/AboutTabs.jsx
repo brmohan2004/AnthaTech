@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AboutTabs.css';
-import { Save, RotateCcw, Image as ImageIcon, Plus, X, UploadCloud, GripVertical } from 'lucide-react';
+import { Save, RotateCcw, Image as ImageIcon, Plus, X, UploadCloud, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
 import MediaPickerModal from '../../../components/ui/MediaPickerModal';
@@ -206,8 +206,20 @@ const AboutTabs = () => {
             ...$,
             about2: {
                 ...$.about2,
-                stats: [...$.about2.stats, { id: Date.now(), color: 'blue', number: '0', label: 'New Stat' }]
+                stats: [...$.about2.stats, { id: Date.now(), color: '#3B82F6', number: '0', label: 'New Stat' }]
             }
+        }));
+    };
+
+    const moveStat = (index, direction) => {
+        const newStats = [...formData.about2.stats];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newStats.length) return;
+
+        [newStats[index], newStats[targetIndex]] = [newStats[targetIndex], newStats[index]];
+        setFormData($ => ({
+            ...$,
+            about2: { ...$.about2, stats: newStats }
         }));
     };
 
@@ -285,14 +297,14 @@ const AboutTabs = () => {
                             <div className="rich-text-builder">
                                 {formData.about1.paragraph1.map((chunk, i) => (
                                     <div className="chunk-row" key={chunk.id}>
-                                        <div className="chunk-color-picker-wrapper">
-                                            <input
-                                                type="color"
-                                                className="chunk-color-picker"
-                                                value={chunk.color === 'blue' ? '#3B82F6' : (chunk.color === 'dark' ? '#1E293B' : chunk.color)}
-                                                onChange={(e) => updateParagraphChunk(1, chunk.id, 'color', e.target.value)}
-                                            />
-                                        </div>
+                                        <select
+                                            className="color-select"
+                                            value={chunk.color}
+                                            onChange={(e) => updateParagraphChunk(1, chunk.id, 'color', e.target.value)}
+                                        >
+                                            <option value="blue">● Blue</option>
+                                            <option value="dark">● Dark</option>
+                                        </select>
                                         <input
                                             type="text"
                                             className="form-input chunk-input"
@@ -311,14 +323,14 @@ const AboutTabs = () => {
                             <div className="rich-text-builder">
                                 {formData.about1.paragraph2.map((chunk, i) => (
                                     <div className="chunk-row" key={chunk.id}>
-                                        <div className="chunk-color-picker-wrapper">
-                                            <input
-                                                type="color"
-                                                className="chunk-color-picker"
-                                                value={chunk.color === 'blue' ? '#3B82F6' : (chunk.color === 'dark' ? '#1E293B' : chunk.color)}
-                                                onChange={(e) => updateParagraphChunk(2, chunk.id, 'color', e.target.value)}
-                                            />
-                                        </div>
+                                        <select
+                                            className="color-select"
+                                            value={chunk.color}
+                                            onChange={(e) => updateParagraphChunk(2, chunk.id, 'color', e.target.value)}
+                                        >
+                                            <option value="blue">● Blue</option>
+                                            <option value="dark">● Dark</option>
+                                        </select>
                                         <input
                                             type="text"
                                             className="form-input chunk-input"
@@ -398,20 +410,31 @@ const AboutTabs = () => {
                             <div className="stats-list">
                                 {formData.about2.stats.map((stat, i) => (
                                     <div className="stat-row" key={stat.id}>
-                                        <div className="drag-handle"><GripVertical size={16} /></div>
-                                        <div className="stat-color-picker-wrapper">
-                                            <input
-                                                type="color"
-                                                className="stat-color-picker"
-                                                value={stat.color.startsWith('#') ? stat.color : (
-                                                    stat.color === 'red' ? '#EF4444' :
-                                                        stat.color === 'yellow' ? '#F59E0B' :
-                                                            stat.color === 'green' ? '#10B981' :
-                                                                '#3B82F6'
-                                                )}
-                                                onChange={(e) => updateStat(stat.id, 'color', e.target.value)}
-                                            />
+                                        <div className="move-controls">
+                                            <button
+                                                className="move-btn"
+                                                onClick={() => moveStat(i, 'up')}
+                                                disabled={i === 0}
+                                                title="Move Up"
+                                            >
+                                                <ChevronUp size={14} />
+                                            </button>
+                                            <button
+                                                className="move-btn"
+                                                onClick={() => moveStat(i, 'down')}
+                                                disabled={i === formData.about2.stats.length - 1}
+                                                title="Move Down"
+                                            >
+                                                <ChevronDown size={14} />
+                                            </button>
                                         </div>
+                                        <input
+                                            type="color"
+                                            className="stat-color-picker"
+                                            value={stat.color && stat.color.startsWith('#') ? stat.color : '#3B82F6'}
+                                            onChange={(e) => updateStat(stat.id, 'color', e.target.value)}
+                                            title="Pick Color"
+                                        />
                                         <input
                                             type="text"
                                             className="form-input stat-number"
@@ -447,7 +470,7 @@ const AboutTabs = () => {
                                 <div className="sim2-stats-grid">
                                     {formData.about2.stats.map(s => (
                                         <div className="sim2-stat-card" key={s.id}>
-                                            <div className={`sim2-stat-dot bg-${s.color}`}></div>
+                                            <div className="sim2-stat-dot" style={{ backgroundColor: s.color }}></div>
                                             <div className="sim2-stat-num">{s.number}</div>
                                             <div className="sim2-stat-label">{s.label}</div>
                                         </div>

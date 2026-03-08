@@ -25,7 +25,19 @@ export default function Services() {
         setError(null);
         fetchServices()
             .then(rows => {
-                setServicesData((rows || []).map((s, i) => ({
+                console.log('Raw Services Rows:', rows);
+                const normalizedRows = (rows || []).map(s => {
+                    const status = (s.status || '').trim().toLowerCase();
+                    console.log(`Service: ${s.title}, DB Status: "${s.status}", Normalized: "${status}"`);
+                    return {
+                        ...s,
+                        status
+                    };
+                });
+                const publishedServices = normalizedRows.filter(s => s.status === 'published');
+                console.log('Filtered Published Services:', publishedServices);
+                
+                setServicesData(publishedServices.map((s, i) => ({
                     title: s.title,
                     tags: Array.isArray(s.tags) ? s.tags : [],
                     description: s.short_description || '',

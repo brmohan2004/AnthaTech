@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Loader2, CheckCircle2, KeyRound, Eye, EyeOff } from 'lucide-react';
 import supabase from '../../config/supabaseClient';
-import { sendPasswordResetEmail } from '../../api/auth';
 import './ForgotPassword.css';
 
 const ForgotPassword = ({ isOpen, onClose }) => {
@@ -51,7 +50,10 @@ const ForgotPassword = ({ isOpen, onClose }) => {
         setError('');
         setLoading(true);
         try {
-            await sendPasswordResetEmail(email);
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/admin/login`,
+            });
+            if (resetError) throw resetError;
             setStep('sent');
         } catch (err) {
             setError(err.message || 'Failed to send reset link. Please try again.');

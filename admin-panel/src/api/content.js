@@ -2,14 +2,17 @@ import supabase from '../config/supabaseClient';
 import { withCache, invalidateLocalCache } from './cacheManager';
 
 // ─── Hero Content ────────────────────────────────────────────
-export async function getHeroContent(page = 'home') {
-  const { data, error } = await supabase.from('hero_content').select('*').eq('page', page).single();
+export async function getHeroContent() {
+  const { data, error } = await supabase.from('hero_content').select('*').single();
   if (error) throw error;
   return data;
 }
 
-export async function updateHeroContent(page, updates) {
-  const { data, error } = await supabase.from('hero_content').update(updates).eq('page', page).select().single();
+export async function updateHeroContent(updates) {
+  const { data: rows } = await supabase.from('hero_content').select('id').limit(1);
+  const id = rows?.[0]?.id;
+  if (!id) throw new Error('No hero_content row found');
+  const { data, error } = await supabase.from('hero_content').update(updates).eq('id', id).select().single();
   if (error) throw error;
   return data;
 }
@@ -36,6 +39,7 @@ export async function getProjects() {
     heroDescription: p.hero_description,
     publishAt: p.publish_at,
     coverImage: p.image,
+    relatedProjects: p.related_projects || [],
     status: p.status ? p.status.charAt(0).toUpperCase() + p.status.slice(1) : 'Draft',
   }));
 }
@@ -168,7 +172,7 @@ export async function deleteReview(id) {
 // ─── Community Content ───────────────────────────────────────
 export async function getCommunityContent(section) {
   if (section) {
-    const { data, error } = await supabase.from('community_content').select('*').eq('section', section).single();
+    const { data, error } = await supabase.from('community_content').select('*').eq('section', section).maybeSingle();
     if (error) throw error;
     return data;
   }
@@ -178,7 +182,12 @@ export async function getCommunityContent(section) {
 }
 
 export async function updateCommunityContent(section, updates) {
-  const { data, error } = await supabase.from('community_content').update(updates).eq('section', section).select().single();
+  const { data, error } = await supabase
+    .from('community_content')
+    .update(updates)
+    .eq('section', section)
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }
@@ -290,7 +299,8 @@ export async function getSiteConfig() {
   return withCache('site_config', async () => {
     const { data, error } = await supabase.from('site_config').select('*');
     if (error) throw error;
-    return data;
+    // Convert to key-value map
+    return data.reduce((acc, row) => { acc[row.key] = row.value; return acc; }, {});
   }, 300000); // 5 minutes
 }
 
@@ -401,6 +411,44 @@ export async function revokeSession(sessionId) {
     .update({ revoked_at: new Date().toISOString() })
     .eq('id', sessionId);
   if (error) throw error;
+}
+
+export async function upsertAdminSession(session) {
+  const payload = {
+    admin_id: session.admin_id,
+    device: session.device || null,
+    browser: session.browser || null,
+    os: session.os || null,
+    ip_address: session.ip_address || null,
+    location: session.location || null,
+    login_at: session.login_at || new Date().toISOString(),
+    last_active: new Date().toISOString(),
+    is_current: session.is_current !== false,
+    jwt_id: session.jwt_id || null,
+    revoked_at: null,
+  };
+
+  if (payload.jwt_id) {
+    const { data: existing, error: findError } = await supabase
+      .from('admin_sessions')
+      .select('id')
+      .eq('jwt_id', payload.jwt_id)
+      .maybeSingle();
+    if (findError) throw findError;
+
+    if (existing?.id) {
+      const { error: updateError } = await supabase
+        .from('admin_sessions')
+        .update(payload)
+        .eq('id', existing.id);
+      if (updateError) throw updateError;
+      return existing.id;
+    }
+  }
+
+  const { data, error } = await supabase.from('admin_sessions').insert(payload).select('id').single();
+  if (error) throw error;
+  return data?.id;
 }
 
 // ─── IP Blocklist ────────────────────────────────────────────

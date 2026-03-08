@@ -13,7 +13,7 @@ const WhatWeOffer = ({ offers }) => {
                 <div className="offers-grid">
                     {offers.map((offer, index) => (
                         <div key={index} className="offer-card">
-                            <div className="offer-icon">{offer.icon}</div>
+                            <div className="offer-icon" dangerouslySetInnerHTML={{ __html: offer.icon }}></div>
                             <h3 className="offer-card-title">{offer.title}</h3>
                             <p className="offer-card-text">{offer.text}</p>
                         </div>

@@ -45,9 +45,10 @@ const Maintenance = () => {
         (async () => {
             try {
                 const rows = await getSiteConfig();
-                const row = rows.find(r => r.key === 'maintenance');
-                if (row?.value) {
-                    const parsed = JSON.parse(row.value);
+                // Ensure rows is an object from the cache-aware getSiteConfig
+                const maintenanceValue = rows.maintenance;
+                if (maintenanceValue) {
+                    const parsed = typeof maintenanceValue === 'string' ? JSON.parse(maintenanceValue) : maintenanceValue;
                     setData({ ...defaultValues, ...parsed });
                     setSaved({ ...defaultValues, ...parsed });
                 }

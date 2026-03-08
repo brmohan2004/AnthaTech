@@ -222,10 +222,31 @@
     color: #ffffff;
 }
 
-.theme-charcoal-black .service-link-icon {
-    border-color: #0c0d10;
-    background-color: #111827;
-    color: #38bdf8;
+.theme-charcoal-black .service-link-icon:hover {
+    background-color: #3b4731;
+}
+
+/* Custom Theme Support */
+.service-card.custom-theme .service-title,
+.service-card.custom-theme .service-description,
+.service-card.custom-theme .service-tag {
+    color: #ffffff;
+}
+
+.service-card.custom-theme .service-tag {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.service-card.custom-theme .service-action-btn {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+.service-card.custom-theme .service-link-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-color: transparent;
 }
 
 @media (max-width: 768px) {

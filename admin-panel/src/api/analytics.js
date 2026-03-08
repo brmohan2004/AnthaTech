@@ -35,7 +35,7 @@ export async function getCloudflareTraffic(accountId) {
             }
         `;
 
-            const res = await fetch('/api/cloudflare-analytics/graphql', {
+            const res = await fetch('/api/cloudflare-analytics', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query }),
@@ -43,6 +43,10 @@ export async function getCloudflareTraffic(accountId) {
 
             if (!res.ok) {
                 const errBody = await res.text();
+                // Check if it's a 405 error, which usually means the Cloudflare Function hasn't deployed or env vars are missing
+                if (res.status === 405) {
+                    throw new Error(`Cloudflare Proxy (405): Method Not Allowed. Ensure Cloudflare Pages Function is deployed.`);
+                }
                 throw new Error(`Cloudflare fetch failed (${res.status}): ${errBody}`);
             }
 

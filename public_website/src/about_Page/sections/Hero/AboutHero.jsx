@@ -37,7 +37,32 @@ const AboutHero = () => {
     }
 
     if (error || !hero) {
-        return <ErrorMessage message={error} retry={loadHero} />;
+        const fallback = {
+            badge_text: 'About us',
+            title_1: 'We are',
+            title_2: 'Antha Tech',
+            description: 'We are a digital design studio founded by tech passionate enthusiasts.'
+        };
+        const display = hero || fallback;
+        
+        return (
+            <section className="about-hero-section">
+                <div className="ah-container">
+                    <div className="ah-badge">
+                        <span>{display.badge_text}</span>
+                    </div>
+
+                    <h1 className="ah-title">
+                        {display.title_1}<br />
+                        <span className="text-blue">{display.title_2}</span>
+                    </h1>
+
+                    <p className="ah-subtitle">
+                        {display.description}
+                    </p>
+                </div>
+            </section>
+        );
     }
 
     return (

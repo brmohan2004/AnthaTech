@@ -5,8 +5,13 @@ import './serviceCard.css';
 export default function ServiceCard({ title, tags, description, buttonText, link, theme, serviceGraphic }) {
     const navigate = useNavigate();
 
+    const isHexTheme = theme?.startsWith('#');
+
     return (
-        <div className={`service-card ${theme || ''}`}>
+        <div
+            className={`service-card ${isHexTheme ? 'custom-theme' : (theme || '')}`}
+            style={isHexTheme ? { backgroundColor: theme } : {}}
+        >
             {/* Top right floating arrow button */}
             <Link to={link || "#"} className="service-link-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

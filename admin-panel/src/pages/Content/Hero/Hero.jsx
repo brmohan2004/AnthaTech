@@ -21,7 +21,6 @@ const emptyData = {
 };
 
 const HeroManager = () => {
-    const [activePage, setActivePage] = useState('home');
     const [formData, setFormData] = useState(emptyData);
     const [savedData, setSavedData] = useState(emptyData);
     const [isDirty, setIsDirty] = useState(false);
@@ -32,9 +31,8 @@ const HeroManager = () => {
 
     useEffect(() => {
         async function load() {
-            setLoading(true);
             try {
-                const data = await getHeroContent(activePage);
+                const data = await getHeroContent();
                 const mapped = {
                     badge: data.badge || '',
                     title1: data.title1 || '',
@@ -49,15 +47,13 @@ const HeroManager = () => {
                 setFormData(mapped);
                 setSavedData(mapped);
             } catch (err) {
-                // If row doesn't exist, use empty
-                setFormData(emptyData);
-                setSavedData(emptyData);
+                setToast({ type: 'error', message: 'Failed to load hero content.' });
             } finally {
                 setLoading(false);
             }
         }
         load();
-    }, [activePage]);
+    }, []);
 
     // Check dirtiness
     useEffect(() => {
@@ -78,7 +74,7 @@ const HeroManager = () => {
     const handleSave = async () => {
         setSaving(true);
         try {
-            await updateHeroContent(activePage, formData);
+            await updateHeroContent(formData);
             setSavedData(formData);
             setIsDirty(false);
             setToast({ type: 'success', message: 'Hero section saved successfully.' });
@@ -156,23 +152,9 @@ const HeroManager = () => {
             {/* Header */}
             <header className="page-header">
                 <div className="header-breadcrumbs">
-                    Content &gt; <span>Hero Section Manager</span>
+                    Content &gt; <span>Hero Section</span>
                 </div>
                 <div className="header-actions">
-                    <div className="page-selector" style={{ marginRight: '16px' }}>
-                        <select
-                            className="form-input"
-                            style={{ width: '160px' }}
-                            value={activePage}
-                            onChange={(e) => setActivePage(e.target.value)}
-                        >
-                            <option value="home">Home Page</option>
-                            <option value="about">About Us</option>
-                            <option value="projects">Projects</option>
-                            <option value="community">Community</option>
-                            <option value="insights">Insights/Blog</option>
-                        </select>
-                    </div>
                     <Button
                         variant="ghost"
                         icon={<RotateCcw size={16} />}
@@ -356,11 +338,11 @@ const HeroManager = () => {
 
                             <div className="hero-sim-ctas">
                                 <button className="sim-btn sim-btn-primary">
-                                    {formData.primary_cta_text || 'Primary CTA'}
+                                    {formData.primaryCtaText}
                                     <span className="sim-btn-arrow">→</span>
                                 </button>
                                 <button className="sim-btn sim-btn-secondary">
-                                    {formData.secondary_cta_text || 'Secondary CTA'}
+                                    {formData.secondaryCtaText}
                                 </button>
                             </div>
 

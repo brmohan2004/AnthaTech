@@ -40,13 +40,11 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
         (async () => {
             try {
                 setLoading(true);
-                const rows = await getSiteConfig();
-                const configMap = {};
-                rows.forEach(r => { configMap[r.key] = r.value; });
+                const configMap = await getSiteConfig();
                 const loaded = {
-                    contact: configMap.contact ? JSON.parse(configMap.contact) : defaultValues.contact,
-                    social: configMap.social ? JSON.parse(configMap.social) : defaultValues.social,
-                    seo: configMap.seo ? JSON.parse(configMap.seo) : defaultValues.seo,
+                    contact: configMap.contact ? (typeof configMap.contact === 'string' ? JSON.parse(configMap.contact) : configMap.contact) : defaultValues.contact,
+                    social: configMap.social ? (typeof configMap.social === 'string' ? JSON.parse(configMap.social) : configMap.social) : defaultValues.social,
+                    seo: configMap.seo ? (typeof configMap.seo === 'string' ? JSON.parse(configMap.seo) : configMap.seo) : defaultValues.seo,
                 };
                 setData(loaded);
                 setSavedData(loaded);

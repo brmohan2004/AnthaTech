@@ -70,10 +70,13 @@ export default function About2() {
                     {stats.map((stat, i) => (
                         <div className="stat-card" key={i}>
                             <div className="stat-number-wrapper">
-                                <span className={`stat-dot ${DOT_COLORS[i % DOT_COLORS.length]}`}></span>
+                                <span
+                                    className="stat-dot"
+                                    style={{ backgroundColor: stat.color || (i === 0 ? '#F05A63' : i === 1 ? '#FBBF24' : '#4ADE80') }}
+                                ></span>
                                 <h3 className="stat-number">{stat.number}</h3>
                             </div>
-                            <p className="stat-text">{stat.text?.split('\n').map((line, j) => (
+                            <p className="stat-text">{(stat.label || stat.text || '')?.split('\n').map((line, j) => (
                                 <React.Fragment key={j}>{line}{j === 0 && <br />}</React.Fragment>
                             ))}</p>
                         </div>

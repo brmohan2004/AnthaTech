@@ -5,7 +5,7 @@ import {
   QrCode, CheckCircle, Key, RefreshCw, Eye, EyeOff, Lock,
   Copy, Download, Users, ChevronRight, Info
 } from "lucide-react";
-import { enrollMFA, verifyMFA, listMFAFactors, unenrollMFA } from '../../../api/auth';
+import { enrollMFA, verifyMFA, listMFAFactors, unenrollMFA, getVerifiedTotpFactors, updateAdminProfile, getCurrentUser } from '../../../api/auth';
 
 export default function MFASettings() {
   const [mfaEnabled, setMfaEnabled] = useState(false);
@@ -24,10 +24,11 @@ export default function MFASettings() {
   useEffect(() => {
     (async () => {
       try {
-        const factors = await listMFAFactors();
-        if (factors.length > 0) {
+        const factorsData = await listMFAFactors();
+        const verifiedFactors = getVerifiedTotpFactors(factorsData);
+        if (verifiedFactors.length > 0) {
           setMfaEnabled(true);
-          setFactorId(factors[0].id);
+          setFactorId(verifiedFactors[0].id);
         }
       } catch (err) { /* silent */ }
     })();
@@ -37,6 +38,12 @@ export default function MFASettings() {
     if (!window.confirm("Disabling MFA reduces your account security. Are you sure you want to continue?")) return;
     try {
       if (factorId) await unenrollMFA(factorId);
+      try {
+        const user = await getCurrentUser();
+        if (user?.id) await updateAdminProfile(user.id, { mfa_enabled: false });
+      } catch {
+        // Keep UI functional even if profile flag update fails.
+      }
       setMfaEnabled(false);
       setShowSetup(false);
       setFactorId(null);
@@ -66,6 +73,12 @@ export default function MFASettings() {
     }
     try {
       await verifyMFA(factorId, otp);
+      try {
+        const user = await getCurrentUser();
+        if (user?.id) await updateAdminProfile(user.id, { mfa_enabled: true });
+      } catch {
+        // Keep UI functional even if profile flag update fails.
+      }
       setMfaEnabled(true);
       setShowSetup(false);
       setOtp("");

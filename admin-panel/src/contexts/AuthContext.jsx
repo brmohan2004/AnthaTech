@@ -25,13 +25,37 @@ export function AuthProvider({ children }) {
         is_current: true,
       });
     } catch (e) {
-      console.error('Failed to sync admin session:', e);
+      // If the background sync fails due to an invalid session/refresh token, handle it
+      if (e?.status === 400 || e?.message?.toLowerCase().includes('refresh token')) {
+        console.warn('Sync failed due to invalid session. Clearing local state.');
+        supabase.auth.signOut().finally(() => {
+          setSession(null);
+          setUser(null);
+        });
+      } else {
+        console.error('Failed to sync admin session:', e);
+      }
     }
   };
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then(({ data: { session: s }, error }) => {
+      if (error) {
+        console.warn('Session initialization notice:', error.message);
+        // If it's a refresh token error or invalid session, clear everything
+        if (error.status === 400 || error.message?.toLowerCase().includes('refresh token')) {
+          supabase.auth.signOut().finally(() => {
+            setSession(null);
+            setUser(null);
+            setLoading(false);
+          });
+          return;
+        }
+        setLoading(false); // For other types of errors, still stop loading
+        return;
+      }
+
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
@@ -42,9 +66,18 @@ export function AuthProvider({ children }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, s) => {
+      if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
       setSession(s);
       setUser(s?.user ?? null);
+
       if (s?.user) {
         getAdminProfile(s.user.id).then(setProfile).catch(() => { });
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
@@ -52,6 +85,7 @@ export function AuthProvider({ children }) {
         }
       } else {
         setProfile(null);
+        setLoading(false);
       }
     });
 

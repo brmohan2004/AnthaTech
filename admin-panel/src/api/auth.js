@@ -87,9 +87,9 @@ export async function getAdminProfile(userId) {
     .from('admin_profiles')
     .select('*')
     .eq('id', userId)
-    .single();
+    .limit(1);
   if (error) throw error;
-  return data;
+  return data?.[0] || null;
 }
 
 // Update Password

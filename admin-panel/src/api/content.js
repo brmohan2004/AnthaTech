@@ -2,17 +2,14 @@ import supabase from '../config/supabaseClient';
 import { withCache, invalidateLocalCache } from './cacheManager';
 
 // ─── Hero Content ────────────────────────────────────────────
-export async function getHeroContent() {
-  const { data, error } = await supabase.from('hero_content').select('*').single();
+export async function getHeroContent(page = 'home') {
+  const { data, error } = await supabase.from('hero_content').select('*').eq('page', page).single();
   if (error) throw error;
   return data;
 }
 
-export async function updateHeroContent(updates) {
-  const { data: rows } = await supabase.from('hero_content').select('id').limit(1);
-  const id = rows?.[0]?.id;
-  if (!id) throw new Error('No hero_content row found');
-  const { data, error } = await supabase.from('hero_content').update(updates).eq('id', id).select().single();
+export async function updateHeroContent(page, updates) {
+  const { data, error } = await supabase.from('hero_content').update(updates).eq('page', page).select().single();
   if (error) throw error;
   return data;
 }
@@ -293,8 +290,7 @@ export async function getSiteConfig() {
   return withCache('site_config', async () => {
     const { data, error } = await supabase.from('site_config').select('*');
     if (error) throw error;
-    // Convert to key-value map
-    return data.reduce((acc, row) => { acc[row.key] = row.value; return acc; }, {});
+    return data;
   }, 300000); // 5 minutes
 }
 

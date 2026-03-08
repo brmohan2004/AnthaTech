@@ -11,6 +11,7 @@ import Highlights from './pages/Content/Highlights/Highlights';
 import ProcessSteps from './pages/Content/ProcessSteps/ProcessSteps';
 import Reviews from './pages/Content/Reviews/Reviews';
 import Community from './pages/Content/Community/Community';
+import Members from './pages/Content/Community/Members';
 import Blog from './pages/Content/Blog/Blog';
 import Inbox from './pages/Messages/Inbox';
 import SiteSettings from './pages/Settings/SiteSettings/SiteSettings';
@@ -48,6 +49,7 @@ const AppLayout = ({ children }) => {
         '/admin/content/process': 'Process Steps Manager',
         '/admin/content/reviews': 'Reviews Manager',
         '/admin/content/community': 'Community Manager',
+        '/admin/content/community/members': 'Community Members & Applications',
         '/admin/content/blog': 'Blog / Insights Manager',
         '/admin/messages': 'Messages Inbox',
         '/admin/media': 'Media Library',
@@ -117,6 +119,7 @@ function AppRoutes() {
             <Route path="/admin/content/process" element={<ProtectedRoute><AppLayout><ProcessSteps /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/reviews" element={<ProtectedRoute><AppLayout><Reviews /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/community" element={<ProtectedRoute><AppLayout><Community /></AppLayout></ProtectedRoute>} />
+            <Route path="/admin/content/community/members" element={<ProtectedRoute><AppLayout><Members /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/content/blog" element={<ProtectedRoute><AppLayout><Blog /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/messages" element={<ProtectedRoute><AppLayout><Inbox /></AppLayout></ProtectedRoute>} />
             <Route path="/admin/media" element={<ProtectedRoute><AppLayout><MediaLibrary /></AppLayout></ProtectedRoute>} />

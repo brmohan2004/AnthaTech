@@ -85,6 +85,18 @@ export async function updatePassword(newPassword) {
   return data;
 }
 
+/**
+ * Sends a password reset email to the specified user.
+ * used in ForgotPassword.jsx
+ */
+export async function sendPasswordResetEmail(email) {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/admin/login`,
+  });
+  if (error) throw error;
+  return data;
+}
+
 // Update admin profile
 export async function updateAdminProfile(userId, updates) {
   const { data, error } = await supabase

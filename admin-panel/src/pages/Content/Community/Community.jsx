@@ -11,7 +11,7 @@ import { getCurrentUser } from '../../../api/auth';
 
 const emptyTeaser = {
     title1: '', title2: '', description: '', ctaText: '',
-    tracks: [], stats: []
+    tracks: [], stats: [], howItWorks: [], perks: []
 };
 
 const CommunityManager = () => {
@@ -27,9 +27,7 @@ const CommunityManager = () => {
             try {
                 setLoading(true);
                 const data = await getCommunityContent('teaser');
-                if (data?.content) setTeaser(data.content);
-                const apps = await getCommunityApplications();
-                setMembers(apps);
+                if (data?.content) setTeaser({ ...emptyTeaser, ...data.content });
             } catch (err) {
                 setToast({ type: 'error', message: 'Failed to load community data.' });
             } finally {
@@ -82,54 +80,54 @@ const CommunityManager = () => {
         });
     };
 
-    const approveMember = async (id) => {
-        try {
-            await updateApplicationStatus(id, 'approved');
-            
-            // Log the approval
-            try {
-                const user = await getCurrentUser();
-                const member = members.find(m => m.id === id);
-                await insertAuditLog({
-                    admin_id: user?.id,
-                    event_type: 'content',
-                    description: `Approved Community Application: ${member?.full_name || id}`,
-                    result: 'success'
-                });
-            } catch (logErr) {
-                console.error('Audit log failed:', logErr);
-            }
-
-            setMembers(members.map(m => m.id === id ? { ...m, status: 'approved' } : m));
-            setToast({ type: 'success', message: 'Member application approved.' });
-        } catch (err) {
-            setToast({ type: 'error', message: 'Failed to approve member.' });
-        }
+    const addTrack = () => {
+        const newTrack = { id: Date.now(), icon: '🚀', label: '', desc: '' };
+        setTeaser({ ...teaser, tracks: [...(teaser.tracks || []), newTrack] });
     };
 
-    const rejectMember = async (id) => {
-        try {
-            const member = members.find(m => m.id === id);
-            await updateApplicationStatus(id, 'rejected');
+    const removeTrack = (id) => {
+        setTeaser({ ...teaser, tracks: teaser.tracks.filter(t => t.id !== id) });
+    };
 
-            // Log the rejection
-            try {
-                const user = await getCurrentUser();
-                await insertAuditLog({
-                    admin_id: user?.id,
-                    event_type: 'content',
-                    description: `Rejected Community Application: ${member?.full_name || id}`,
-                    result: 'success'
-                });
-            } catch (logErr) {
-                console.error('Audit log failed:', logErr);
-            }
+    const addStat = () => {
+        const newStat = { id: Date.now(), value: '0', label: '' };
+        setTeaser({ ...teaser, stats: [...(teaser.stats || []), newStat] });
+    };
 
-            setMembers(members.filter(m => m.id !== id));
-            setToast({ type: 'info', message: 'Member application rejected.' });
-        } catch (err) {
-            setToast({ type: 'error', message: 'Failed to reject member.' });
-        }
+    const removeStat = (id) => {
+        setTeaser({ ...teaser, stats: teaser.stats.filter(s => s.id !== id) });
+    };
+
+    const addHow = () => {
+        const newItem = { id: Date.now(), title: '', desc: '' };
+        setTeaser({ ...teaser, howItWorks: [...(teaser.howItWorks || []), newItem] });
+    };
+
+    const updateHow = (id, field, value) => {
+        setTeaser({
+            ...teaser,
+            howItWorks: teaser.howItWorks.map(item => item.id === id ? { ...item, [field]: value } : item)
+        });
+    };
+
+    const removeHow = (id) => {
+        setTeaser({ ...teaser, howItWorks: teaser.howItWorks.filter(item => item.id !== id) });
+    };
+
+    const addPerk = () => {
+        const newItem = { id: Date.now(), title: '', desc: '', icon: '✨' };
+        setTeaser({ ...teaser, perks: [...(teaser.perks || []), newItem] });
+    };
+
+    const updatePerk = (id, field, value) => {
+        setTeaser({
+            ...teaser,
+            perks: teaser.perks.map(item => item.id === id ? { ...item, [field]: value } : item)
+        });
+    };
+
+    const removePerk = (id) => {
+        setTeaser({ ...teaser, perks: teaser.perks.filter(item => item.id !== id) });
     };
 
     return (
@@ -143,7 +141,6 @@ const CommunityManager = () => {
                 <button className={`tab-btn ${activeTab === 'teaser' ? 'active' : ''}`} onClick={() => setActiveTab('teaser')}>Teaser Content</button>
                 <button className={`tab-btn ${activeTab === 'how' ? 'active' : ''}`} onClick={() => setActiveTab('how')}>How It Works</button>
                 <button className={`tab-btn ${activeTab === 'perks' ? 'active' : ''}`} onClick={() => setActiveTab('perks')}>Perks</button>
-                <button className={`tab-btn ${activeTab === 'members' ? 'active' : ''}`} onClick={() => setActiveTab('members')}>Members</button>
             </div>
 
             <div className="panel editor-panel">
@@ -174,14 +171,14 @@ const CommunityManager = () => {
                         <div className="form-section mt-6">
                             <div className="section-header-flex">
                                 <h3 className="section-title mb-0">Tracks (max 4)</h3>
-                                <Button variant="secondary" size="sm" icon={<Plus size={14} />}>Add Track</Button>
+                                <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={addTrack}>Add Track</Button>
                             </div>
                             <div className="repeatable-grid mt-4">
                                 {teaser.tracks.map(track => (
                                     <div key={track.id} className="track-card">
                                         <div className="card-controls">
                                             <GripVertical size={16} />
-                                            <button className="del-btn"><X size={14} /></button>
+                                            <button className="del-btn" onClick={() => removeTrack(track.id)}><X size={14} /></button>
                                         </div>
                                         <div className="track-inputs">
                                             <div className="flex gap-2">
@@ -196,12 +193,16 @@ const CommunityManager = () => {
                         </div>
 
                         <div className="form-section mt-6">
-                            <h3 className="section-title">Impact Stats</h3>
+                            <div className="section-header-flex">
+                                <h3 className="section-title mb-0">Impact Stats</h3>
+                                <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={addStat}>Add Stat</Button>
+                            </div>
                             <div className="stats-row mt-4">
                                 {teaser.stats.map(stat => (
                                     <div key={stat.id} className="stat-editor">
                                         <input type="text" value={stat.value} onChange={(e) => updateStat(stat.id, 'value', e.target.value)} className="form-input stat-val" />
                                         <input type="text" value={stat.label} onChange={(e) => updateStat(stat.id, 'label', e.target.value)} className="form-input stat-lbl" />
+                                        <button className="del-btn-sub" onClick={() => removeStat(stat.id)}><X size={14} /></button>
                                     </div>
                                 ))}
                             </div>
@@ -209,55 +210,57 @@ const CommunityManager = () => {
                     </div>
                 )}
 
-                {activeTab === 'members' && (
-                    <div className="members-tab">
-                        <h3 className="section-title">Community Members & Applications</h3>
-                        <div className="table-container mt-4">
-                            <table className="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Track</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {members.map((m, i) => (
-                                        <tr key={m.id}>
-                                            <td className="text-secondary">{i + 1}</td>
-                                            <td className="font-bold">{m.name}</td>
-                                            <td>{m.email}</td>
-                                            <td><span className="track-tag">{m.track}</span></td>
-                                            <td><span className={`status-pill ${m.status.toLowerCase()}`}>{m.status}</span></td>
-                                            <td>
-                                                <div className="member-actions">
-                                                    {m.status === 'Pending' && (
-                                                        <>
-                                                            <button className="action-btn success" onClick={() => approveMember(m.id)} title="Approve"><Check size={16} /></button>
-                                                            <button className="action-btn danger" onClick={() => rejectMember(m.id)} title="Reject"><XCircle size={16} /></button>
-                                                        </>
-                                                    )}
-                                                    <button className="action-btn" title="View Details"><Eye size={16} /></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                {activeTab === 'how' && (
+                    <div className="how-tab">
+                        <div className="section-header-flex">
+                            <h3 className="section-title mb-0">How It Works Steps</h3>
+                            <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={addHow}>Add Step</Button>
+                        </div>
+                        <div className="repeatable-list mt-4">
+                            {(teaser.howItWorks || []).map((item, idx) => (
+                                <div key={item.id} className="repeatable-item p-4 bg-page rounded-xl border border-border mb-4 flex gap-4">
+                                    <div className="step-num font-bold text-accent-blue pt-2">Step {idx + 1}</div>
+                                    <div className="flex-1">
+                                        <input type="text" value={item.title} onChange={(e) => updateHow(item.id, 'title', e.target.value)} className="form-input mb-2" placeholder="Step Title" />
+                                        <textarea value={item.desc} onChange={(e) => updateHow(item.id, 'desc', e.target.value)} className="form-input" placeholder="Step Description"></textarea>
+                                    </div>
+                                    <button className="del-btn pt-2" onClick={() => removeHow(item.id)}><X size={18} /></button>
+                                </div>
+                            ))}
+                            {(teaser.howItWorks || []).length === 0 && (
+                                <div className="placeholder-tab p-12 text-center border-2 border-dashed border-border rounded-xl">
+                                    <p className="text-secondary mb-4">No steps added yet.</p>
+                                    <Button variant="secondary" onClick={addHow}>Add First Step</Button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
 
-                {/* Tab placeholders for simplicity in this demo build */}
-                {(activeTab === 'how' || activeTab === 'perks') && (
-                    <div className="placeholder-tab">
-                        <div className="placeholder-icon"><Plus size={48} /></div>
-                        <h3>Manage {activeTab === 'how' ? 'How It Works' : 'Perks'}</h3>
-                        <p>Similar to the Tracks section, you can add and reorder items for this section.</p>
-                        <Button variant="secondary">Add First Item</Button>
+                {activeTab === 'perks' && (
+                    <div className="perks-tab">
+                        <div className="section-header-flex">
+                            <h3 className="section-title mb-0">Community Perks</h3>
+                            <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={addPerk}>Add Perk</Button>
+                        </div>
+                        <div className="repeatable-grid mt-4 grid grid-cols-2 gap-4">
+                            {(teaser.perks || []).map((item) => (
+                                <div key={item.id} className="repeatable-item p-4 bg-page rounded-xl border border-border flex gap-4">
+                                    <input type="text" value={item.icon} onChange={(e) => updatePerk(item.id, 'icon', e.target.value)} className="form-input w-icon text-2xl h-12 w-12 text-center" placeholder="Icon" />
+                                    <div className="flex-1">
+                                        <input type="text" value={item.title} onChange={(e) => updatePerk(item.id, 'title', e.target.value)} className="form-input mb-2" placeholder="Perk Title" />
+                                        <textarea value={item.desc} onChange={(e) => updatePerk(item.id, 'desc', e.target.value)} className="form-input" placeholder="Perk Description"></textarea>
+                                    </div>
+                                    <button className="del-btn" onClick={() => removePerk(item.id)}><X size={18} /></button>
+                                </div>
+                            ))}
+                            {(teaser.perks || []).length === 0 && (
+                                <div className="placeholder-tab p-12 text-center border-2 border-dashed border-border rounded-xl col-span-2">
+                                    <p className="text-secondary mb-4">No perks added yet.</p>
+                                    <Button variant="secondary" onClick={addPerk}>Add First Perk</Button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

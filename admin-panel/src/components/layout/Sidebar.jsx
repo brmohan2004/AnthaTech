@@ -46,7 +46,16 @@ const navSections = [
             { id: 'cnt-highlights', label: 'Highlights', icon: <Sparkles size={16} />, path: '/admin/content/highlights' },
             { id: 'cnt-process', label: 'Process', icon: <ListOrdered size={16} />, path: '/admin/content/process' },
             { id: 'cnt-reviews', label: 'Reviews', icon: <Star size={16} />, path: '/admin/content/reviews' },
-            { id: 'cnt-community', label: 'Community', icon: <UsersRound size={16} />, path: '/admin/content/community' },
+            {
+                id: 'cnt-community',
+                label: 'Community',
+                icon: <UsersRound size={16} />,
+                path: '/admin/content/community',
+                children: [
+                    { id: 'cnt-comm-teaser', label: 'Teaser & Tracks', path: '/admin/content/community' },
+                    { id: 'cnt-comm-members', label: 'Members', path: '/admin/content/community/members' },
+                ]
+            },
             { id: 'cnt-blog', label: 'Blog', icon: <FileText size={16} />, path: '/admin/content/blog' },
         ],
     },

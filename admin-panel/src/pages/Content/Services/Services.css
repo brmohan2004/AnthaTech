@@ -184,6 +184,10 @@
     background: var(--text-primary);
 }
 
+.theme-dot.custom-color {
+    border: 1px solid var(--border);
+}
+
 .status-pill {
     padding: 4px 10px;
     border-radius: 20px;
@@ -304,8 +308,15 @@
 
 .theme-options {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 12px;
+}
+
+.theme-color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 
 .theme-radio {
@@ -347,12 +358,59 @@
     padding: 32px;
     text-align: center;
     background: var(--bg-page);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.media-selector-box:hover {
+    border-color: var(--accent-blue);
+    background: var(--bg-hover);
+}
+
+.media-selector-box.has-image {
+    padding: 0;
+    border-style: solid;
+}
+
+.graphic-preview {
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.media-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.media-selector-box:hover .media-overlay {
+    opacity: 1;
 }
 
 .media-selector-box p {
     color: var(--text-secondary);
     font-size: 13px;
     margin: 12px 0;
+}
+
+.form-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
 }
 
 /* Repeatable Sections */

@@ -260,8 +260,8 @@ const AboutTabs = () => {
                                         <div className="placeholder"><ImageIcon size={40} /></div>
                                     )}
                                     <div className="flex-col gap-2">
-                                        <button 
-                                            type="button" 
+                                        <button
+                                            type="button"
                                             className="btn-link secondary"
                                             onClick={() => setIsMediaOpen(true)}
                                         >
@@ -285,14 +285,14 @@ const AboutTabs = () => {
                             <div className="rich-text-builder">
                                 {formData.about1.paragraph1.map((chunk, i) => (
                                     <div className="chunk-row" key={chunk.id}>
-                                        <select
-                                            className="color-select"
-                                            value={chunk.color}
-                                            onChange={(e) => updateParagraphChunk(1, chunk.id, 'color', e.target.value)}
-                                        >
-                                            <option value="blue">● Blue</option>
-                                            <option value="dark">● Dark</option>
-                                        </select>
+                                        <div className="chunk-color-picker-wrapper">
+                                            <input
+                                                type="color"
+                                                className="chunk-color-picker"
+                                                value={chunk.color === 'blue' ? '#3B82F6' : (chunk.color === 'dark' ? '#1E293B' : chunk.color)}
+                                                onChange={(e) => updateParagraphChunk(1, chunk.id, 'color', e.target.value)}
+                                            />
+                                        </div>
                                         <input
                                             type="text"
                                             className="form-input chunk-input"
@@ -311,14 +311,14 @@ const AboutTabs = () => {
                             <div className="rich-text-builder">
                                 {formData.about1.paragraph2.map((chunk, i) => (
                                     <div className="chunk-row" key={chunk.id}>
-                                        <select
-                                            className="color-select"
-                                            value={chunk.color}
-                                            onChange={(e) => updateParagraphChunk(2, chunk.id, 'color', e.target.value)}
-                                        >
-                                            <option value="blue">● Blue</option>
-                                            <option value="dark">● Dark</option>
-                                        </select>
+                                        <div className="chunk-color-picker-wrapper">
+                                            <input
+                                                type="color"
+                                                className="chunk-color-picker"
+                                                value={chunk.color === 'blue' ? '#3B82F6' : (chunk.color === 'dark' ? '#1E293B' : chunk.color)}
+                                                onChange={(e) => updateParagraphChunk(2, chunk.id, 'color', e.target.value)}
+                                            />
+                                        </div>
                                         <input
                                             type="text"
                                             className="form-input chunk-input"
@@ -399,16 +399,19 @@ const AboutTabs = () => {
                                 {formData.about2.stats.map((stat, i) => (
                                     <div className="stat-row" key={stat.id}>
                                         <div className="drag-handle"><GripVertical size={16} /></div>
-                                        <select
-                                            className="stat-color"
-                                            value={stat.color}
-                                            onChange={(e) => updateStat(stat.id, 'color', e.target.value)}
-                                        >
-                                            <option value="red">● Red</option>
-                                            <option value="yellow">● Yell</option>
-                                            <option value="green">● Green</option>
-                                            <option value="blue">● Blue</option>
-                                        </select>
+                                        <div className="stat-color-picker-wrapper">
+                                            <input
+                                                type="color"
+                                                className="stat-color-picker"
+                                                value={stat.color.startsWith('#') ? stat.color : (
+                                                    stat.color === 'red' ? '#EF4444' :
+                                                        stat.color === 'yellow' ? '#F59E0B' :
+                                                            stat.color === 'green' ? '#10B981' :
+                                                                '#3B82F6'
+                                                )}
+                                                onChange={(e) => updateStat(stat.id, 'color', e.target.value)}
+                                            />
+                                        </div>
                                         <input
                                             type="text"
                                             className="form-input stat-number"

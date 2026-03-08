@@ -3,11 +3,12 @@ import './Services.css';
 import {
     Plus, Search, Edit2, Trash2, ArrowLeft, Save,
     X, GripVertical, Image as ImageIcon, Layout,
-    ListChecks, TrendingUp, Palette, ChevronRight
+    ListChecks, TrendingUp, Palette, ChevronRight, UploadCloud
 } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
 import ConfirmModal from '../../../components/ui/ConfirmModal';
+import MediaPickerModal from '../../../components/ui/MediaPickerModal';
 import { getServices, getServiceBySlug, createService, updateService, deleteService, insertAuditLog } from '../../../api/content';
 import { getCurrentUser } from '../../../api/auth';
 
@@ -41,6 +42,7 @@ const ServicesManager = () => {
     const [toast, setToast] = useState(null);
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, name: '' });
     const [saving, setSaving] = useState(false);
+    const [isMediaOpen, setIsMediaOpen] = useState(false);
 
     useEffect(() => { loadServices(); }, []);
 
@@ -120,6 +122,12 @@ const ServicesManager = () => {
         setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
     };
 
+    const handleMediaSelect = (url) => {
+        setFormData(prev => ({ ...prev, graphic: url }));
+        setIsMediaOpen(false);
+        setToast({ type: 'success', message: 'Graphic selected.' });
+    };
+
     const saveService = async () => {
         setSaving(true);
         try {
@@ -127,13 +135,13 @@ const ServicesManager = () => {
             if (formData.id) {
                 const { id, heroBgColor, ...updates } = formData;
                 await updateService(id, { ...updates, hero_bg_color: heroBgColor });
-                
+
                 // Log the update
                 try {
                     await insertAuditLog({
                         admin_id: user?.id,
                         event_type: 'content',
-                        description: `Updated Service: ${formData.name}`,
+                        description: `Updated Service: ${formData.name} (${formData.status})`,
                         result: 'success'
                     });
                 } catch (logErr) {
@@ -148,14 +156,14 @@ const ServicesManager = () => {
                     await insertAuditLog({
                         admin_id: user?.id,
                         event_type: 'content',
-                        description: `Created Service: ${formData.name}`,
+                        description: `Created Service: ${formData.name} (${formData.status})`,
                         result: 'success'
                     });
                 } catch (logErr) {
                     console.error('Audit log failed:', logErr);
                 }
             }
-            setToast({ type: 'success', message: 'Service saved successfully.' });
+            setToast({ type: 'success', message: `Service "${formData.name}" saved as ${formData.status}.` });
             setCurrentView('table');
             await loadServices();
         } catch (err) {
@@ -238,8 +246,11 @@ const ServicesManager = () => {
                                     </td>
                                     <td>
                                         <div className="theme-indicator">
-                                            <span className={`theme-dot dot-${service.theme.toLowerCase()}`}></span>
-                                            {service.name === 'Branding' ? 'DkGreen' : service.name === 'Development' ? 'Charcoal' : 'Indigo'}
+                                            <span
+                                                className="theme-dot custom-color"
+                                                style={{ backgroundColor: service.theme.startsWith('#') ? service.theme : (service.theme === 'DkGreen' ? '#064e3b' : (service.theme === 'Indigo' ? '#3730a3' : '#1e293b')) }}
+                                            ></span>
+                                            {service.theme}
                                         </div>
                                     </td>
                                     <td>
@@ -329,15 +340,20 @@ const ServicesManager = () => {
                         </div>
                         <div className="form-col">
                             <div className="form-group">
-                                <label>Theme</label>
-                                <div className="theme-options">
-                                    {['DkGreen', 'Indigo', 'Charcoal'].map(t => (
-                                        <label key={t} className="theme-radio">
-                                            <input type="radio" name="theme" value={t} checked={formData.theme === t} onChange={handleFormChange} />
-                                            <span>{t === 'DkGreen' ? 'Dark Green' : t === 'Indigo' ? 'Indigo Blue' : 'Charcoal Black'}</span>
-                                        </label>
-                                    ))}
+                                <label>Status</label>
+                                <select name="status" value={formData.status} onChange={handleFormChange} className="form-input">
+                                    <option value="Draft">Draft</option>
+                                    <option value="published">Published</option>
+                                </select>
+                                <p className="form-hint">Only published services appear on the website.</p>
+                            </div>
+                            <div className="form-group">
+                                <label>Theme Color</label>
+                                <div className="color-picker-input">
+                                    <input type="color" name="theme" value={formData.theme.startsWith('#') ? formData.theme : '#10B981'} onChange={handleFormChange} />
+                                    <code>{formData.theme}</code>
                                 </div>
+                                <p className="form-hint">This color is used for dots and accents.</p>
                             </div>
                             <div className="form-group">
                                 <label>Hero BG Color</label>
@@ -348,10 +364,21 @@ const ServicesManager = () => {
                             </div>
                             <div className="form-group">
                                 <label>Service Graphic</label>
-                                <div className="media-selector-box">
-                                    <ImageIcon size={32} />
-                                    <p>Click to change graphic</p>
-                                    <Button variant="secondary" size="sm">Change</Button>
+                                <div
+                                    className={`media-selector-box ${formData.graphic ? 'has-image' : ''}`}
+                                    onClick={() => setIsMediaOpen(true)}
+                                >
+                                    {formData.graphic ? (
+                                        <img src={formData.graphic} alt="Service Graphic" className="graphic-preview" />
+                                    ) : (
+                                        <>
+                                            <ImageIcon size={32} />
+                                            <p>Click to select graphic</p>
+                                        </>
+                                    )}
+                                    <div className="media-overlay">
+                                        <Button variant="secondary" size="sm">Change Image</Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -422,6 +449,12 @@ const ServicesManager = () => {
             </div>
 
             {toast && <ToastMessage type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
+
+            <MediaPickerModal
+                isOpen={isMediaOpen}
+                onClose={() => setIsMediaOpen(false)}
+                onSelect={handleMediaSelect}
+            />
         </div>
     );
 };

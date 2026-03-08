@@ -108,14 +108,35 @@
     align-items: center;
 }
 
-.color-select {
-    padding: 8px;
+.chunk-color-picker-wrapper {
+    width: 38px;
+    height: 38px;
+    padding: 3px;
     border: 1px solid var(--border-input);
     border-radius: 6px;
     background: var(--bg-card);
-    font-size: 13px;
-    outline: none;
-    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chunk-color-picker {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: none;
+}
+
+.chunk-color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.chunk-color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
 }
 
 .color-select:focus {
@@ -169,20 +190,45 @@
     padding: 0 4px;
 }
 
-.stat-color {
-    padding: 8px;
+.stat-color-picker-wrapper {
+    width: 38px;
+    height: 38px;
+    padding: 3px;
     border: 1px solid var(--border-input);
     border-radius: 6px;
     background: var(--bg-card);
-    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-color-picker {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: none;
+}
+
+.stat-color-picker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.stat-color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
 }
 
 .stat-number {
-    width: 80px;
+    width: 60px; /* Reduced size */
+    color: var(--text-primary);
 }
 
 .stat-label {
-    flex: 1;
+    flex: 1; /* Increased size */
+    color: var(--text-primary);
 }
 
 /* Visual Simulate (About 1) */
@@ -211,6 +257,11 @@
 
 .sim-text-dark {
     color: var(--accent-navy);
+}
+
+/* Fallback for hex colors in simulation */
+.sim-text-custom {
+    color: inherit;
 }
 
 .sim-about-actions {

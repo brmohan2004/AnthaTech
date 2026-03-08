@@ -49,6 +49,11 @@ function updateSubmissionTime() {
 
 function mapHero(d) {
   if (!d) return null;
+  // Extract URLs if d.logos is an array of objects {url: '...'}
+  const logos = Array.isArray(d.logos) 
+    ? d.logos.map(l => typeof l === 'string' ? l : l.url).filter(Boolean)
+    : [];
+
   return {
     badge_text: d.badge || '',
     title_line_1: d.title1 || '',
@@ -58,7 +63,7 @@ function mapHero(d) {
     cta_primary_text: d.primary_cta_text || '',
     cta_primary_route: d.primary_cta_link || '/',
     cta_secondary_text: d.secondary_cta_text || '',
-    client_logos: Array.isArray(d.logos) ? d.logos : [],
+    client_logos: logos,
   };
 }
 
@@ -264,7 +269,19 @@ export async function fetchProcessSteps() {
     throw new Error(`Failed to load process steps: ${error.message}`);
   }
   if (!data) return null;
-  return { ...data, badge_text: data.badge, title_1: data.title1, title_2: data.title2 };
+
+  const mappedSteps = (data.steps || []).map(s => ({
+    ...s,
+    image_url: s.image || s.image_url || null
+  }));
+
+  return { 
+    ...data, 
+    badge_text: data.badge, 
+    title_1: data.title1, 
+    title_2: data.title2,
+    steps: mappedSteps
+  };
 }
 
 // ─── Reviews ─────────────────────────────────────────────────

@@ -214,6 +214,19 @@ const ProjectsManager = () => {
             }));
             setToast({ type: 'success', message: 'Image added to gallery from library.' });
         }
+        setMediaTarget(null);
+    };
+
+    const toggleRelatedProject = (projectId) => {
+        const id = parseInt(projectId);
+        setFormData(prev => {
+            const current = prev.relatedProjects || [];
+            if (current.includes(id)) {
+                return { ...prev, relatedProjects: current.filter(pId => pId !== id) };
+            } else {
+                return { ...prev, relatedProjects: [...current, id] };
+            }
+        });
     };
 
     const saveProject = async (status) => {
@@ -450,13 +463,30 @@ const ProjectsManager = () => {
 
                         <div className="panel">
                             <h3 className="panel-title">Related Projects</h3>
-                            <select className="form-input" defaultValue="">
-                                <option value="" disabled>Multi-select ▾</option>
-                                {projects.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                            <select
+                                className="form-input"
+                                value=""
+                                onChange={(e) => toggleRelatedProject(e.target.value)}
+                            >
+                                <option value="" disabled>Select project to link...</option>
+                                {projects
+                                    .filter(p => p.id !== formData.id && !(formData.relatedProjects || []).includes(p.id))
+                                    .map(p => <option key={p.id} value={p.id}>{p.title}</option>)
+                                }
                             </select>
                             <div className="tags-container mt-3">
-                                <span className="pill-tag">Digital in <X size={12} /></span>
-                                <span className="pill-tag">PayFlow Pro <X size={12} /></span>
+                                {(formData.relatedProjects || []).map(pId => {
+                                    const p = projects.find(proj => proj.id === pId);
+                                    if (!p) return null;
+                                    return (
+                                        <span className="pill-tag" key={pId}>
+                                            {p.title} <X size={12} onClick={() => toggleRelatedProject(pId)} />
+                                        </span>
+                                    );
+                                })}
+                                {(formData.relatedProjects || []).length === 0 && (
+                                    <span className="text-secondary" style={{ fontSize: '13px' }}>No related projects linked.</span>
+                                )}
                             </div>
                         </div>
                     </div>

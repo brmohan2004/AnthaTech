@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => {
         server: {
             proxy: {
                 '/api/cloudflare-analytics': {
-                    target: 'https://api.cloudflare.com/client/v4/graphql',
+                    target: 'https://api.cloudflare.com/client/v4',
                     changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/api\/cloudflare-analytics/, ''),
+                    // rewrite removed to avoid possible double-slash or missing segment issues
                     configure: (proxy, options) => {
                         proxy.on('proxyReq', (proxyReq, req, res) => {
                             // Securely attach the CF_API_TOKEN without compiling it into the React app

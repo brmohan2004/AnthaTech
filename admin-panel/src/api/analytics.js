@@ -35,7 +35,7 @@ export async function getCloudflareTraffic(accountId) {
             }
         `;
 
-            const res = await fetch('/api/cloudflare-analytics', {
+            const res = await fetch('/api/cloudflare-analytics/graphql', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query }),

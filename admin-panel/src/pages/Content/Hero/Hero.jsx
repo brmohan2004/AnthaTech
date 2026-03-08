@@ -21,6 +21,7 @@ const emptyData = {
 };
 
 const HeroManager = () => {
+    const [activePage, setActivePage] = useState('home');
     const [formData, setFormData] = useState(emptyData);
     const [savedData, setSavedData] = useState(emptyData);
     const [isDirty, setIsDirty] = useState(false);
@@ -31,8 +32,9 @@ const HeroManager = () => {
 
     useEffect(() => {
         async function load() {
+            setLoading(true);
             try {
-                const data = await getHeroContent();
+                const data = await getHeroContent(activePage);
                 const mapped = {
                     badge: data.badge || '',
                     title1: data.title1 || '',
@@ -47,13 +49,15 @@ const HeroManager = () => {
                 setFormData(mapped);
                 setSavedData(mapped);
             } catch (err) {
-                setToast({ type: 'error', message: 'Failed to load hero content.' });
+                // If row doesn't exist, use empty
+                setFormData(emptyData);
+                setSavedData(emptyData);
             } finally {
                 setLoading(false);
             }
         }
         load();
-    }, []);
+    }, [activePage]);
 
     // Check dirtiness
     useEffect(() => {
@@ -74,7 +78,7 @@ const HeroManager = () => {
     const handleSave = async () => {
         setSaving(true);
         try {
-            await updateHeroContent(formData);
+            await updateHeroContent(activePage, formData);
             setSavedData(formData);
             setIsDirty(false);
             setToast({ type: 'success', message: 'Hero section saved successfully.' });
@@ -125,7 +129,7 @@ const HeroManager = () => {
         try {
             const path = generateFilePath('hero-logos', file.name);
             const url = await uploadFile(path, file);
-            
+
             const newLogo = {
                 id: Date.now(),
                 url: url
@@ -135,7 +139,7 @@ const HeroManager = () => {
                 ...prev,
                 logos: [...prev.logos, newLogo]
             }));
-            
+
             setToast({ type: 'success', message: 'Logo uploaded successfully.' });
         } catch (err) {
             setToast({ type: 'error', message: 'Failed to upload logo.' });
@@ -152,9 +156,23 @@ const HeroManager = () => {
             {/* Header */}
             <header className="page-header">
                 <div className="header-breadcrumbs">
-                    Content &gt; <span>Hero Section</span>
+                    Content &gt; <span>Hero Section Manager</span>
                 </div>
                 <div className="header-actions">
+                    <div className="page-selector" style={{ marginRight: '16px' }}>
+                        <select
+                            className="form-input"
+                            style={{ width: '160px' }}
+                            value={activePage}
+                            onChange={(e) => setActivePage(e.target.value)}
+                        >
+                            <option value="home">Home Page</option>
+                            <option value="about">About Us</option>
+                            <option value="projects">Projects</option>
+                            <option value="community">Community</option>
+                            <option value="insights">Insights/Blog</option>
+                        </select>
+                    </div>
                     <Button
                         variant="ghost"
                         icon={<RotateCcw size={16} />}
@@ -338,11 +356,11 @@ const HeroManager = () => {
 
                             <div className="hero-sim-ctas">
                                 <button className="sim-btn sim-btn-primary">
-                                    {formData.primaryCtaText}
+                                    {formData.primary_cta_text || 'Primary CTA'}
                                     <span className="sim-btn-arrow">→</span>
                                 </button>
                                 <button className="sim-btn sim-btn-secondary">
-                                    {formData.secondaryCtaText}
+                                    {formData.secondary_cta_text || 'Secondary CTA'}
                                 </button>
                             </div>
 

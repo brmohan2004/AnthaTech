@@ -1,0 +1,50 @@
+.sd-hero {
+    padding: 160px 60px 100px 60px;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.sd-hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.sd-title {
+    font-size: 84px;
+    font-weight: 700;
+    color: #111827;
+    margin: 20px 0 10px 0;
+    letter-spacing: -2px;
+}
+
+.sd-subtitle {
+    font-size: 36px;
+    font-weight: 600;
+    color: #0c2d57;
+    margin-bottom: 30px;
+    line-height: 1.2;
+}
+
+.sd-description {
+    font-size: 20px;
+    color: #4b5563;
+    line-height: 1.6;
+    max-width: 700px;
+}
+
+@media (max-width: 768px) {
+    .sd-hero {
+        padding: 120px 30px 60px 30px;
+    }
+
+    .sd-title {
+        font-size: 52px;
+    }
+
+    .sd-subtitle {
+        font-size: 24px;
+    }
+}

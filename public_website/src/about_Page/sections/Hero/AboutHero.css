@@ -1,0 +1,70 @@
+.about-hero-section {
+    position: relative;
+    padding: 120px 60px 100px 60px;
+    background-color: #ffffff;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ah-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.ah-badge {
+    background: #f3f4f6;
+    padding: 8px 24px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.ah-badge span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+}
+
+.ah-title {
+    font-size: 80px;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    letter-spacing: -2px;
+}
+
+.ah-title .text-blue {
+    color: #0c2d57;
+    /* Deep navy blue */
+}
+
+.ah-subtitle {
+    font-size: 18px;
+    color: #0c2d57;
+    /* Same deep navy for the subtitle */
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+
+
+@media (max-width: 768px) {
+    .about-hero-section {
+        padding: 60px 30px;
+    }
+
+    .ah-title {
+        font-size: 56px;
+    }
+
+    .ah-subtitle {
+        font-size: 16px;
+    }
+}

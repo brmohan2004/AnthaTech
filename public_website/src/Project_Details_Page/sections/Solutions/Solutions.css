@@ -1,0 +1,70 @@
+.pd-solutions-section {
+    background-color: #eeeeee;
+    /* Light gray background matching the design */
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pd-solutions-container {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.pd-solutions-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 24px;
+}
+
+.pd-solutions-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.pd-solutions-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 32px;
+}
+
+.pd-solutions-text p {
+    font-size: 20px;
+    color: #111827;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-weight: 400;
+    text-align: left;
+    /* Text in the design is left-aligned within the centered container */
+}
+
+/* Override the centering for text block to make it look exactly like the design */
+.pd-solutions-text {
+    width: 100%;
+    max-width: 850px;
+    text-align: left;
+}
+
+.pd-solutions-text p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .pd-solutions-section {
+        padding: 60px 20px;
+    }
+
+    .pd-solutions-title {
+        font-size: 28px;
+    }
+
+    .pd-solutions-text p {
+        font-size: 18px;
+    }
+}

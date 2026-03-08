@@ -1,0 +1,41 @@
+.blog-list-section {
+    padding: 20px 0 80px 0;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.bl-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.bl-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    /* Increased gap slightly for the larger cards */
+    max-width: 1200px;
+    /* Increased from 900px */
+    margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+    .bl-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .bl-container {
+        padding: 0 30px;
+    }
+
+    .bl-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .blog-list-section {
+        padding: 40px 0 80px 0;
+    }
+}

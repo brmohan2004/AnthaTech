@@ -1,0 +1,160 @@
+.about-section {
+    padding: 20px 60px 60px 60px;
+    /* Increased bottom padding for more spacing */
+    background-color: #e5e5e5;
+    /* Light grey matching the design */
+    width: 100%;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centered */
+}
+
+.about-logo-wrapper {
+    margin-bottom: 16px;
+    /* Tighter against text */
+}
+
+.about-logo {
+    width: 140px;
+    height: 115px;
+    /* Sized explicitly based on user request */
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    /* Removes white background from jpg effectively against grey */
+}
+
+.about-text-large {
+    font-size: 48px;
+    /* Slightly scaled down to fit standard viewports */
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin: 0 0 20px 0;
+    /* Tightened paragraph gaps */
+    max-width: 1000px;
+    text-align: center;
+    /* Centered text */
+}
+
+.text-dark {
+    color: #111827;
+    /* Rich black */
+}
+
+.text-blue {
+    color: #1e3a5f;
+    /* The dark navy blue from the text */
+}
+
+/* Button styles matching the screenshot */
+.about-buttons-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    justify-content: center;
+    /* Center buttons */
+    /* Tighter above buttons */
+}
+
+.btn-dark-blue {
+    background-color: #11274b;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 16px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-dark-blue:hover {
+    background-color: #0c1a32;
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(12, 45, 87, 0.3);
+}
+
+.btn-white {
+    background-color: #ffffff;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 16px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    /* Slight shadow to pop off grey */
+    transition: all 0.3s ease;
+}
+
+.btn-white:hover {
+    background-color: #f9fafb;
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Animations (Reusing our fade-in-up logic) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .about-text-large {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-section {
+        padding: 80px 20px;
+    }
+
+    .about-text-large {
+        font-size: 32px;
+        letter-spacing: -1px;
+        margin-bottom: 32px;
+    }
+
+    .about-buttons-wrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-dark-blue,
+    .btn-white {
+        width: 100%;
+    }
+}

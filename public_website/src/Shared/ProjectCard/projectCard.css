@@ -1,0 +1,128 @@
+.project-card {
+    background-color: #f0f0f0;
+    /* Soft gray from design */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 1100px;
+    height: 560px;
+    position: relative;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.02);
+    text-decoration: none;
+    /* Removed underline */
+    color: inherit;
+    /* Keep text colors */
+    cursor: pointer;
+}
+
+/* Link Icon on Top Right of the card */
+.project-link-icon {
+    position: absolute;
+    top: -24px;
+    right: -24px;
+    width: 80px;
+    height: 80px;
+    background-color: #e5e5e5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111827;
+    transition: all 0.3s ease;
+    z-index: 10;
+    border: 10px solid #ffffff;
+    /* Thick white 'cutout' border */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    /* Optional subtle shadow to lift it */
+}
+
+.project-link-icon:hover {
+    background-color: #d4d4d4;
+    transform: scale(1.05);
+}
+
+/* Image side of the card */
+.project-image-wrapper {
+    width: 70%;
+    margin: 16px 0 16px 16px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+    transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-preview-img {
+    transform: scale(1.05);
+}
+
+/* Right side grey text info of card */
+.project-info {
+    width: 30%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.info-pill {
+    background-color: #e5e7eb;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 30px;
+    margin-bottom: 24px;
+}
+
+.project-name {
+    font-size: 36px;
+    font-weight: 600;
+    color: #000000;
+    letter-spacing: -1px;
+}
+
+@media (max-width: 1024px) {
+    .project-card {
+        width: 800px;
+    }
+
+    .project-image-wrapper {
+        width: 60%;
+    }
+
+    .project-info {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-card {
+        flex-direction: column;
+        width: 320px;
+        height: auto;
+    }
+
+    .project-image-wrapper {
+        width: 100%;
+        height: 300px;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .project-info {
+        width: 100%;
+        padding: 24px;
+    }
+}

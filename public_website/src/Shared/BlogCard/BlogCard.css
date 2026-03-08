@@ -1,0 +1,113 @@
+.blog-card {
+    background: transparent;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.blog-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #1a1a1b;
+    /* Matching the dark image vibe */
+}
+
+.blog-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.blog-card:hover .blog-card-image {
+    transform: scale(1.04);
+}
+
+.blog-card-arrow-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2;
+}
+
+.blog-card-arrow-btn:hover {
+    background-color: #ffffff;
+    transform: scale(1.1) rotate(45deg);
+}
+
+.blog-card-content {
+    padding: 0 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.blog-card-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    /* Light gray pill background like image */
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+}
+
+.blog-date-icon {
+    display: flex;
+    align-items: center;
+    color: #111827;
+}
+
+.blog-date {
+    font-size: 13px;
+    color: #111827;
+    font-weight: 500;
+}
+
+.blog-title {
+    font-size: 32px;
+    /* Large bold title like image */
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.25;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.8px;
+}
+
+.blog-description {
+    font-size: 17px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 1000px;
+}
+
+@media (max-width: 768px) {
+    .blog-title {
+        font-size: 26px;
+    }
+
+    .blog-description {
+        font-size: 15px;
+    }
+}

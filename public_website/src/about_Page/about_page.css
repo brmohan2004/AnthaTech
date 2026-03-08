@@ -1,0 +1,13 @@
+.about-page-container {
+    min-height: 100vh;
+    background-color: #ffffff;
+    /* Typically clean white background */
+    display: flex;
+    flex-direction: column;
+}
+
+.about-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

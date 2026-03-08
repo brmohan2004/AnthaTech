@@ -1,0 +1,231 @@
+.process-manager {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.manager-grid {
+    display: flex;
+    gap: 32px;
+}
+
+.form-column {
+    flex: 3;
+}
+
+.preview-column {
+    flex: 2;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+}
+
+.panel {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-navy);
+    margin-bottom: 24px;
+}
+
+.panel-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.step-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-page);
+}
+
+.card-top {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: grab;
+}
+
+.card-body {
+    padding: 20px;
+    display: flex;
+    gap: 24px;
+}
+
+.step-main-info {
+    flex: 3;
+}
+
+.step-media {
+    flex: 1;
+}
+
+.media-placeholder-box {
+    width: 100%;
+    height: 80px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    gap: 4px;
+}
+
+.btn-link {
+    background: transparent;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Simulation Preview */
+.process-sim {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.sim-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--bg-active);
+    color: var(--accent-blue);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.sim-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 40px;
+}
+
+.sim-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.sim-step-item {
+    border-left: 2px solid var(--border);
+    padding-left: 24px;
+    position: relative;
+}
+
+.sim-step-item::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--bg-card);
+    border: 2px solid var(--accent-blue);
+    border-radius: 50%;
+}
+
+.sim-step-header {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.sim-step-num {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--accent-blue);
+}
+
+.sim-step-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sim-step-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.sim-cta-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--text-primary);
+    color: var(--text-on-primary);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}

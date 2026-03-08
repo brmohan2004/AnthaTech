@@ -1,0 +1,89 @@
+.bulk-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 28px;
+    background: var(--accent-navy);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    z-index: 500;
+    animation: slideUp 0.25s ease;
+    color: var(--text-on-primary);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.bulk-bar-count {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bulk-bar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bulk-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.bulk-btn--publish {
+    background: var(--accent-green);
+    color: var(--status-green-text);
+}
+
+.bulk-btn--publish:hover {
+    background: var(--accent-green);
+}
+
+.bulk-btn--draft {
+    background: var(--accent-yellow);
+    color: var(--status-yellow-text);
+}
+
+.bulk-btn--draft:hover {
+    background: var(--accent-yellow);
+}
+
+.bulk-btn--delete {
+    background: var(--accent-red);
+    color: var(--text-on-primary);
+}
+
+.bulk-btn--delete:hover {
+    background: var(--accent-red-hover);
+}
+
+.bulk-btn--clear {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-on-primary);
+}
+
+.bulk-btn--clear:hover {
+    background: rgba(255, 255, 255, 0.25);
+}

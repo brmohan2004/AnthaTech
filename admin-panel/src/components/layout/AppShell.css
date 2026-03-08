@@ -1,0 +1,16 @@
+.app-shell {
+    min-height: 100vh;
+    background: var(--bg-page);
+    transition: background 0.2s ease;
+}
+
+.app-main {
+    margin-left: 240px;
+    margin-top: 56px;
+    min-height: calc(100vh - 56px);
+    transition: margin-left 0.25s ease;
+}
+
+.app-shell--collapsed .app-main {
+    margin-left: 68px;
+}

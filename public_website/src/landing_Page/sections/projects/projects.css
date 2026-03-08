@@ -1,0 +1,202 @@
+.projects-section {
+    padding: 20px 0 40px 60px;
+    /* Reduced vertical gaps */
+    background-color: #ffffff;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.projects-header-container {
+    max-width: 100%;
+    margin-bottom: 0;
+    padding-right: 60px;
+}
+
+.projects-header-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #0f2243;
+    color: #ffffff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.view-all-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.view-all-btn:hover {
+    background-color: #081224;
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(12, 45, 87, 0.3);
+}
+
+.view-all-btn:hover svg {
+    transform: translate(2px, -2px);
+}
+
+/* Badge styling similar to Hero */
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 9999px;
+    padding: 10px 24px;
+    margin-bottom: 24px;
+}
+
+.section-badge .badge-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Title styling */
+.projects-title {
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    color: #000000;
+    margin: 0;
+    /* Clear default <h2> margins to tightly couple with the cards */
+}
+
+.text-dark-blue {
+    color: #0f2c59;
+    /* A deep rich navy blue from the design overlay */
+}
+
+/* Carousel wrapper */
+.carousel-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scroll-behavior: smooth;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.carousel-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.projects-carousel {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+    padding: 32px 60px 0 0;
+    /* Adding 32px top padding prevents floating button overflow clipping */
+}
+
+
+
+/* Controls below carousel */
+.carousel-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding-right: 80px;
+    margin-top: 5px;
+}
+
+.control-btn {
+    width: 64px;
+    height: 64px;
+    background-color: #e2e8f0;
+    color: #111827;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background-color: #cbd5e1;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .projects-title {
+        font-size: 48px;
+    }
+}
+
+@media (max-width: 768px) {
+    .projects-section {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .projects-header-container {
+        padding-right: 0;
+    }
+
+    .projects-header-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+
+    .view-all-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+
+    .carousel-controls {
+        padding-right: 20px;
+    }
+}

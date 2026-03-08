@@ -1,0 +1,66 @@
+.projects-hero-section {
+    position: relative;
+    padding: 120px 60px 20px 60px;
+    background-color: #ffffff;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ph-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.ph-badge {
+    background: #f3f4f6;
+    padding: 8px 24px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.ph-badge span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+}
+
+.ph-title {
+    font-size: 80px;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    letter-spacing: -2px;
+}
+
+.ph-subtitle {
+    font-size: 18px;
+    color: #1e3a5f;
+    /* Deep navy blue to match design */
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.1px;
+    line-height: 1.5;
+    max-width: 900px;
+    /* To prevent too long lines */
+}
+
+@media (max-width: 768px) {
+    .projects-hero-section {
+        padding: 60px 30px;
+    }
+
+    .ph-title {
+        font-size: 56px;
+    }
+
+    .ph-subtitle {
+        font-size: 16px;
+    }
+}

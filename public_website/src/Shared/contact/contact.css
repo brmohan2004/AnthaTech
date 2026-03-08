@@ -1,0 +1,142 @@
+.contact-section {
+    padding: 80px 0 120px 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.contact-section.is-compact {
+    padding-top: 20px;
+    /* Reduced spacing from section above */
+}
+
+.contact-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.contact-title {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 60px;
+}
+
+/* CTA Button Container */
+.contact-cta-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.contact-cta-button {
+    background-color: #e5e7eb;
+    /* Light Gray */
+    height: 120px;
+    min-width: 520px;
+    /* Increased to fit text */
+    border-radius: 100px;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+    padding: 0 10px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* The expanding white circle */
+.circle-bg {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    /* Centered in the 120px height button */
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.cta-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 52px;
+    font-weight: 700;
+    color: #111827;
+    /* Sharper dark gray/black */
+    text-align: center;
+    padding-left: 100px;
+    /* Offset for circle */
+    padding-right: 20px;
+    /* Safety padding */
+    z-index: 2;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    white-space: nowrap;
+    backface-visibility: hidden;
+    /* Optimization to prevent blur */
+    -webkit-font-smoothing: antialiased;
+}
+
+.arrow-icon {
+    color: #000000;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 3;
+}
+
+/* HOVER EFFECTS */
+.contact-cta-button:hover .circle-bg {
+    left: 5px;
+    top: 5px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border-radius: 100px;
+}
+
+.contact-cta-button:hover .cta-text {
+    padding-left: 0;
+    padding-right: 0;
+    color: #000000;
+}
+
+.contact-cta-button:hover {
+    transform: scale(1.02);
+}
+
+.contact-cta-button:hover .arrow-icon {
+    transform: rotate(45deg) translateX(40px);
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .contact-title {
+        font-size: 48px;
+    }
+
+    .contact-cta-button {
+        min-width: 320px;
+        height: 80px;
+    }
+
+    .circle-bg {
+        width: 60px;
+        height: 60px;
+    }
+
+    .cta-text {
+        font-size: 32px;
+        padding-left: 70px;
+    }
+}

@@ -1,0 +1,306 @@
+.about-manager {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+/* Tabs Header */
+.tabs-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-page);
+}
+
+.tab-btn.active {
+    color: var(--accent-blue);
+    font-weight: 600;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-bottom-color: var(--text-on-primary);
+    margin-bottom: -1px;
+}
+
+/* Tab Content Layout */
+.tab-content {
+    background: var(--bg-card);
+    border-radius: 0 12px 12px 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    padding: 24px;
+    min-height: 500px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 32px;
+}
+
+.form-column {
+    flex: 3;
+}
+
+.preview-column {
+    flex: 2;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.preview-title {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Builder Controls */
+.image-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px dashed var(--border-input);
+    border-radius: 8px;
+    background: var(--bg-page);
+}
+
+.logo-preview-img {
+    height: 40px;
+    object-fit: contain;
+}
+
+.rich-text-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.chunk-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.color-select {
+    padding: 8px;
+    border: 1px solid var(--border-input);
+    border-radius: 6px;
+    background: var(--bg-card);
+    font-size: 13px;
+    outline: none;
+    width: 100px;
+}
+
+.color-select:focus {
+    border-color: var(--accent-blue);
+}
+
+.chunk-input {
+    flex: 1;
+}
+
+.icon-btn-danger {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-tertiary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.icon-btn-danger:hover {
+    background: var(--bg-red-tint);
+    color: var(--accent-red);
+    border-color: var(--status-red-bg);
+}
+
+/* Stats list */
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.drag-handle {
+    color: var(--text-tertiary);
+    cursor: grab;
+    padding: 0 4px;
+}
+
+.stat-color {
+    padding: 8px;
+    border: 1px solid var(--border-input);
+    border-radius: 6px;
+    background: var(--bg-card);
+    font-size: 13px;
+}
+
+.stat-number {
+    width: 80px;
+}
+
+.stat-label {
+    flex: 1;
+}
+
+/* Visual Simulate (About 1) */
+.about-sim {
+    padding: 24px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sim-about-logo {
+    height: 24px;
+    margin-bottom: 24px;
+}
+
+.sim-about-p {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 20px 0;
+}
+
+.sim-text-blue {
+    color: var(--accent-blue);
+}
+
+.sim-text-dark {
+    color: var(--accent-navy);
+}
+
+.sim-about-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+/* Visual Simulate (About 2) */
+.about-sim-2 {
+    padding: 32px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sim2-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--text-primary);
+    color: var(--text-on-primary);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.sim2-title {
+    margin: 0 0 24px 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.sim2-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+}
+
+.sim2-stat-card {
+    padding: 16px;
+    background: var(--bg-page);
+    border: 1px solid var(--bg-hover);
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sim2-stat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+}
+
+.bg-red {
+    background: var(--accent-red);
+}
+
+.bg-yellow {
+    background: var(--accent-yellow);
+}
+
+.bg-green {
+    background: var(--accent-green);
+}
+
+.bg-blue {
+    background: var(--accent-blue);
+}
+
+.sim2-stat-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.sim2-stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}

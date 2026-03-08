@@ -1,0 +1,247 @@
+.pd-gallery-section {
+    padding: 60px 40px 100px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+}
+
+.pd-gallery-container {
+    max-width: 1400px;
+    width: 100%;
+}
+
+.gallery-badge {
+    background: #f3f4f6;
+    padding: 8px 18px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.gallery-badge span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+/* Carousel Area */
+.gallery-carousel-area {
+    background-color: #f3f4f6;
+    border-radius: 24px;
+    padding: 60px 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.gallery-carousel-content {
+    width: 100%;
+    max-width: 1000px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+/* Base Mockup Frame styling */
+.mockup-frame {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.mockup-header {
+    background-color: #111827;
+    /* Dark almost black bar */
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+}
+
+.mockup-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.mockup-dot.red {
+    background-color: #ff5f56;
+}
+
+.mockup-dot.yellow {
+    background-color: #ffbd2e;
+}
+
+.mockup-dot.green {
+    background-color: #27c93f;
+}
+
+.mockup-body {
+    flex: 1;
+    background-color: #ffffff;
+    display: flex;
+}
+
+.mockup-body img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Main Carousel Mockup */
+.main-carousel-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    z-index: 2;
+    position: relative;
+}
+
+/* Side Mockups in Carousel */
+.side-frame {
+    position: absolute;
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 16 / 9;
+    top: 50%;
+    z-index: 1;
+    filter: blur(4px);
+    opacity: 0.7;
+    transition: all 0.5s ease;
+}
+
+.prev-frame {
+    left: 0;
+    transform: translate(-65%, -50%) scale(0.85);
+}
+
+.next-frame {
+    right: 0;
+    transform: translate(65%, -50%) scale(0.85);
+}
+
+/* Shadow Blur effects mimicking faded edges */
+.carousel-blur-left,
+.carousel-blur-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.carousel-blur-left {
+    left: 0;
+    background: linear-gradient(to right, #f3f4f6 20%, rgba(243, 244, 246, 0) 100%);
+}
+
+.carousel-blur-right {
+    right: 0;
+    background: linear-gradient(to left, #f3f4f6 20%, rgba(243, 244, 246, 0) 100%);
+}
+
+/* Nav Buttons */
+.gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    color: #4b5563;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    /* Added shadow */
+    transition: all 0.2s ease;
+}
+
+.gallery-nav-btn:hover {
+    background-color: #d1d5db;
+    color: #111827;
+}
+
+.gallery-nav-btn.prev {
+    left: 40px;
+}
+
+.gallery-nav-btn.next {
+    right: 40px;
+}
+
+.gallery-nav-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Static Mockups Layout */
+.gallery-static-mockups {
+    display: flex;
+    gap: 40px;
+}
+
+.mobile-mockup {
+    flex: 1;
+    max-width: 400px;
+    aspect-ratio: 9 / 16;
+}
+
+.desktop-mockup {
+    flex: 2;
+    aspect-ratio: 16 / 10;
+}
+
+@media (max-width: 1024px) {
+    .gallery-static-mockups {
+        flex-direction: column;
+    }
+
+    .mobile-mockup {
+        max-width: 100%;
+        aspect-ratio: auto;
+        height: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pd-gallery-section {
+        padding: 40px 20px 60px;
+    }
+
+    .gallery-carousel-area {
+        padding: 30px 10px;
+    }
+
+    .gallery-nav-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .gallery-nav-btn.prev {
+        left: 10px;
+    }
+
+    .gallery-nav-btn.next {
+        right: 10px;
+    }
+
+    .carousel-blur-left {
+        left: 0;
+    }
+
+    .carousel-blur-right {
+        right: 0;
+    }
+}

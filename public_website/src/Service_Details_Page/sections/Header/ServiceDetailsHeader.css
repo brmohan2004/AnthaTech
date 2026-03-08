@@ -1,0 +1,75 @@
+.service-details-header {
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.back-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    color: #111827;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.back-button:hover {
+    background-color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.back-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.get-in-touch-btn {
+    background-color: #0c2d57;
+    color: #ffffff;
+    padding: 12px 28px;
+    border-radius: 99px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(12, 45, 87, 0.15);
+}
+
+.get-quote-btn:hover {
+    background-color: #092140;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(12, 45, 87, 0.25);
+}
+
+@media (max-width: 768px) {
+    .service-details-header {
+        padding: 15px 20px;
+    }
+
+    .back-button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .get-quote-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}

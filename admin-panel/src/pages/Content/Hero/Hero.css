@@ -1,0 +1,311 @@
+.hero-manager {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.header-breadcrumbs {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.header-breadcrumbs span {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.manager-content {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+/* Panel Defaults */
+.form-panel {
+    flex: 3;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.preview-panel {
+    flex: 2;
+    position: sticky;
+    top: 88px;
+}
+
+.panel-title {
+    margin: 0 0 24px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent-navy);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.char-count {
+    color: var(--text-tertiary);
+    font-size: 12px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    transition: border-color 0.15s ease;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-section-divider {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Logos Grid */
+.logos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px;
+}
+
+.logo-preview-card {
+    position: relative;
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+}
+
+.logo-preview-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.logo-remove-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    color: var(--text-on-primary);
+    border: 2px solid var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.logo-preview-card:hover .logo-remove-btn {
+    opacity: 1;
+}
+
+.add-logo-btn {
+    height: 60px;
+    border: 1px dashed var(--border-input);
+    border-radius: 8px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.add-logo-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+/* Preview Sim */
+.preview-canvas {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.hero-sim {
+    padding: 40px 32px;
+    background: linear-gradient(180deg, var(--bg-page) 0%, var(--bg-card) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-sim-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    background: var(--bg-card);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.hero-sim-title {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.title-plain {
+    color: var(--accent-navy);
+}
+
+.title-gradient {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-navy));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-sim-subtitle {
+    margin: 0 0 32px 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.hero-sim-ctas {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 48px;
+}
+
+.sim-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+}
+
+.sim-btn-primary {
+    background: var(--accent-navy);
+    color: var(--text-on-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sim-btn-arrow {
+    color: var(--accent-blue);
+}
+
+.sim-btn-secondary {
+    background: var(--bg-subtle);
+    color: var(--accent-navy);
+    border: 1px solid var(--border);
+}
+
+.hero-sim-trusted p {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+}
+
+.sim-logos {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sim-logos img {
+    height: 24px;
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.sim-no-logos {
+    font-size: 12px;
+    color: var(--border-light);
+}
+
+@media (max-width: 1024px) {
+    .manager-content {
+        flex-direction: column;
+    }
+
+    .preview-panel {
+        top: 0;
+        width: 100%;
+    }
+}

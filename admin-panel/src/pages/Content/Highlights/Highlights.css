@@ -1,0 +1,226 @@
+.highlights-manager {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.manager-grid {
+    display: flex;
+    gap: 32px;
+}
+
+.form-column {
+    flex: 3;
+}
+
+.preview-column {
+    flex: 2;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+}
+
+.panel {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-navy);
+    margin-bottom: 24px;
+}
+
+.panel-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mt-3 {
+    margin-top: 16px;
+}
+
+/* Rich Text Builder */
+.rich-text-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chunk-row {
+    display: flex;
+    gap: 12px;
+}
+
+.color-select {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.chunk-input {
+    flex: 1;
+}
+
+/* Highlight Item Cards */
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.highlight-item-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-page);
+}
+
+.card-top {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: grab;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.svg-input-group {
+    display: flex;
+    gap: 20px;
+}
+
+.input-with-label {
+    flex: 1;
+}
+
+.svg-textarea {
+    font-family: monospace;
+    font-size: 12px;
+    height: 80px;
+}
+
+.svg-preview {
+    width: 100px;
+}
+
+.mini-svg-box {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-blue);
+}
+
+.mini-svg-box svg {
+    width: 32px;
+    height: 32px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* Simulation Preview */
+.highlights-sim {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.sim-header {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.sim-text-normal {
+    color: var(--accent-navy);
+}
+
+.sim-text-highlight {
+    color: var(--accent-blue);
+}
+
+.sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.sim-item {
+    padding: 24px;
+    background: var(--bg-page);
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sim-item-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    color: var(--accent-blue);
+}
+
+.sim-item-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sim-item-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-navy);
+    line-height: 1.2;
+}
+
+.preview-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+}

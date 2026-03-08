@@ -1,0 +1,15 @@
+/* Base reset and global styles for the app */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    color: #111827;
+    overflow-x: hidden;
+}
+
+/* Base utility classes can go here */

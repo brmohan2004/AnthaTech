@@ -1,0 +1,69 @@
+.insights-hero-section {
+    position: relative;
+    padding: 120px 60px 20px 60px;
+    background-color: #ffffff;
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ih-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.ih-badge {
+    background: #f3f4f6;
+    padding: 8px 24px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.ih-badge span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+}
+
+.ih-title {
+    font-size: 80px;
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    letter-spacing: -2.5px;
+}
+
+.ih-title .text-blue {
+    color: #0c2d57;
+    /* Consistent navy blue */
+}
+
+.ih-subtitle {
+    font-size: 18px;
+    color: #1e3a5f;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.2px;
+    line-height: 1.5;
+    max-width: 800px;
+}
+
+@media (max-width: 768px) {
+    .insights-hero-section {
+        padding: 100px 30px 40px 30px;
+    }
+
+    .ih-title {
+        font-size: 56px;
+    }
+
+    .ih-subtitle {
+        font-size: 16px;
+    }
+}

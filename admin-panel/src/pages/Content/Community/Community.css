@@ -1,0 +1,334 @@
+.community-manager {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.header-breadcrumbs {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.header-breadcrumbs span {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Tabs */
+.editor-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1px;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: var(--bg-card);
+    color: var(--accent-blue);
+    font-weight: 700;
+    padding-bottom: 13px;
+    margin-bottom: -1px;
+    z-index: 10;
+}
+
+.editor-panel {
+    border-top-left-radius: 0;
+    min-height: 600px;
+}
+
+/* Form Styles */
+.form-section {
+    padding: 24px;
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-navy);
+    margin-bottom: 20px;
+}
+
+.section-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-input);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.mt-6 {
+    margin-top: 24px;
+}
+
+.mt-4 {
+    margin-top: 16px;
+}
+
+.mt-2 {
+    margin-top: 8px;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.flex {
+    display: flex;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+/* Tracks */
+.repeatable-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.track-card {
+    padding: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+}
+
+.card-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-tertiary);
+}
+
+.drag-handle {
+    cursor: grab;
+}
+
+.del-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+.del-btn:hover {
+    color: var(--accent-red);
+}
+
+.track-inputs {
+    flex: 1;
+}
+
+.w-icon {
+    width: 50px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Stats */
+.stats-row {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-editor {
+    flex: 1;
+    background: var(--bg-card);
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    text-align: center;
+}
+
+.stat-lbl {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    border: none;
+}
+
+/* Members Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background: var(--bg-page);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.font-bold {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.track-tag {
+    padding: 2px 8px;
+    background: var(--bg-active);
+    color: var(--accent-blue);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-pill.pending {
+    background: var(--bg-yellow-tint);
+    color: var(--status-yellow-text);
+}
+
+.status-pill.approved {
+    background: var(--status-green-bg);
+    color: var(--status-green-text);
+}
+
+.member-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    background: var(--bg-hover);
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+}
+
+.action-btn:hover {
+    background: var(--border);
+}
+
+.action-btn.success {
+    color: var(--accent-green);
+}
+
+.action-btn.success:hover {
+    background: var(--status-green-bg);
+}
+
+.action-btn.danger {
+    color: var(--accent-red);
+}
+
+.action-btn.danger:hover {
+    background: var(--bg-red-tint);
+}
+
+/* Placeholder */
+.placeholder-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--text-tertiary);
+}
+
+.placeholder-icon {
+    margin-bottom: 24px;
+    color: var(--border);
+}
+
+.placeholder-tab h3 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.placeholder-tab p {
+    max-width: 400px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}

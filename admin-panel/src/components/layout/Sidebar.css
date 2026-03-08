@@ -1,0 +1,236 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 110;
+    transition: width 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar--collapsed {
+    width: 68px;
+}
+
+.sidebar-logo-container {
+    padding: 24px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-sidebar);
+    flex-shrink: 0;
+}
+
+.sidebar-logo-img {
+    max-height: 50px;
+    width: auto;
+    object-fit: contain;
+    transition: all 0.25s ease;
+}
+
+.sidebar-logo-text {
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 16px 8px 8px;
+    /* Removed 72px top padding since logo takes up the space */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Nav Item */
+.nav-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-nav);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.nav-item:hover {
+    background: var(--bg-active);
+    color: var(--text-nav-hover);
+}
+
+.nav-item--active {
+    background: var(--bg-active);
+    color: var(--accent-blue);
+    font-weight: 600;
+    border-left: 4px solid var(--accent-blue);
+    padding-left: 8px;
+}
+
+.nav-item--open {
+    color: var(--text-nav-hover);
+    font-weight: 600;
+}
+
+.nav-item-icon {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.nav-item-label {
+    flex: 1;
+}
+
+.nav-alert-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.nav-chevron {
+    display: flex;
+    color: var(--text-tertiary);
+    transition: transform 0.2s ease;
+}
+
+/* Sub Nav Children */
+.nav-children {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-left: 16px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+.nav-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-nav);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.nav-child:hover {
+    background: var(--bg-hover);
+    color: var(--text-nav-hover);
+}
+
+.nav-child--active {
+    background: var(--bg-active);
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
+.nav-child-icon {
+    display: flex;
+    flex-shrink: 0;
+    color: inherit;
+}
+
+/* Collapse Toggle */
+.sidebar-collapse-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 12px;
+    border: none;
+    border-top: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.sidebar-collapse-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+/* Collapsed state overrides */
+.sidebar--collapsed .nav-item {
+    justify-content: center;
+    padding: 10px;
+}
+
+.sidebar--collapsed .nav-children {
+    display: none;
+}
+
+.sidebar--collapsed .sidebar-collapse-btn {
+    justify-content: center;
+}
+
+.sidebar--collapsed .sidebar-logo-container {
+    padding: 16px 0;
+}
+
+.sidebar--collapsed .sidebar-logo-img {
+    max-height: 24px;
+    max-width: 40px;
+}

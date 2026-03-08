@@ -1,0 +1,141 @@
+.footer-section {
+    background-color: #f3f4f6;
+    padding: 80px 0 0 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 100px;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Logo Column */
+.footer-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.logo-img {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-subtext {
+    font-size: 14px;
+    color: #000000;
+    font-weight: 600;
+    padding-left: 10px;
+}
+
+/* Link Columns */
+.footer-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 30px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-links li a {
+    text-decoration: none;
+    color: #374151;
+    /* Gray-700 */
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.footer-links li a:hover {
+    color: #1d4ed8;
+    /* Primary Blue */
+    padding-left: 5px;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 40px;
+    margin-bottom: 40px;
+}
+
+.copyright {
+    font-size: 16px;
+    color: #111827;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Large Brand Display */
+.footer-brand-display {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.footer-brand-display h1 {
+    font-size: 240px;
+    font-weight: 500;
+    color: #e5e7eb;
+    /* Light Gray */
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: -8px;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .footer-brand-display h1 {
+        font-size: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-section {
+        padding: 60px 0 20px 0;
+    }
+
+    .footer-container {
+        padding: 0 20px;
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    .footer-heading {
+        margin-bottom: 20px;
+    }
+
+    .footer-brand-display h1 {
+        font-size: 100px;
+        letter-spacing: -3px;
+    }
+}

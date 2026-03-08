@@ -1,0 +1,32 @@
+.project-list-section {
+    padding: 0px 0 0px 0;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.pl-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.pl-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+    /* Large vertical gap between project cards */
+    width: 100%;
+}
+
+.pl-card-wrapper {
+    width: fit-content;
+}
+
+@media (max-width: 1200px) {
+    .pl-container {
+        padding: 0 20px;
+    }
+}

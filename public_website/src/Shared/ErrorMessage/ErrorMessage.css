@@ -1,0 +1,65 @@
+.error-message-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px dashed rgba(240, 90, 99, 0.3);
+    margin: 2rem auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.error-icon {
+    color: #F05A63;
+    opacity: 0.8;
+}
+
+.error-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.error-text {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.error-retry-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #3B82F6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.error-retry-btn:hover {
+    background-color: #2563EB;
+}
+
+/* Dark mode support if applicable */
+@media (prefers-color-scheme: dark) {
+    .error-title {
+        color: #f3f4f6;
+    }
+
+    .error-text {
+        color: #9ca3af;
+    }
+}

@@ -10,39 +10,8 @@ import logo from '../../assets/logo.png';
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_SECONDS = 600;
 
-function parseJwtId(accessToken) {
-    try {
-        const payload = JSON.parse(atob((accessToken || '').split('.')[1] || ''));
-        return payload?.session_id || payload?.jti || null;
-    } catch {
-        return null;
-    }
-}
+import { parseJwtId, parseUserAgent } from '../../utils/session';
 
-function parseUserAgent() {
-    const ua = navigator.userAgent || '';
-    const browser = ua.includes('Edg/')
-        ? 'Edge'
-        : ua.includes('Chrome/')
-            ? 'Chrome'
-            : ua.includes('Firefox/')
-                ? 'Firefox'
-                : ua.includes('Safari/')
-                    ? 'Safari'
-                    : 'Unknown';
-    const os = ua.includes('Windows')
-        ? 'Windows'
-        : ua.includes('Mac OS')
-            ? 'macOS'
-            : ua.includes('Linux')
-                ? 'Linux'
-                : ua.includes('Android')
-                    ? 'Android'
-                    : ua.includes('iPhone') || ua.includes('iPad')
-                        ? 'iOS'
-                        : 'Unknown';
-    return { browser, os };
-}
 
 const Login = () => {
     const navigate = useNavigate();

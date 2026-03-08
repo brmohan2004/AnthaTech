@@ -8,6 +8,8 @@ import {
   Copy,
 } from 'lucide-react';
 import { getActiveSessions, revokeSession } from '../../../api/content';
+import { useAuth } from '../../../contexts/AuthContext';
+import { parseJwtId } from '../../../utils/session';
 
 const formatDateTime = (value) => {
   if (!value) return '—';
@@ -16,17 +18,21 @@ const formatDateTime = (value) => {
   return d.toLocaleString();
 };
 
-const normalizeSession = (s) => ({
-  ...s,
-  current: !!s.is_current,
-  ip: s.ip_address || 'Unknown',
-  loginTime: formatDateTime(s.login_at),
-  lastActive: formatDateTime(s.last_active),
-  risk: s.is_current ? 'Current' : 'Active',
-  duration: s.last_active ? `Updated ${formatDateTime(s.last_active)}` : '—',
-});
+const normalizeSession = (s, currentJwtId) => {
+  const isCurrent = s.jwt_id === currentJwtId;
+  return {
+    ...s,
+    current: isCurrent,
+    ip: s.ip_address || 'Unknown',
+    loginTime: formatDateTime(s.login_at),
+    lastActive: formatDateTime(s.last_active),
+    risk: isCurrent ? 'Current' : 'Active',
+    duration: s.last_active ? `Updated ${formatDateTime(s.last_active)}` : '—',
+  };
+};
 
 const ActiveSessions = () => {
+  const { session: authSession } = useAuth();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,7 +42,8 @@ const ActiveSessions = () => {
       setLoading(true);
       setError(null);
       const data = await getActiveSessions();
-      setSessions((data || []).map(normalizeSession));
+      const currentJwtId = parseJwtId(authSession?.access_token);
+      setSessions((data || []).map(s => normalizeSession(s, currentJwtId)));
     } catch (err) {
       setError(err.message || 'Failed to load active sessions. Check your Supabase connection.');
     } finally {
@@ -44,9 +51,13 @@ const ActiveSessions = () => {
     }
   };
 
+
   useEffect(() => {
-    loadSessions();
-  }, []);
+    if (authSession) {
+      loadSessions();
+    }
+  }, [authSession]);
+
 
   const currentSession = useMemo(() => sessions.find((s) => s.current), [sessions]);
 
@@ -194,9 +205,8 @@ const ActiveSessions = () => {
                   <span className="session-meta">{session.lastActive}</span>
                 </td>
                 <td>
-                  <span className={`session-status session-${
-                    session.current ? 'active' : session.risk === 'Trusted device' ? 'trusted' : 'warn'
-                  }`}
+                  <span className={`session-status session-${session.current ? 'active' : session.risk === 'Trusted device' ? 'trusted' : 'warn'
+                    }`}
                   >
                     {session.current ? 'Current' : session.risk}
                   </span>

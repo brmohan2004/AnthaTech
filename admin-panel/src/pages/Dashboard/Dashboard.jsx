@@ -60,12 +60,12 @@ const Dashboard = () => {
     }, []);
 
     const quickActions = [
-        { label: 'Add new project', icon: <Plus size={20} />, bgColor: '#DBEAFE', iconColor: '#2563EB', path: '/admin/content/projects' },
-        { label: 'New blog Post', icon: <FileText size={20} />, bgColor: '#DCFCE7', iconColor: '#16A34A', path: '/admin/content/blog' },
-        { label: 'View messages', icon: <Mail size={20} />, bgColor: '#FEF9C3', iconColor: '#854D0E', path: '/admin/messages' },
-        { label: 'Media library', icon: <ImageIcon size={20} />, bgColor: '#E0E7FF', iconColor: '#4338CA', path: '/admin/media' },
-        { label: 'Edit hero section', icon: <Edit size={20} />, bgColor: '#FFE4E6', iconColor: '#BE123C', path: '/admin/content/hero' },
-        { label: 'config Settings', icon: <Settings size={20} />, bgColor: '#E5E7EB', iconColor: '#374151', path: '/admin/settings/general-info' },
+        { label: 'Add Project', desc: 'Create a new portfolio item', icon: <Plus size={20} />, color: '#3B82F6', path: '/admin/content/projects' },
+        { label: 'New Blog', desc: 'Write a new article or update', icon: <FileText size={20} />, color: '#10B981', path: '/admin/content/blog' },
+        { label: 'Messages', desc: 'Review client inquiries', icon: <Mail size={20} />, color: '#F59E0B', path: '/admin/messages' },
+        { label: 'Media Library', desc: 'Manage images and assets', icon: <ImageIcon size={20} />, color: '#6366F1', path: '/admin/media' },
+        { label: 'Hero Section', desc: 'Update landing page content', icon: <Edit size={20} />, color: '#EF4444', path: '/admin/content/hero' },
+        { label: 'Settings', desc: 'General system configuration', icon: <Settings size={20} />, color: '#6B7280', path: '/admin/settings/general-info' },
     ];
 
     return (
@@ -129,15 +129,27 @@ const Dashboard = () => {
                     </div>
                     <div className="actions-grid">
                         {quickActions.map((action, i) => (
-                            <button className="action-btn" key={i} onClick={() => navigate(action.path)}>
-                                <span className="action-icon-wrap" style={{ backgroundColor: action.bgColor, color: action.iconColor }}>
+                            <button
+                                className="action-card"
+                                key={i}
+                                onClick={() => navigate(action.path)}
+                                style={{ '--action-color': action.color }}
+                            >
+                                <div className="action-icon">
                                     {action.icon}
-                                </span>
-                                <span className="action-label">{action.label}</span>
+                                </div>
+                                <div className="action-info">
+                                    <span className="action-title">{action.label}</span>
+                                    <span className="action-desc">{action.desc}</span>
+                                </div>
+                                <div className="action-arrow">
+                                    <ArrowRight size={16} />
+                                </div>
                             </button>
                         ))}
                     </div>
                 </section>
+
 
                 {/* Recent Activity Log Panel */}
                 <section className="activity-log-panel panel">

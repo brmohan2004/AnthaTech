@@ -219,52 +219,109 @@
 .actions-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px 24px;
-  padding: 12px 0;
-  flex: 1;
+  gap: 16px;
+  padding: 4px 0;
 }
 
-.action-btn {
+.action-card {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 12px;
-  padding: 4px;
-  background: transparent;
-  border: none;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); */
   width: 100%;
-  min-width: 0; /* Prevents overflow */
+  position: relative;
+  overflow: hidden;
 }
 
-.action-btn:hover {
-  transform: translateX(4px);
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--action-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.action-icon-wrap {
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.05);
+  background: white;
+}
+
+.action-card:hover::before {
+  opacity: 1;
+}
+
+.action-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--action-color), transparent 88%);
+  color: var(--action-color);
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
 }
 
-.action-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  line-height: 1.3;
-  word-break: break-word; /* Allows text to wrap neatly */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.action-card:hover .action-icon {
+  background: var(--action-color);
+  color: white;
+  transform: scale(1.05);
 }
+
+.action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.action-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-navy);
+  line-height: 1.2;
+}
+
+.action-desc {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+.action-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  transform: translateX(-8px);
+}
+
+.action-card:hover .action-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--action-color);
+}
+
 
 /* Activity Log */
 .activity-log-panel {

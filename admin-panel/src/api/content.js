@@ -429,13 +429,14 @@ export async function upsertAdminSession(session) {
   };
 
   if (payload.jwt_id) {
-    const { data: existing, error: findError } = await supabase
+    const { data: results, error: findError } = await supabase
       .from('admin_sessions')
       .select('id')
       .eq('jwt_id', payload.jwt_id)
-      .maybeSingle();
+      .limit(1);
     if (findError) throw findError;
 
+    const existing = results?.[0];
     if (existing?.id) {
       const { error: updateError } = await supabase
         .from('admin_sessions')
@@ -446,9 +447,9 @@ export async function upsertAdminSession(session) {
     }
   }
 
-  const { data, error } = await supabase.from('admin_sessions').insert(payload).select('id').single();
+  const { data: inserted, error } = await supabase.from('admin_sessions').insert(payload).select('id');
   if (error) throw error;
-  return data?.id;
+  return inserted?.[0]?.id;
 }
 
 // ─── IP Blocklist ────────────────────────────────────────────

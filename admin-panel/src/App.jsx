@@ -34,9 +34,20 @@ import BackupExport from './pages/ApiKeys/Backup/Backup';
 import ApiKeys from './pages/ApiKeys/ApiKeys';
 import Login from './pages/Auth/Login';
 
-// A wrapper to pass the current path to AppShell
-const AppLayout = ({ children }) => {
+import { Outlet } from 'react-router-dom';
+
+// Admin Layout that persists across routes
+const AdminLayout = () => {
+    const { isAuthenticated, loading } = useAuth();
     const location = useLocation();
+
+    if (loading) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--text-secondary)' }}>Loading...</div>;
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/admin/login" replace />;
+    }
 
     // Quick map to get page titles based on path
     const titles = {
@@ -77,17 +88,9 @@ const AppLayout = ({ children }) => {
 
     return (
         <AppShell pageTitle={title} activePath={location.pathname}>
-            {children}
+            <Outlet />
         </AppShell>
     );
-};
-
-// Protected route wrapper using Supabase session
-const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, loading } = useAuth();
-    if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'var(--text-secondary)' }}>Loading...</div>;
-    if (!isAuthenticated) return <Navigate to="/admin/login" replace />;
-    return children;
 };
 
 function AppRoutes() {
@@ -97,7 +100,7 @@ function AppRoutes() {
 
     return (
         <Routes>
-            {/* Login Route */}
+            {/* Login Route - Separate from AdminLayout */}
             <Route
                 path="/admin/login"
                 element={
@@ -107,52 +110,54 @@ function AppRoutes() {
                 }
             />
 
-            {/* Protected Admin Routes */}
-            <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            {/* Admin Routes with Persistent Layout */}
+            <Route element={<AdminLayout />}>
+                <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
 
-            <Route path="/admin/dashboard" element={<ProtectedRoute><AppLayout><Dashboard /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/hero" element={<ProtectedRoute><AppLayout><HeroManager /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/about" element={<ProtectedRoute><AppLayout><AboutTabs /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/services" element={<ProtectedRoute><AppLayout><Services /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/projects" element={<ProtectedRoute><AppLayout><Projects /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/highlights" element={<ProtectedRoute><AppLayout><Highlights /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/process" element={<ProtectedRoute><AppLayout><ProcessSteps /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/reviews" element={<ProtectedRoute><AppLayout><Reviews /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/community" element={<ProtectedRoute><AppLayout><Community /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/community/applications" element={<ProtectedRoute><AppLayout><CommunityApplications /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/content/blog" element={<ProtectedRoute><AppLayout><Blog /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/messages" element={<ProtectedRoute><AppLayout><Inbox /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/media" element={<ProtectedRoute><AppLayout><MediaLibrary /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/users" element={<ProtectedRoute><AppLayout><AdminUsers /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/overview" element={<ProtectedRoute><AppLayout><SecurityOverview /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/sessions" element={<ProtectedRoute><AppLayout><ActiveSessions /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/mfa" element={<ProtectedRoute><AppLayout><MFASettings /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/passwords" element={<ProtectedRoute><AppLayout><PasswordPolicy /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/audit-log" element={<ProtectedRoute><AppLayout><AuditLog /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/ip-blocklist" element={<ProtectedRoute><AppLayout><IPBlocklist /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/security/alerts" element={<ProtectedRoute><AppLayout><SuspiciousActivityAlerts /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/analytics/traffic" element={<ProtectedRoute><AppLayout><TrafficOverview /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/analytics/performance" element={<ProtectedRoute><AppLayout><PerformanceMetrics /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/analytics/contact" element={<ProtectedRoute><AppLayout><ContactAnalytics /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/messages/contact-analytics" element={<ProtectedRoute><AppLayout><ContactAnalytics /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/analytics/community" element={<ProtectedRoute><AppLayout><CommunityAnalytics /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/settings/maintenance" element={<ProtectedRoute><AppLayout><Maintenance /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/settings/webhooks" element={<ProtectedRoute><AppLayout><Webhooks /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/settings/general-info" element={<ProtectedRoute><AppLayout><SiteSettings defaultTab="contact" /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/api-keys" element={<ProtectedRoute><AppLayout><ApiKeys /></AppLayout></ProtectedRoute>} />
-            <Route path="/admin/backup" element={<ProtectedRoute><AppLayout><BackupExport /></AppLayout></ProtectedRoute>} />
-            {/* Fallback for unbuilt pages */}
-            <Route path="*" element={
-                isAuthenticated ? (
-                    <AppLayout>
-                        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                            <h2>Page under construction</h2>
-                            <p>This section is currently being built.</p>
-                        </div>
-                    </AppLayout>
-                ) : <Navigate to="/admin/login" replace />
-            } />
+                <Route path="/admin/dashboard" element={<Dashboard />} />
+                <Route path="/admin/content/hero" element={<HeroManager />} />
+                <Route path="/admin/content/about" element={<AboutTabs />} />
+                <Route path="/admin/content/services" element={<Services />} />
+                <Route path="/admin/content/projects" element={<Projects />} />
+                <Route path="/admin/content/highlights" element={<Highlights />} />
+                <Route path="/admin/content/process" element={<ProcessSteps />} />
+                <Route path="/admin/content/reviews" element={<Reviews />} />
+                <Route path="/admin/content/community" element={<Community />} />
+                <Route path="/admin/community/applications" element={<CommunityApplications />} />
+                <Route path="/admin/content/blog" element={<Blog />} />
+                <Route path="/admin/messages" element={<Inbox />} />
+                <Route path="/admin/media" element={<MediaLibrary />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/security/overview" element={<SecurityOverview />} />
+                <Route path="/admin/security/sessions" element={<ActiveSessions />} />
+                <Route path="/admin/security/mfa" element={<MFASettings />} />
+                <Route path="/admin/security/passwords" element={<PasswordPolicy />} />
+                <Route path="/admin/security/audit-log" element={<AuditLog />} />
+                <Route path="/admin/security/ip-blocklist" element={<IPBlocklist />} />
+                <Route path="/admin/security/alerts" element={<SuspiciousActivityAlerts />} />
+                <Route path="/admin/analytics/traffic" element={<TrafficOverview />} />
+                <Route path="/admin/analytics/performance" element={<PerformanceMetrics />} />
+                <Route path="/admin/analytics/contact" element={<ContactAnalytics />} />
+                <Route path="/admin/messages/contact-analytics" element={<ContactAnalytics />} />
+                <Route path="/admin/analytics/community" element={<CommunityAnalytics />} />
+                <Route path="/admin/settings/maintenance" element={<Maintenance />} />
+                <Route path="/admin/settings/webhooks" element={<Webhooks />} />
+                <Route path="/admin/settings/general-info" element={<SiteSettings defaultTab="contact" />} />
+                <Route path="/admin/api-keys" element={<ApiKeys />} />
+                <Route path="/admin/backup" element={<BackupExport />} />
+
+                {/* Fallback for unbuilt pages */}
+                <Route path="*" element={
+                    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                        <h2>Page under construction</h2>
+                        <p>This section is currently being built.</p>
+                    </div>
+                } />
+            </Route>
+
+            {/* External Fallback */}
+            <Route path="*" element={<Navigate to="/admin/login" replace />} />
         </Routes>
     );
 }

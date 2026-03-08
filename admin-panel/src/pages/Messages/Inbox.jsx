@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Inbox.css';
 import {
     Search, Trash2, Eye, Mail, MailOpen,
-    CheckCircle2, X, Send, MoreVertical, Archive
+    CheckCircle2, X, Send, MoreVertical, Archive, Loader2
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
@@ -20,7 +20,7 @@ const Inbox = () => {
         try {
             setLoading(true);
             const data = await getContactMessages('All');
-            setMessages(data);
+            setMessages(data || []);
         } catch (err) {
             setToast({ type: 'error', message: err.message || 'Failed to load messages.' });
         } finally {
@@ -66,6 +66,15 @@ const Inbox = () => {
             setToast({ type: 'error', message: err.message || 'Failed to mark all as read.' });
         }
     };
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: '400px', flexDirection: 'column', gap: '16px', color: 'var(--text-secondary)' }}>
+                <Loader2 className="animate-spin" size={32} />
+                <p>Loading messages...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="inbox-manager">

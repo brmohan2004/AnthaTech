@@ -28,87 +28,92 @@ This repository contains two main applications:
 
 ---
 
-## 🛠️ Tech Stack
-
-- **Frontend**: [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
-- **Styling**: Vanilla CSS / CSS Modules
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Backend/Database**: [Supabase](https://supabase.com/)
-- **Media Storage**: Cloudinary / Supabase Storage
-- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/)
-
----
-
-## 📂 Project Structure
+##  Project Structure
 
 ```bash
 AnthaTech/
 ├── admin-panel/          # Admin Dashboard (Vite project)
-│   ├── src/
-│   │   ├── api/          # Admin-specific data handlers
-│   │   ├── components/   # Reusable UI elements
-│   │   └── pages/        # Management modules (Dashboard, Projects, etc.)
-│   └── public/           # Static assets (Favicon)
 ├── public_website/       # Public Landing Page (Vite project)
-│   ├── src/
-│   │   ├── api/          # Content fetching with Caching/Throttling
-│   │   ├── Shared/       # Global components (NavBar, Footer)
-│   │   └── landing_Page/ # Main landing page components
-│   └── public/           # Static assets & Cloudflare _redirects
 └── supabase/             # Database schema and SQL exports
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🔑 Environment Configuration & Credentials
 
-### Prerequisites
-- Node.js (v18+)
-- npm or yarn
+To run these projects, you need to set up environment variables in `.env` files within each project folder.
 
-### Local Installation
+### 1. Supabase Credentials (Required for both)
+- **VITE_SUPABASE_URL**: Go to your [Supabase Dashboard](https://app.supabase.com/) > Project Settings > API. Copy the **Project URL**.
+- **VITE_SUPABASE_ANON_KEY**: In the same API settings page, copy the **`anon` `public`** key.
+- **SUPABASE_SERVICE_ROLE_KEY** (Admin Panel only): In the same API settings page, copy the **`service_role` `secret`** key. (⚠️ *Keep this private*).
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/brmohan2004/AnthaTech.git
-   cd AnthaTech
-   ```
+### 2. Cloudinary Credentials (Admin Panel - Media)
+- **VITE_CLOUDINARY_CLOUD_NAME**: Found on your [Cloudinary Dashboard](https://cloudinary.com/console).
+- **VITE_CLOUDINARY_UPLOAD_PRESET**: Created in Cloudinary Settings > Upload > Upload presets (Enable "Unsigned" uploading).
 
-2. **Setup Admin Panel**:
-   ```bash
-   cd admin-panel
-   npm install
-   # Create .env and add Supabase/Cloudinary keys
-   npm run dev
-   ```
-
-3. **Setup Public Website**:
-   ```bash
-   cd ../public_website
-   npm install
-   # Create .env and add VITE_SUPABASE_URL/KEY
-   npm run dev
-   ```
+### 3. Brevo Credentials (Admin Panel - Emails)
+- **BREVO_API_KEY**: Sign up at [Brevo (Sendinblue)](https://www.brevo.com/) > SMTP & API > API Keys.
 
 ---
 
-## ☁️ Deployment
+## 🚀 How to Run Locally
 
-### Cloudflare Pages
-This project is configured for Cloudflare Pages with separate URLs:
-1. Connect your GitHub repo to Cloudflare.
-2. Create two projects:
-   - **Public Site**: Set root directory to `public_website`.
-   - **Admin Panel**: Set root directory to `admin-panel`.
-3. Add your Environment Variables in the Cloudflare Dashboard.
+### Step 1: Clone the repository
+```bash
+git clone https://github.com/brmohan2004/AnthaTech.git
+cd AnthaTech
+```
+
+### Step 2: Setup and Run Admin Panel
+```bash
+cd admin-panel
+npm install
+# Create a .env file based on .env.example and add your keys
+npm run dev
+```
+- **Access**: `http://localhost:5173` (or the port shown in terminal).
+
+### Step 3: Setup and Run Public Website
+Open a new terminal:
+```bash
+cd public_website
+npm install
+# Create a .env file based on .env.example and add your keys
+npm run dev
+```
+- **Access**: `http://localhost:5173` (Vite will likely use `5174` if Admin is running).
+
+---
+
+## ☁️ How to Deploy (Cloudflare Pages)
+
+We use **Cloudflare Pages** for deployment because it is fast and supports monorepos easily.
+
+### Deployment Steps:
+1.  **Connect GitHub**: Log in to [Cloudflare](https://dash.cloudflare.com/), go to **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
+2.  **Deploy Public Website**:
+    - **Project Name**: `anthatech-public`
+    - **Root directory**: `public_website`
+    - **Build command**: `npm run build`
+    - **Build output directory**: `dist`
+    - **Environment Variables**: Add your `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+3.  **Deploy Admin Panel**:
+    - Repeat the process with a new project.
+    - **Project Name**: `anthatech-admin`
+    - **Root directory**: `admin-panel`
+    - **Build command**: `npm run build`
+    - **Build output directory**: `dist`
+    - **Environment Variables**: Add all keys from the Admin `.env` file.
+
+### Custom Domains:
+You can assign custom domains like `anthatech.com` to the Public site and `admin.anthatech.com` to the Admin Panel in the **Custom Domains** tab of each Cloudflare project.
 
 ---
 
 ## 🔒 Security & Optimization
-- **SPA Support**: `_redirects` files ensure clean routing on Cloudflare.
-- **Form Protection**: Throttling logic in `api/content.js` prevents API abuse.
-- **Environment Protection**: `.gitignore` is configured to never leak your secrets.
+- **SPA Support**: `_redirects` files in the `public` folders ensure that page refreshes on sub-routes don't cause 404 errors.
+- **Protection**: `.ignore` files are set up to ensure your private `.env` keys are never pushed to GitHub.
 
 ---
 

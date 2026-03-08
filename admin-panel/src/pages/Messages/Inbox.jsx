@@ -137,18 +137,21 @@ const Inbox = () => {
                 </table>
             </div>
 
-            {/* Detail Drawer */}
-            <div className={`drawer-overlay ${selectedMsg ? 'open' : ''}`} onClick={() => setSelectedMsg(null)}>
-                <div className="detail-drawer" onClick={e => e.stopPropagation()}>
-                    <header className="drawer-header">
-                        <div className="header-meta">
-                            <Mail className="header-icon" />
-                            <span>Message Details</span>
-                        </div>
-                        <button className="close-btn" onClick={() => setSelectedMsg(null)}><X size={20} /></button>
-                    </header>
+            {/* Detail Drawer - Only render when a message is selected to prevent invisible wall issues */}
+            {selectedMsg && (
+                <div
+                    className="drawer-overlay open"
+                    onClick={() => setSelectedMsg(null)}
+                >
+                    <div className="detail-drawer" onClick={e => e.stopPropagation()}>
+                        <header className="drawer-header">
+                            <div className="header-meta">
+                                <Mail className="header-icon" />
+                                <span>Message Details</span>
+                            </div>
+                            <button className="close-btn" onClick={() => setSelectedMsg(null)}><X size={20} /></button>
+                        </header>
 
-                    {selectedMsg && (
                         <div className="drawer-body">
                             <div className="msg-info">
                                 <div className="info-row">
@@ -179,9 +182,9 @@ const Inbox = () => {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {toast && <ToastMessage type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
         </div>

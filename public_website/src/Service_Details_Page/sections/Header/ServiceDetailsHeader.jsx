@@ -29,7 +29,6 @@ const ServiceDetailsHeader = () => {
             <button
                 className="get-in-touch-btn"
                 onClick={openContactModal}
-                style={{ border: 'none', cursor: 'pointer', background: 'none' }}
             >
                 Get in touch
             </button>

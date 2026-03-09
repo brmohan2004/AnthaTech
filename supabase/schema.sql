@@ -93,6 +93,7 @@ CREATE TABLE projects (
     solutions         JSONB DEFAULT '[]'::jsonb,
     review            JSONB DEFAULT '{}'::jsonb,         -- { quote, author, role, company }
     related_projects  JSONB DEFAULT '[]'::jsonb,
+    preview_link      TEXT,
     status            TEXT DEFAULT 'draft' CHECK (status IN ('published', 'draft', 'scheduled')),
     publish_at        TIMESTAMPTZ,
     display_order     INT2 DEFAULT 0,

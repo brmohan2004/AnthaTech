@@ -3,11 +3,7 @@ import './Solutions.css';
 
 const Solutions = ({ project }) => {
     const solutions = Array.isArray(project?.solutions) ? project.solutions : [];
-    const fallbackText = [
-        'We developed a comprehensive digital strategy for RecruiterOne, creating an engaging website (designed by Tudor Dobritoiu) that showcased their value proposition and role as strategic partners. We also built an user friendly platform with social network integration, particularly LinkedIn, to streamline recruitment processes.',
-        "Our tailored solutions transformed RecruiterOne's digital presence into a powerful tool for attracting clients and candidates. This new digital ecosystem positions RecruiterOne as a forward-thinking leader in Romania's recruitment sector, better equipped to support entrepreneurs in finding top talent.",
-    ];
-    const paragraphs = solutions.length ? solutions : fallbackText;
+    const paragraphs = solutions;
     return (
         <section className="pd-solutions-section">
             <div className="pd-solutions-container">

@@ -26,7 +26,8 @@ const initialProjectState = {
     gallery: [],
     solutions: [{ id: 1, text: '' }],
     review: { quote: '', author: '', role: '', company: '' },
-    relatedProjects: []
+    relatedProjects: [],
+    previewLink: ''
 };
 
 
@@ -79,7 +80,7 @@ const ProjectsManager = () => {
         const solutions = Array.isArray(project.solutions) && project.solutions.length
             ? project.solutions.map((t, i) => ({ id: i + 1, text: t }))
             : [{ id: 1, text: '' }];
-        setFormData({ ...initialProjectState, ...project, challenges, solutions });
+        setFormData({ ...initialProjectState, ...project, challenges, solutions, previewLink: project.previewLink || project.preview_link || '' });
         setCurrentView('edit');
 
         // Load version history
@@ -238,6 +239,7 @@ const ProjectsManager = () => {
                 solutions: formData.solutions.map(s => s.text).filter(Boolean),
                 review: formData.review,
                 related_projects: formData.relatedProjects,
+                preview_link: formData.previewLink,
             };
             if (formData.id) {
                 await updateProject(formData.id, payload);
@@ -312,6 +314,11 @@ const ProjectsManager = () => {
                                     <label>Category Pill</label>
                                     <input type="text" name="category" value={formData.category} onChange={handleFormChange} className="form-input" placeholder="e.g. Human Recruit." />
                                 </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Project Preview Link (for Desktop Mockup)</label>
+                                <input type="text" name="previewLink" value={formData.previewLink} onChange={handleFormChange} className="form-input" placeholder="https://example.com" />
                             </div>
 
                             <div className="form-section-divider">Hero Description</div>

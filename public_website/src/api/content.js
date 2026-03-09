@@ -76,6 +76,7 @@ function mapProject(p) {
     category_pill: p.category || '',
     cover_image_url: p.image || '',
     gallery_urls: Array.isArray(p.gallery) ? p.gallery : [],
+    preview_link: p.preview_link || '',
     review_quote: p.review?.quote || '',
     review_author: p.review?.author || '',
     review_role: p.review?.role || '',
@@ -378,6 +379,21 @@ export async function submitContactMessage(message) {
     console.error('Error submitting contact message:', error);
     throw new Error(`Failed to send message: ${error.message}`);
   }
+
+  try {
+    const isQuote = message.message && message.message.startsWith('Quote Request');
+    const isBooking = message.message && message.message.startsWith('Booking Request');
+    const typeLabel = isQuote ? 'Quote' : isBooking ? 'Booking' : 'Message';
+
+    await supabase.from('notifications').insert({
+      type: 'message',
+      title: `New ${typeLabel} from ${message.name}`,
+      is_read: false
+    });
+  } catch (err) {
+    console.error('Failed to create notification', err);
+  }
+
   updateSubmissionTime();
   return true;
 }

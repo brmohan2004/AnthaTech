@@ -8,10 +8,10 @@ const ProjectDetailsHero = ({ project }) => {
         setIframeKey(prev => prev + 1);
     };
 
-    const badge = project?.category_pill || 'Human Recruitment';
-    const title = project?.title || 'RecruiterOne';
-    const desc = project?.hero_description || 'RecruiterOne is a specialized recruitment service provider, positioning itself as the ace up the sleeve for Romanian entrepreneurs.';
-    const previewUrl = project?.gallery_urls?.[0] || 'https://construo-2026.pages.dev/';
+    const badge = project?.category;
+    const title = project?.title;
+    const desc = project?.hero_description;
+    const previewUrl = project?.preview_link || (project?.gallery?.length > 0 ? project.gallery[0].url : project?.image);
 
     return (
         <section className="project-details-hero">
@@ -21,13 +21,23 @@ const ProjectDetailsHero = ({ project }) => {
                     <div className="monitor-outer-frame">
                         <div className="monitor-screen">
                             <div className="monitor-iframe-wrapper">
-                                <iframe
-                                    key={iframeKey}
-                                    src={previewUrl}
-                                    title="Project Website Preview"
-                                    className="monitor-iframe"
-                                    frameBorder="0"
-                                ></iframe>
+                                {previewUrl.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) || previewUrl.includes('supabase.co') ? (
+                                    <img
+                                        key={iframeKey}
+                                        src={previewUrl}
+                                        alt="Project Preview"
+                                        className="monitor-iframe"
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    <iframe
+                                        key={iframeKey}
+                                        src={previewUrl}
+                                        title="Project Website Preview"
+                                        className="monitor-iframe"
+                                        frameBorder="0"
+                                    ></iframe>
+                                )}
                             </div>
                             <div className="monitor-browser-bar">
                                 <button
@@ -65,9 +75,11 @@ const ProjectDetailsHero = ({ project }) => {
 
                 {/* Right side: Project Content */}
                 <div className="pd-content-section">
-                    <div className="pd-badge">
-                        <span>{badge}</span>
-                    </div>
+                    {badge && (
+                        <div className="pd-badge">
+                            <span>{badge}</span>
+                        </div>
+                    )}
                     <h1 className="pd-title">{title}</h1>
                     <div className="pd-description">
                         <h3>{title}</h3>

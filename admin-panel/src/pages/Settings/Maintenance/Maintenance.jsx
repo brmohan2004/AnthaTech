@@ -29,7 +29,7 @@ const defaultValues = {
 
 const Maintenance = () => {
     const { profile } = useAuth();
-    const isSuperAdmin = profile?.role === 'Super Admin';
+    const isSuperAdmin = profile?.role === 'Super Admin' || profile?.role === 'super_admin';
     const [data, setData] = useState(defaultValues);
     const [saved, setSaved] = useState(defaultValues);
     const [isDirty, setIsDirty] = useState(false);
@@ -385,9 +385,8 @@ const Maintenance = () => {
                 <div className="modal-overlay" onClick={() => setShowConfirm(false)}>
                     <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
                         <div
-                            className={`modal-icon-wrap ${
-                                pendingToggle ? 'icon-wrap--danger' : 'icon-wrap--success'
-                            }`}
+                            className={`modal-icon-wrap ${pendingToggle ? 'icon-wrap--danger' : 'icon-wrap--success'
+                                }`}
                         >
                             {pendingToggle ? (
                                 <AlertTriangle size={26} />

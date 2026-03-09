@@ -40,6 +40,7 @@ export async function getProjects() {
     publishAt: p.publish_at,
     coverImage: p.image,
     relatedProjects: p.related_projects || [],
+    previewLink: p.preview_link,
     status: p.status ? p.status.charAt(0).toUpperCase() + p.status.slice(1) : 'Draft',
   }));
 }
@@ -306,9 +307,28 @@ export async function getSiteConfig() {
 
 export async function updateSiteConfig(key, value) {
   invalidateLocalCache('site_config');
-  const { data, error } = await supabase.from('site_config').update({ value }).eq('key', key).select().single();
-  if (error) throw error;
-  return data;
+
+  // First attempt to update
+  const { data: updateData, error: updateError } = await supabase
+    .from('site_config')
+    .update({ value })
+    .eq('key', key)
+    .select();
+
+  if (updateError) throw updateError;
+
+  if (updateData && updateData.length > 0) {
+    return updateData[0];
+  } else {
+    // If not found, attempt to insert (assuming RLS allows it for admins)
+    const { data: insertData, error: insertError } = await supabase
+      .from('site_config')
+      .insert([{ key, value }])
+      .select()
+      .single();
+    if (insertError) throw insertError;
+    return insertData;
+  }
 }
 
 export async function updateSiteConfigBatch(entries) {

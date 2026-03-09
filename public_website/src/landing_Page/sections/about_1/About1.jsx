@@ -105,8 +105,18 @@ export default function About1() {
                 )}
 
                 <div className="about-buttons-wrapper fade-in-up delay-3">
-                    <button className="btn-dark-blue" onClick={openContactModal}>{about.btn_primary}</button>
-                    <button className="btn-white" onClick={() => navigate('/about')}>{about.btn_secondary}</button>
+                    <button className="btn-dark-blue" onClick={() => {
+                        const txt = (about.btn_primary || '').toLowerCase();
+                        if (txt.includes('about')) navigate('/about');
+                        else if (txt.includes('service')) navigate('/services');
+                        else openContactModal();
+                    }}>{about.btn_primary}</button>
+                    <button className="btn-white" onClick={() => {
+                        const txt = (about.btn_secondary || '').toLowerCase();
+                        if (txt.includes('about')) navigate('/about');
+                        else if (txt.includes('service')) navigate('/services');
+                        else navigate('/about'); // default fallback
+                    }}>{about.btn_secondary}</button>
                 </div>
             </div>
         </section>

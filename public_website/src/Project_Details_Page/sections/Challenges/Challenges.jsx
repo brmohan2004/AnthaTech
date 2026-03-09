@@ -3,11 +3,7 @@ import './Challenges.css';
 
 const Challenges = ({ project }) => {
     const challenges = Array.isArray(project?.challenges) ? project.challenges : [];
-    const fallbackText = [
-        'RecruiterOne approached us with the challenge of establishing a strong digital presence that would resonate with Romanian entrepreneurs while also streamlining their recruitment processes.',
-        'The task at hand was to create a platform that not only showcased their services but also integrated effortlessly with social networks to enhance their recruitment capabilities.',
-    ];
-    const paragraphs = challenges.length ? challenges : fallbackText;
+    const paragraphs = challenges;
     return (
         <section className="pd-challenges-section">
             <div className="pd-challenges-container">

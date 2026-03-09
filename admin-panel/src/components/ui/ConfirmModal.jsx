@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import './ConfirmModal.css';
 
@@ -11,12 +11,18 @@ const ConfirmModal = ({
     variant = 'danger',
     requireTyping = false,
     typeConfirmWord = 'DELETE',
-    typedValue = '',
-    onTypedChange,
     onConfirm,
     onCancel,
     icon,
 }) => {
+    const [typedValue, setTypedValue] = useState('');
+
+    useEffect(() => {
+        if (!isOpen) {
+            setTypedValue('');
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const isConfirmDisabled = requireTyping && typedValue !== typeConfirmWord;
@@ -37,7 +43,7 @@ const ConfirmModal = ({
                             type="text"
                             className="modal-type-input"
                             value={typedValue}
-                            onChange={(e) => onTypedChange && onTypedChange(e.target.value)}
+                            onChange={(e) => setTypedValue(e.target.value)}
                             placeholder={typeConfirmWord}
                             autoFocus
                         />

@@ -11,6 +11,7 @@ import ToastMessage from '../../components/ui/ToastMessage';
 import ConfirmModal from '../../components/ui/ConfirmModal';
 import { listAdminProfiles, updateAdminProfile, deleteAdminProfile } from '../../api/auth';
 import { createAdminUser, deleteAdminUser } from '../../api/edgeFunctions';
+import { getSiteConfig, updateSiteConfig } from '../../api/content';
 import { useAuth } from '../../contexts/AuthContext';
 
 const ROLES = ['Admin', 'Editor', 'Viewer'];
@@ -105,8 +106,16 @@ const AdminUsers = () => {
                 lastLogin: u.last_sign_in ? new Date(u.last_sign_in).toLocaleDateString() : 'Never',
                 status: u.status ? u.status.charAt(0).toUpperCase() + u.status.slice(1) : 'Active',
             })));
+
+            const config = await getSiteConfig();
+            if (config.role_permissions) {
+                const parsedConfig = typeof config.role_permissions === 'string'
+                    ? JSON.parse(config.role_permissions)
+                    : config.role_permissions;
+                setRolePermissions(prev => ({ ...prev, ...parsedConfig }));
+            }
         } catch (err) {
-            setToast({ type: 'error', message: 'Failed to load admin users.' });
+            setToast({ type: 'error', message: 'Failed to load admin users or permissions.' });
         } finally {
             setLoading(false);
         }
@@ -235,14 +244,21 @@ const AdminUsers = () => {
         });
     };
 
-    const saveAccessPerms = () => {
+    const saveAccessPerms = async () => {
         const user = accessModal.user;
-        setRolePermissions(prev => ({
-            ...prev,
-            [user.role]: { ...prev[user.role], ...accessPerms },
-        }));
-        setAccessModal({ open: false, user: null });
-        setToast({ type: 'success', message: `Access permissions updated for "${user.name}".` });
+        const newPerms = {
+            ...rolePermissions,
+            [user.role]: { ...rolePermissions[user.role], ...accessPerms },
+        };
+
+        try {
+            await updateSiteConfig('role_permissions', JSON.stringify(newPerms));
+            setRolePermissions(newPerms);
+            setAccessModal({ open: false, user: null });
+            setToast({ type: 'success', message: `Access permissions updated for "${user.name}".` });
+        } catch (err) {
+            setToast({ type: 'error', message: 'Failed to save access permissions.' });
+        }
     };
 
     const getPermSummary = (perms) => {

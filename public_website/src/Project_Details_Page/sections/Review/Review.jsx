@@ -2,9 +2,11 @@ import React from 'react';
 import './Review.css';
 
 const Review = ({ project }) => {
-    const quote = project?.review_quote || 'Working with digitalhero has been incredible. Their strategic design expertise and versatility quickly grasped our vision, transforming our landing page design, creating pitch decks, and delivering comprehensive branding services. Unmatched B2B design agency!';
-    const authorName = project?.review_author || 'Lokesh Kumar';
-    const authorRole = project?.review_role ? `${project.review_role}${project.review_company ? ' @ ' + project.review_company : ''}` : 'CEO @ RecruiterOne';
+    const quote = project?.review_quote;
+    const authorName = project?.review_author;
+    const authorRole = project?.review_role ? `${project.review_role}${project.review_company ? ' @ ' + project.review_company : ''}` : '';
+
+    if (!quote) return null;
 
     return (
         <section className="pd-review-section">

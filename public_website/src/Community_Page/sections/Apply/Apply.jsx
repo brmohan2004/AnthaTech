@@ -26,12 +26,13 @@ const Apply = () => {
         setLoading(true);
 
         try {
+            const dbTrack = form.track === 'Student' ? 'student' : 'professional';
+
             await submitCommunityApplication({
                 full_name: form.name,
                 email: form.email,
-                portfolio_url: form.portfolio,
-                track: form.track,
-                message: form.message,
+                track: dbTrack,
+                message: `Portfolio: ${form.portfolio}\n\n${form.message}`,
                 status: 'pending'
             });
             setSubmitted(true);

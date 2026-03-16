@@ -228,7 +228,7 @@ body {
 }
 
 .client-brand-logo {
-    height: 48px;
+    height: 38px;
     width: auto;
     object-fit: contain;
     opacity: 0.5;
@@ -325,6 +325,14 @@ body {
     .logo-placeholder {
         width: 100px;
         height: 40px;
+    }
+
+    .client-brand-logo {
+        height: 28px;
+    }
+
+    .logo-track {
+        gap: 40px;
     }
 }
 

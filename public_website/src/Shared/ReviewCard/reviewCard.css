@@ -11,6 +11,7 @@
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
     margin: 0 15px;
+    box-sizing: border-box;
 }
 
 .review-card:hover {
@@ -75,10 +76,12 @@
 
 @media (max-width: 768px) {
     .review-card {
-        width: 320px;
-        min-width: 320px;
+        width: 100%;
+        min-width: 0;
         height: auto;
-        padding: 40px;
+        min-height: 350px;
+        padding: 30px;
+        margin: 15px 0;
     }
 
     .review-quote {

@@ -15,7 +15,7 @@
 
 .apply-title {
     font-size: 52px;
-    font-weight: 800;
+    font-weight: 400;
     color: #111827;
     margin: 20px 0 16px;
     letter-spacing: -1.5px;
@@ -172,7 +172,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .apply-section {
-        padding: 70px 30px;
+        padding: 70px 20px;
     }
 
     .apply-title {

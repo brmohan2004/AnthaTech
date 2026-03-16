@@ -161,7 +161,7 @@
 
 .pd-title {
     font-size: 64px;
-    font-weight: 700;
+    font-weight: 400;
     color: #111827;
     margin-bottom: 30px;
     line-height: 1.1;
@@ -199,10 +199,32 @@
 
 @media (max-width: 768px) {
     .project-details-hero {
-        padding: 60px 20px;
+        padding: 100px 20px 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+    }
+
+    .pd-hero-container {
+        flex-direction: column;
+        gap: 40px;
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    .pd-content-section {
+        align-items: flex-start;
+        text-align: left;
     }
 
     .pd-title {
         font-size: 36px;
+        text-align: left;
+    }
+
+    .pd-description p {
+        text-align: left;
     }
 }

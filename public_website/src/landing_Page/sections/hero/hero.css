@@ -21,7 +21,7 @@ body {
 
 .hero-section {
     position: relative;
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@ body {
     justify-content: center;
     background-color: #ffffff;
     padding: 100px 0px 40px;
-    /* Removed horizontal padding, added bottom padding */
+    overflow: hidden;
 }
 
 /* Beautiful simulated window shadow overlay from the design */
@@ -180,7 +180,7 @@ body {
 }
 
 .logo-carousel-container {
-    width: 100vw;
+    width: 100%;
     /* Full viewport width */
     max-width: 100%;
     /* Take full width */
@@ -310,7 +310,7 @@ body {
     .hero-cta-group {
         flex-direction: column;
         width: 100%;
-        padding: 0 40px;
+        padding: 0 20px;
     }
 
     .btn {

@@ -20,7 +20,7 @@
 
 .benefits-headline {
     font-size: 52px;
-    font-weight: 700;
+    font-weight: 400;
     max-width: 400px;
     line-height: 1.1;
     margin: 0;
@@ -63,6 +63,10 @@
 }
 
 @media (max-width: 768px) {
+    .benefits-section {
+        padding: 40px 20px;
+    }
+
     .benefits-headline {
         font-size: 36px;
     }

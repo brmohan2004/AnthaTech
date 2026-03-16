@@ -9,7 +9,6 @@ import InsightsPage from './insights_Page/InsightsPage';
 import ServiceDetailsPage from './Service_Details_Page/ServiceDetailsPage';
 import CommunityPage from './Community_Page/CommunityPage';
 import FollowUs from './Shared/FollowUs/FollowUs';
-import ChatAssistant from './Shared/ChatAssistant/ChatAssistant';
 import ScrollToTop from './Shared/ScrollToTop';
 // ModalProvider moved to main.jsx
 
@@ -28,7 +27,6 @@ function App() {
                 <Route path="/community" element={<CommunityPage />} />
             </Routes>
             <FollowUs />
-            <ChatAssistant />
         </Router>
     );
 }

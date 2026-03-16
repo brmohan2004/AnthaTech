@@ -54,7 +54,7 @@
 
 .cp-hero-title {
     font-size: 80px;
-    font-weight: 800;
+    font-weight: 400;
     color: #ffffff;
     line-height: 1.05;
     letter-spacing: -3px;
@@ -148,7 +148,7 @@
 
 @media (max-width: 768px) {
     .cp-hero {
-        padding: 80px 30px 60px;
+        padding: 80px 20px 60px;
     }
 
     .cp-hero-title {

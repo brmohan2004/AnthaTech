@@ -63,7 +63,7 @@ export default function About1() {
                 {Array.isArray(about.paragraph_1) && about.paragraph_1.length > 0 ? (
                     <h2 className="about-text-large fade-in-up delay-1">
                         {about.paragraph_1.map((item, i) => (
-                            <span key={i} className={item.type === 'blue' ? 'text-blue' : 'text-dark'}>
+                            <span key={i} className={(item.color === 'blue' || item.type === 'blue') ? 'text-blue' : 'text-dark'}>
                                 {item.text}{' '}
                                 {item.br && <br />}
                             </span>
@@ -82,7 +82,7 @@ export default function About1() {
                 {Array.isArray(about.paragraph_2) && about.paragraph_2.length > 0 ? (
                     <h2 className="about-text-large fade-in-up delay-2">
                         {about.paragraph_2.map((item, i) => (
-                            <span key={i} className={item.type === 'blue' ? 'text-blue' : 'text-dark'}>
+                            <span key={i} className={(item.color === 'blue' || item.type === 'blue') ? 'text-blue' : 'text-dark'}>
                                 {item.text}{' '}
                                 {item.br && <br />}
                             </span>

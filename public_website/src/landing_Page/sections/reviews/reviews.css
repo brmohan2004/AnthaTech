@@ -19,20 +19,18 @@
 
 .reviews-title {
     font-size: 56px;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.1;
     letter-spacing: -1.5px;
     margin: 0;
 }
 
 .reviews-carousel-wrapper {
-    width: 100vw;
+    width: 100%;
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     overflow: hidden;
+    margin: 40px -20px 0;
+    width: calc(100% + 40px);
 }
 
 /* Edge Fade Masks */
@@ -61,7 +59,7 @@
 .reviews-track {
     display: flex;
     width: max-content;
-    animation: scrollInfinite 80s linear infinite;
+    animation: scrollInfinite 40s linear infinite;
     padding: 20px 0;
 }
 
@@ -75,8 +73,7 @@
     }
 
     100% {
-        transform: translateX(calc(-630px * 4));
-        /* Width of card (600) + margin (30) * original steps (4) */
+        transform: translateX(-33.3333%);
     }
 }
 
@@ -116,21 +113,61 @@
     .reviews-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 30px;
+        gap: 20px;
+        margin-bottom: 20px;
     }
 
     .reviews-container {
-        padding: 0 30px;
+        padding: 0 20px;
     }
 
-    @keyframes scrollInfinite {
+    .reviews-carousel-wrapper {
+        margin: 20px 0;
+        width: 100%;
+        height: 600px;
+        position: relative;
+    }
+
+    /* Vertical Edge Masks for Mobile */
+    .reviews-carousel-wrapper::before,
+    .reviews-carousel-wrapper::after {
+        width: 100%;
+        height: 150px;
+        left: 0;
+        right: 0;
+    }
+
+    .reviews-carousel-wrapper::before {
+        top: 0;
+        background: linear-gradient(to bottom, #ffffff 10%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    .reviews-carousel-wrapper::after {
+        bottom: 0;
+        top: auto;
+        background: linear-gradient(to top, #ffffff 10%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    .reviews-track {
+        flex-direction: column;
+        width: 100%;
+        height: max-content;
+        animation: scrollInfiniteVertical 25s linear infinite;
+        padding: 0;
+    }
+
+    @keyframes scrollInfiniteVertical {
         0% {
-            transform: translateX(0);
+            transform: translateY(0);
         }
 
         100% {
-            transform: translateX(calc(-350px * 4));
-            /* Width on mobile */
+            transform: translateY(-33.3333%);
         }
+    }
+
+    .reviews-nav {
+        display: none;
+        /* Hide navigation on mobile as it's auto-scrolling vertically */
     }
 }

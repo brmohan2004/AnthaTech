@@ -207,12 +207,14 @@ export async function fetchProjects() {
 
 
 export async function fetchProjectBySlug(slug) {
-  return withCache(`project_${slug}`, async () => {
+  const trimmedSlug = (slug || '').trim();
+  return withCache(`project_${trimmedSlug}`, async () => {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
-      .eq('slug', slug)
+      .ilike('slug', `%${trimmedSlug}%`)
       .eq('status', 'published')
+      .limit(1)
       .maybeSingle();
     if (error) {
       console.error(`Error fetching project (${slug}):`, error);

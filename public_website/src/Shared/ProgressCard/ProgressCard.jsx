@@ -6,7 +6,10 @@ export default function ProgressCard({ title, description, activeIndex, index, t
     const isPassed = diff < 0;
     const isActive = diff === 0;
 
-    let translateX = diff * 120;
+    const isMobile = window.innerWidth <= 768;
+    const shiftAmount = isMobile ? 30 : 120;
+
+    let translateX = diff * shiftAmount;
     let scale = 1 - (Math.abs(diff) * 0.04);
     let opacity = 1;
 

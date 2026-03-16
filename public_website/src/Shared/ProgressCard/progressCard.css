@@ -66,9 +66,34 @@
 
 @media (max-width: 1024px) {
     .progress-card {
-        width: 90%;
+        width: 100%;
         height: auto;
-        min-height: 400px;
-        padding: 40px;
+        min-height: 480px;
+        padding: 40px 30px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+        gap: 30px;
+    }
+
+    .progress-card-content {
+        max-width: 100%;
+    }
+
+    .progress-card-title {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .progress-card-description {
+        font-size: 16px;
+    }
+
+    .progress-card-image {
+        width: 100%;
+    }
+
+    .progress-card-image img {
+        max-width: 280px;
     }
 }

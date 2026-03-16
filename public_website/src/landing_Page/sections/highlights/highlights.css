@@ -17,7 +17,7 @@
 /* Typography for the large header */
 .highlights-header {
     font-size: 48px;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.25;
     color: #000000;
     max-width: 900px;
@@ -78,7 +78,7 @@
 
 @media (max-width: 768px) {
     .highlights-section {
-        padding: 80px 24px;
+        padding: 80px 20px;
     }
 
     .highlights-container {

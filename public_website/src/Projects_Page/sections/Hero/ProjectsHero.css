@@ -32,7 +32,7 @@
 
 .ph-title {
     font-size: 80px;
-    font-weight: 600;
+    font-weight: 400;
     color: #000000;
     line-height: 1.1;
     margin: 0 0 20px 0;
@@ -53,14 +53,29 @@
 
 @media (max-width: 768px) {
     .projects-hero-section {
-        padding: 60px 30px;
+        padding: 100px 20px 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        text-align: left;
+    }
+
+    .ph-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .ph-title {
-        font-size: 56px;
+        font-size: 52px;
+        text-align: left;
     }
 
     .ph-subtitle {
         font-size: 16px;
+        text-align: left;
     }
 }

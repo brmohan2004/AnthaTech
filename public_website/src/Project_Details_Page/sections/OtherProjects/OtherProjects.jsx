@@ -2,15 +2,12 @@ import React, { useRef } from 'react';
 import ProjectCard from '../../../Shared/ProjectCard/ProjectCard';
 import './OtherProjects.css';
 
-const FALLBACK_PROJECTS = [
-    { id: 'project-1', pill: 'Human Recruitment', title: 'RecruiterOne', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1000&q=80' },
-    { id: 'project-2', pill: 'FinTech', title: 'PayStream', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80' },
-    { id: 'project-3', pill: 'E-commerce', title: 'ShopSmart', image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1000&q=80' },
-];
-
 const OtherProjects = ({ projects: externalProjects }) => {
     const scrollContainerRef = useRef(null);
-    const projects = externalProjects?.length ? externalProjects : FALLBACK_PROJECTS;
+    const projects = externalProjects || [];
+
+    // Don't render section if there are no real related projects
+    if (!projects.length) return null;
 
     const scrollLeft = () => {
         if (scrollContainerRef.current) {

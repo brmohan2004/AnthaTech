@@ -27,7 +27,9 @@ const initialProjectState = {
     solutions: [{ id: 1, text: '' }],
     review: { quote: '', author: '', role: '', company: '' },
     relatedProjects: [],
-    previewLink: ''
+    previewLink: '',
+    mobile_image: null,
+    tab_image: null
 };
 
 
@@ -49,7 +51,8 @@ const ProjectsManager = () => {
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, title: '' });
     const [historyOpen, setHistoryOpen] = useState(false);
     const [statusFilter, setStatusFilter] = useState('All');
-    const [mediaTarget, setMediaTarget] = useState(null); // 'cover' | 'gallery'
+    const [mediaTarget, setMediaTarget] = useState(null); // 'cover' | 'gallery' | 'mobile' | 'tab'
+    const [activeEditorTab, setActiveEditorTab] = useState('info'); // 'info' | 'gallery'
 
     const loadProjects = async () => {
         try {
@@ -214,6 +217,12 @@ const ProjectsManager = () => {
                 gallery: [...(prev.gallery || []), { id: Date.now(), url }]
             }));
             setToast({ type: 'success', message: 'Image added to gallery from library.' });
+        } else if (mediaTarget === 'mobile') {
+            setFormData(prev => ({ ...prev, mobile_image: url }));
+            setToast({ type: 'success', message: 'Mobile image updated.' });
+        } else if (mediaTarget === 'tab') {
+            setFormData(prev => ({ ...prev, tab_image: url }));
+            setToast({ type: 'success', message: 'Tab image updated.' });
         }
         setMediaTarget(null); // Close the modal
     };
@@ -240,6 +249,8 @@ const ProjectsManager = () => {
                 review: formData.review,
                 related_projects: formData.relatedProjects,
                 preview_link: formData.previewLink,
+                mobile_image: formData.mobile_image,
+                tab_image: formData.tab_image,
             };
             if (formData.id) {
                 await updateProject(formData.id, payload);
@@ -295,126 +306,183 @@ const ProjectsManager = () => {
                     </div>
                 </header>
 
+                <div className="sched-tab-bar" style={{ marginBottom: 24, padding: '0 32px' }}>
+                    <button
+                        className={`sched-tab ${activeEditorTab === 'info' ? 'sched-tab-active' : ''}`}
+                        onClick={() => setActiveEditorTab('info')}
+                    >
+                        Tab 1: Information
+                    </button>
+                    <button
+                        className={`sched-tab ${activeEditorTab === 'gallery' ? 'sched-tab-active' : ''}`}
+                        onClick={() => setActiveEditorTab('gallery')}
+                    >
+                        Tab 2: Gallery Images
+                    </button>
+                </div>
+
                 <div className="editor-grid">
                     {/* Main Column */}
                     <div className="editor-maincol">
-
-                        <div className="panel">
-                            <h3 className="panel-title">Basic Info</h3>
-                            <div className="form-group">
-                                <label>Project Title</label>
-                                <input type="text" name="title" value={formData.title} onChange={handleFormChange} className="form-input" placeholder="e.g. RecruiterOne" />
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Slug <span className="slug-check">{formData.slug ? '✓ exists' : ''}</span></label>
-                                    <input type="text" name="slug" value={formData.slug} onChange={handleFormChange} className="form-input" placeholder="e.g. recruiterone" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Category Pill</label>
-                                    <input type="text" name="category" value={formData.category} onChange={handleFormChange} className="form-input" placeholder="e.g. Human Recruit." />
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Project Preview Link (for Desktop Mockup)</label>
-                                <input type="text" name="previewLink" value={formData.previewLink} onChange={handleFormChange} className="form-input" placeholder="https://example.com" />
-                            </div>
-
-                            <div className="form-section-divider">Hero Description</div>
-                            <textarea name="heroDescription" value={formData.heroDescription} onChange={handleFormChange} className="form-input textarea-tall" placeholder="Hero text here..."></textarea>
-                        </div>
-
-                        <div className="panel">
-                            <div className="panel-header-flex">
-                                <h3 className="panel-title mb-0">Challenges</h3>
-                                <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={() => addArrayItem('challenges')}>Add Challenge</Button>
-                            </div>
-                            <div className="repeatable-list">
-                                {formData.challenges.map((item) => (
-                                    <div className="repeatable-item" key={item.id}>
-                                        <GripVertical size={16} className="drag-handle" />
-                                        <textarea className="form-input" value={item.text} onChange={(e) => handleArrayChange('challenges', item.id, e.target.value)} placeholder="Challenge description..."></textarea>
-                                        <button className="icon-btn-danger" onClick={() => removeArrayItem('challenges', item.id)}><X size={16} /></button>
+                        {activeEditorTab === 'info' ? (
+                            <>
+                                <div className="panel">
+                                    <h3 className="panel-title">Basic Info</h3>
+                                    <div className="form-group">
+                                        <label>Project Title</label>
+                                        <input type="text" name="title" value={formData.title} onChange={handleFormChange} className="form-input" placeholder="e.g. RecruiterOne" />
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="panel">
-                            <div className="panel-header-flex">
-                                <h3 className="panel-title mb-0">Gallery Images</h3>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <button className="btn-link secondary" onClick={() => setMediaTarget('gallery')}>
-                                        📁 Media Library
-                                    </button>
-                                    <label className="btn-link secondary cursor-pointer">
-                                        <Plus size={14} /> Add Images
-                                        <input
-                                            type="file"
-                                            multiple
-                                            hidden
-                                            accept="image/*"
-                                            onChange={handleGalleryUpload}
-                                            disabled={saving}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="gallery-preview-grid">
-                                {formData.gallery && formData.gallery.length > 0 ? (
-                                    formData.gallery.map(img => (
-                                        <div key={img.id} className="gallery-preview-item">
-                                            <img src={img.url} alt="Gallery" />
-                                            <button className="del-btn" onClick={() => removeGalleryImage(img.id)}><X size={12} /></button>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>Slug <span className="slug-check">{formData.slug ? '✓ exists' : ''}</span></label>
+                                            <input type="text" name="slug" value={formData.slug} onChange={handleFormChange} className="form-input" placeholder="e.g. recruiterone" />
                                         </div>
-                                    ))
-                                ) : (
-                                    <div className="gallery-placeholder">
-                                        <ImageIcon size={32} />
-                                        <span>No images added</span>
+                                        <div className="form-group">
+                                            <label>Category Pill</label>
+                                            <input type="text" name="category" value={formData.category} onChange={handleFormChange} className="form-input" placeholder="e.g. Human Recruit." />
+                                        </div>
                                     </div>
-                                )}
-                            </div>
-                        </div>
 
-                        <div className="panel">
-                            <div className="panel-header-flex">
-                                <h3 className="panel-title mb-0">Solutions</h3>
-                                <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={() => addArrayItem('solutions')}>Add Solution</Button>
-                            </div>
-                            <div className="repeatable-list">
-                                {formData.solutions.map((item) => (
-                                    <div className="repeatable-item" key={item.id}>
-                                        <GripVertical size={16} className="drag-handle" />
-                                        <textarea className="form-input" value={item.text} onChange={(e) => handleArrayChange('solutions', item.id, e.target.value)} placeholder="Solution description..."></textarea>
-                                        <button className="icon-btn-danger" onClick={() => removeArrayItem('solutions', item.id)}><X size={16} /></button>
+                                    <div className="form-group">
+                                        <label>Project Preview Link (for Desktop Mockup)</label>
+                                        <input type="text" name="previewLink" value={formData.previewLink} onChange={handleFormChange} className="form-input" placeholder="https://example.com" />
                                     </div>
-                                ))}
-                            </div>
-                        </div>
 
-                        <div className="panel">
-                            <h3 className="panel-title">Client Review</h3>
-                            <div className="form-group">
-                                <label>Quote</label>
-                                <textarea name="quote" value={formData.review.quote} onChange={handleReviewChange} className="form-input" placeholder='"Working with Antha Tech was..."'></textarea>
+                                    <div className="form-section-divider">Hero Description</div>
+                                    <textarea name="heroDescription" value={formData.heroDescription} onChange={handleFormChange} className="form-input textarea-tall" placeholder="Hero text here..."></textarea>
+                                </div>
+
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Challenges</h3>
+                                        <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={() => addArrayItem('challenges')}>Add Challenge</Button>
+                                    </div>
+                                    <div className="repeatable-list">
+                                        {formData.challenges.map((item) => (
+                                            <div className="repeatable-item" key={item.id}>
+                                                <GripVertical size={16} className="drag-handle" />
+                                                <textarea className="form-input" value={item.text} onChange={(e) => handleArrayChange('challenges', item.id, e.target.value)} placeholder="Challenge description..."></textarea>
+                                                <button className="icon-btn-danger" onClick={() => removeArrayItem('challenges', item.id)}><X size={16} /></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Solutions</h3>
+                                        <Button variant="secondary" size="sm" icon={<Plus size={14} />} onClick={() => addArrayItem('solutions')}>Add Solution</Button>
+                                    </div>
+                                    <div className="repeatable-list">
+                                        {formData.solutions.map((item) => (
+                                            <div className="repeatable-item" key={item.id}>
+                                                <GripVertical size={16} className="drag-handle" />
+                                                <textarea className="form-input" value={item.text} onChange={(e) => handleArrayChange('solutions', item.id, e.target.value)} placeholder="Solution description..."></textarea>
+                                                <button className="icon-btn-danger" onClick={() => removeArrayItem('solutions', item.id)}><X size={16} /></button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="panel">
+                                    <h3 className="panel-title">Client Review</h3>
+                                    <div className="form-group">
+                                        <label>Quote</label>
+                                        <textarea name="quote" value={formData.review.quote} onChange={handleReviewChange} className="form-input" placeholder='"Working with Antha Tech was..."'></textarea>
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>Author</label>
+                                            <input type="text" name="author" value={formData.review.author} onChange={handleReviewChange} className="form-input" placeholder="Lokesh Kumar" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Role</label>
+                                            <input type="text" name="role" value={formData.review.role} onChange={handleReviewChange} className="form-input" placeholder="CEO" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Company</label>
+                                            <input type="text" name="company" value={formData.review.company} onChange={handleReviewChange} className="form-input" placeholder="RecruiterOne" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="gallery-tabs-view">
+                                {/* Mobile View Image */}
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Mobile View (1 image)</h3>
+                                        <Button variant="secondary" size="sm" onClick={() => setMediaTarget('mobile')}>📁 Media Library</Button>
+                                    </div>
+                                    <div className="gallery-single-preview">
+                                        {formData.mobile_image ? (
+                                            <div className="gallery-preview-item large">
+                                                <img src={formData.mobile_image} alt="Mobile View" />
+                                                <button className="del-btn" onClick={() => setFormData(prev => ({ ...prev, mobile_image: null }))}><X size={12} /></button>
+                                            </div>
+                                        ) : (
+                                            <div className="gallery-placeholder">
+                                                <ImageIcon size={32} />
+                                                <span>No mobile image added</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-secondary mt-2" style={{ fontSize: '12px' }}>This image will update on the mobile portion of the public website.</p>
+                                </div>
+
+                                {/* Desktop View Gallery */}
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Desktop View (Gallery - multiple)</h3>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button className="btn-link secondary" onClick={() => setMediaTarget('gallery')}>📁 Media Library</button>
+                                            <label className="btn-link secondary cursor-pointer">
+                                                <Plus size={14} /> Add Images
+                                                <input type="file" multiple hidden accept="image/*" onChange={handleGalleryUpload} disabled={saving} />
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="gallery-preview-grid">
+                                        {formData.gallery && formData.gallery.length > 0 ? (
+                                            formData.gallery.map(img => (
+                                                <div key={img.id} className="gallery-preview-item">
+                                                    <img src={img.url} alt="Gallery" />
+                                                    <button className="del-btn" onClick={() => removeGalleryImage(img.id)}><X size={12} /></button>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="gallery-placeholder">
+                                                <ImageIcon size={32} />
+                                                <span>No gallery images added</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-secondary mt-2" style={{ fontSize: '12px' }}>These images will update on the scrolling portion of the public website.</p>
+                                </div>
+
+                                {/* Tab View Image */}
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Tab View (1 image)</h3>
+                                        <Button variant="secondary" size="sm" onClick={() => setMediaTarget('tab')}>📁 Media Library</Button>
+                                    </div>
+                                    <div className="gallery-single-preview">
+                                        {formData.tab_image ? (
+                                            <div className="gallery-preview-item large">
+                                                <img src={formData.tab_image} alt="Tab View" />
+                                                <button className="del-btn" onClick={() => setFormData(prev => ({ ...prev, tab_image: null }))}><X size={12} /></button>
+                                            </div>
+                                        ) : (
+                                            <div className="gallery-placeholder">
+                                                <ImageIcon size={32} />
+                                                <span>No tab image added</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-secondary mt-2" style={{ fontSize: '12px' }}>This image will show on the tab/desktop secondary portion.</p>
+                                </div>
                             </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Author</label>
-                                    <input type="text" name="author" value={formData.review.author} onChange={handleReviewChange} className="form-input" placeholder="Lokesh Kumar" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Role</label>
-                                    <input type="text" name="role" value={formData.review.role} onChange={handleReviewChange} className="form-input" placeholder="CEO" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Company</label>
-                                    <input type="text" name="company" value={formData.review.company} onChange={handleReviewChange} className="form-input" placeholder="RecruiterOne" />
-                                </div>
-                            </div>
-                        </div>
+                        )}
 
                     </div>
 

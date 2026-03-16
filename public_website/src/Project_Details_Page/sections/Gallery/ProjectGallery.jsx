@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import './ProjectGallery.css';
+import ImageLightbox from './ImageLightbox';
 
 const ProjectGallery = ({ project }) => {
-    const FALLBACK_IMAGES = [
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80",
-        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1400&q=80"
-    ];
     const carouselImages = (Array.isArray(project?.gallery_urls) && project.gallery_urls.length)
         ? project.gallery_urls
-        : FALLBACK_IMAGES;
+        : [];
 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [lightboxSrc, setLightboxSrc] = useState(null);
 
     const handleNext = () => {
         setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
@@ -21,6 +18,9 @@ const ProjectGallery = ({ project }) => {
         setCurrentIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
     };
 
+    const openLightbox = (src) => setLightboxSrc(src);
+    const closeLightbox = () => setLightboxSrc(null);
+
     return (
         <section className="pd-gallery-section">
             <div className="pd-gallery-container">
@@ -28,7 +28,8 @@ const ProjectGallery = ({ project }) => {
                     <span>Project Gallery</span>
                 </div>
 
-                {/* Top Carousel Section */}
+                {/* Top Carousel Section — only shown if gallery images exist */}
+                {carouselImages.length > 0 && (
                 <div className="gallery-carousel-area">
                     <button className="gallery-nav-btn prev" onClick={handlePrev}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -52,8 +53,12 @@ const ProjectGallery = ({ project }) => {
                             </div>
                         </div>
 
-                        {/* Main Current Mockup */}
-                        <div className="mockup-frame main-carousel-frame">
+                        {/* Main Current Mockup — clickable */}
+                        <div
+                            className="mockup-frame main-carousel-frame lb-clickable"
+                            onClick={() => openLightbox(carouselImages[currentIndex])}
+                            title="Click to view full image"
+                        >
                             <div className="mockup-header">
                                 <span className="mockup-dot red"></span>
                                 <span className="mockup-dot yellow"></span>
@@ -62,6 +67,7 @@ const ProjectGallery = ({ project }) => {
                             <div className="mockup-body">
                                 <img src={carouselImages[currentIndex]} alt="Project mockup" />
                             </div>
+                            <div className="lb-expand-hint">🔍 Click to expand</div>
                         </div>
 
                         {/* Next Mockup */}
@@ -86,32 +92,45 @@ const ProjectGallery = ({ project }) => {
                         </svg>
                     </button>
                 </div>
+                )}
 
                 {/* Bottom Static Mockups */}
                 <div className="gallery-static-mockups">
-                    <div className="mockup-frame mobile-mockup">
-                        <div className="mockup-header">
-                            <span className="mockup-dot red"></span>
-                            <span className="mockup-dot yellow"></span>
-                            <span className="mockup-dot green"></span>
-                        </div>
-                        <div className="mockup-body">
-                            <img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?auto=format&fit=crop&w=600&q=80" alt="Mobile mockup" />
-                        </div>
-                    </div>
 
-                    <div className="mockup-frame desktop-mockup">
-                        <div className="mockup-header">
-                            <span className="mockup-dot red"></span>
-                            <span className="mockup-dot yellow"></span>
-                            <span className="mockup-dot green"></span>
+                    {/* Mobile Image — clickable */}
+                    {project.mobile_image_url && (
+                        <div
+                            className="static-image-item static-image-mobile lb-clickable"
+                            onClick={() => openLightbox(project.mobile_image_url)}
+                            title="Click to view full image"
+                        >
+                            <img src={project.mobile_image_url} alt="Mobile view" />
+                            <div className="lb-expand-hint">🔍 Click to expand</div>
                         </div>
-                        <div className="mockup-body">
-                            <img src="https://images.unsplash.com/photo-1507238691741-b4a1a5b82cce?auto=format&fit=crop&w=1200&q=80" alt="Desktop secondary mockup" />
+                    )}
+
+                    {/* Tab/Desktop Image — clickable */}
+                    {project.tab_image_url && (
+                        <div
+                            className="static-image-item static-image-desktop lb-clickable"
+                            onClick={() => openLightbox(project.tab_image_url)}
+                            title="Click to view full image"
+                        >
+                            <img src={project.tab_image_url} alt="Desktop view" />
+                            <div className="lb-expand-hint">🔍 Click to expand</div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
+
+            {/* Lightbox */}
+            {lightboxSrc && (
+                <ImageLightbox
+                    src={lightboxSrc}
+                    alt="Project image"
+                    onClose={closeLightbox}
+                />
+            )}
         </section>
     );
 };

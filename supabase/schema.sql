@@ -87,6 +87,8 @@ CREATE TABLE projects (
     title             TEXT NOT NULL,
     category          TEXT,
     image             TEXT,
+    mobile_image      TEXT,                              -- Added for mobile mockup
+    tab_image         TEXT,                              -- Added for tab/secondary mockup
     hero_description  TEXT,
     challenges        JSONB DEFAULT '[]'::jsonb,
     gallery           JSONB DEFAULT '[]'::jsonb,

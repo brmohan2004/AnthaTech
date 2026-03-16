@@ -75,12 +75,14 @@ function mapProject(p) {
     ...p,
     category_pill: p.category || '',
     cover_image_url: p.image || '',
-    gallery_urls: Array.isArray(p.gallery) ? p.gallery : [],
+    gallery_urls: Array.isArray(p.gallery) ? p.gallery.map(img => (typeof img === 'object' && img !== null) ? img.url : img) : [],
     preview_link: p.preview_link || '',
     review_quote: p.review?.quote || '',
     review_author: p.review?.author || '',
     review_role: p.review?.role || '',
     review_company: p.review?.company || '',
+    mobile_image_url: p.mobile_image || '',
+    tab_image_url: p.tab_image || '',
   };
 }
 

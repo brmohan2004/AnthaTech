@@ -242,14 +242,18 @@
         display: flex;
     }
 
+    .header-logo {
+        padding-top: 30px;
+    }
+
     .logo-img {
-        width: 60px;
-        height: 48px;
+        width: 40px;
+        height: auto;
     }
 
     .main-header.floating .logo-img {
-        width: 50px;
-        height: 40px;
+        width: 35px;
+        height: auto;
     }
 
     .btn-get-in-touch {

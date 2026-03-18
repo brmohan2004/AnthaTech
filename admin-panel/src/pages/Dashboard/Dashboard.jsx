@@ -108,12 +108,7 @@ const Dashboard = () => {
                     </div>
                     <ul className="message-list">
                         {recentMessages.map((msg, i) => (
-                            <li
-                                className={`message-item ${msg.unread ? 'unread' : ''}`}
-                                key={i}
-                                onClick={() => navigate('/admin/messages')}
-                                style={{ cursor: 'pointer' }}
-                            >
+                            <li className={`message-item ${msg.unread ? 'unread' : ''}`} key={i}>
                                 <div className="message-dot"></div>
                                 <div className="message-content">
                                     <span className="message-name">{msg.name}</span>

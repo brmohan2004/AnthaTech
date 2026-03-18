@@ -161,21 +161,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background-color: var(--scrollbar-thumb-hover);
 }
-
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-/* Global Read-only Banner */
-.readonly-banner { background: #fffbeb; color: #92400e; padding: 12px 20px; border-bottom: 1px solid #fef3c7; display: flex; align-items: center; gap: 10px; font-size: 14px; animation: slideInDown 0.3s ease-out; }
-.readonly-banner strong { font-weight: 600; }
-@keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

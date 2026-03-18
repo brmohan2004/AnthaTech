@@ -68,29 +68,24 @@ body {
 
 /* Pill badge styling */
 .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--pill-bg);
-    border: 1px solid var(--pill-border);
-    border-radius: 9999px;
-    padding: 8px 20px;
-    margin-bottom: 24px;
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.05), inset 0px -2px 0px rgba(0, 0, 0, 0.02);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hero-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08), inset 0px -2px 0px rgba(0, 0, 0, 0.02);
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f8fafc !important;
+    border-radius: 999px !important;
+    padding: 12px 32px !important;
+    margin-bottom: 30px !important;
+    border: 1px solid #eef2f6 !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.3s ease !important;
 }
 
 .badge-text {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--secondary-text);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
 }
 
 /* Typography styles */

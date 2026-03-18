@@ -133,7 +133,7 @@ const getAvatarColor = (name) => {
 };
 
 const AdminUsers = () => {
-    const { profile } = useAuth();
+    const { profile, checkPermission, refreshPermissions } = useAuth();
     const currentUserRole = roleToDisplay(profile?.role || 'editor');
     const [users, setUsers] = useState([]);
     const [toast, setToast] = useState(null);

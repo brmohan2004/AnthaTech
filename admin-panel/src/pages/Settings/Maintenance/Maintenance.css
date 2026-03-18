@@ -518,3 +518,15 @@
     width: 100%;
     justify-content: flex-end;
 }
+
+.error-text {
+    color: var(--status-red-text);
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.input--error {
+    border-color: var(--status-red-bg) !important;
+    background-color: var(--bg-red-tint) !important;
+}

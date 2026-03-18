@@ -1,0 +1,125 @@
+.maintenance-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0c0d11; /* Matching existing dark theme */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  overflow: hidden;
+  color: #f7f8fa;
+  font-family: 'Inter', sans-serif;
+}
+
+.maintenance-content {
+  max-width: 600px;
+  width: calc(100% - 40px);
+  text-align: center;
+  padding: 40px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.maintenance-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: rgba(240, 90, 99, 0.1);
+  border-radius: 50%;
+  margin: 0 auto 32px;
+}
+
+.maintenance-icon {
+  color: #F05A63; /* Main red color */
+  z-index: 1;
+}
+
+.maintenance-icon-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(240, 90, 99, 0.3);
+  animation: pulse 2s infinite cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.maintenance-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.maintenance-message {
+  font-size: 18px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.maintenance-timer {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px 32px;
+  display: inline-block;
+  margin-bottom: 40px;
+}
+
+.timer-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.timer-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #F05A63;
+  font-variant-numeric: tabular-nums;
+}
+
+.maintenance-footer {
+  margin-top: 20px;
+  opacity: 0.5;
+  font-size: 13px;
+}
+
+.footer-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .maintenance-title {
+    font-size: 24px;
+  }
+  
+  .maintenance-message {
+    font-size: 16px;
+  }
+}

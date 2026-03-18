@@ -10,11 +10,72 @@ import ServiceDetailsPage from './Service_Details_Page/ServiceDetailsPage';
 import CommunityPage from './Community_Page/CommunityPage';
 import FollowUs from './Shared/FollowUs/FollowUs';
 import ScrollToTop from './Shared/ScrollToTop';
+import { fetchSiteConfig } from './api/content';
+import MaintenancePage from './Shared/Maintenance/MaintenancePage';
+import SEO from './Shared/SEO';
+import { useState, useEffect } from 'react';
 // ModalProvider moved to main.jsx
 
 function App() {
+    const [maintenance, setMaintenance] = useState(null);
+    const [siteConfig, setSiteConfig] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const config = await fetchSiteConfig();
+                
+                // Parse standard JSON fields from site_config
+                const processed = { ...config };
+                ['contact', 'social', 'seo', 'maintenance'].forEach(key => {
+                    if (config[key] && typeof config[key] === 'string') {
+                        try {
+                            processed[key] = JSON.parse(config[key]);
+                        } catch (e) {
+                            console.warn(`Failed to parse site_config key: ${key}`, e);
+                        }
+                    }
+                });
+
+                setSiteConfig(processed);
+                if (processed.maintenance) {
+                    setMaintenance(processed.maintenance);
+                }
+            } catch (err) {
+                console.error('Failed to load site configuration', err);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, []);
+
+    // Bypass check: if ?bypass=1 is in URL or local storage has bypass_maint=true
+    const queryParams = new URLSearchParams(window.location.search);
+    const bypassUrl = queryParams.get('bypass') === '1';
+    const bypassStorage = localStorage.getItem('bypass_maint') === 'true';
+
+    if (bypassUrl) {
+      localStorage.setItem('bypass_maint', 'true');
+    }
+
+    const shouldShowMaintenance = maintenance?.isEnabled && !bypassUrl && !bypassStorage;
+
+    if (loading) return null; // Or a simple loader
+
+    if (shouldShowMaintenance) {
+      return (
+        <MaintenancePage 
+          title={maintenance.title} 
+          message={maintenance.message} 
+          expectedBackAt={maintenance.expectedBackAt} 
+        />
+      );
+    }
+
     return (
         <Router>
+            <SEO config={siteConfig} />
             <ScrollToTop />
             <Routes>
                 <Route path="/" element={<LandingPage />} />

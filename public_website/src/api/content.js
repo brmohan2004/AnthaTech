@@ -1,7 +1,7 @@
 import supabase from '../config/supabaseClient';
 
 // ─── Caching Logic ───────────────────────────────────────────
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
+const CACHE_TTL = 30 * 1000; // 30 seconds cache (reduced for testing)
 const cache = new Map();
 
 /**

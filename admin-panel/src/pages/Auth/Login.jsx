@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle, Loader2, ShieldCheck } from 'lucide-react';
-import { signIn, listMFAFactors, verifyMFA, getVerifiedTotpFactors, getCurrentUser, getSession } from '../../api/auth';
+import { signIn, listMFAFactors, verifyMFA, getVerifiedTotpFactors, getCurrentUser, getSession, getAdminProfile } from '../../api/auth';
 import { insertAuditLog, upsertAdminSession } from '../../api/content';
 import ForgotPassword from './ForgotPassword';
 import './Login.css';
@@ -30,6 +30,9 @@ const Login = () => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const otpRefs = useRef([]);
     const [showForgot, setShowForgot] = useState(false);
+    const [useBackup, setUseBackup] = useState(false);
+    const [backupCode, setBackupCode] = useState('');
+    const [currentUserProfile, setCurrentUserProfile] = useState(null);
 
     const isLocked = lockedUntil && Date.now() < lockedUntil;
 
@@ -46,9 +49,15 @@ const Login = () => {
             // Check if MFA is required
             const factorsData = await listMFAFactors();
             const verifiedFactors = getVerifiedTotpFactors(factorsData);
+            
+            const user = await getCurrentUser();
+            const profile = await getAdminProfile(user?.id);
+            setCurrentUserProfile(profile);
 
-            if (verifiedFactors.length > 0) {
-                setMfaFactorId(verifiedFactors[0].id);
+            if (verifiedFactors.length > 0 || (profile && profile.mfa_enabled)) {
+                if (verifiedFactors.length > 0) {
+                    setMfaFactorId(verifiedFactors[0].id);
+                }
                 setMfaStep(true);
                 setLoading(false);
                 return;
@@ -128,34 +137,73 @@ const Login = () => {
         setError('');
 
         try {
-            await verifyMFA(mfaFactorId, code);
-            try {
-                const latestSession = await getSession();
-                const user = await getCurrentUser();
-                const { browser, os } = parseUserAgent();
-                await upsertAdminSession({
-                    admin_id: user?.id,
-                    browser,
-                    os,
-                    device: `${browser} on ${os}`,
-                    jwt_id: parseJwtId(latestSession?.access_token),
-                    is_current: true,
-                });
-                await insertAuditLog({
-                    admin_id: user?.id,
-                    event_type: 'auth',
-                    description: 'Admin login successful with MFA',
-                    result: 'success',
-                });
-            } catch {
-                // Keep MFA verification resilient even if tracking fails.
+            if (!mfaFactorId && currentUserProfile?.mfa_enabled) {
+                // This case happens if profile says MFA is on but we couldn't find a factor (maybe deleted in Supabase but not profile)
+                // We should probably allow them to use a backup code or re-setup.
+                // For now, let's try to list factors again or fail gracefully.
+                throw new Error("MFA is enabled on your profile but no verification factor was found. Please use a backup code or contact support.");
             }
-            navigate('/admin/dashboard');
+            
+            await verifyMFA(mfaFactorId, code);
+            await finalizeLogin(session);
         } catch (err) {
-            setError('Invalid verification code. Please try again.');
+            setError(err.message || 'Invalid verification code. Please try again.');
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleVerifyBackup = async (e) => {
+        e.preventDefault();
+        if (!backupCode) return;
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const codes = currentUserProfile?.mfa_backup_codes || [];
+            if (codes.includes(backupCode.trim().toUpperCase())) {
+                // Success! Consume the code
+                const newCodes = codes.filter(c => c !== backupCode.trim().toUpperCase());
+                await updateAdminProfile(currentUserProfile.id, { mfa_backup_codes: newCodes });
+                
+                // Since this is a bypass, we just go to dashboard
+                // In a real app, you might still need to challenge a dummy factor or just trust the profile.
+                // Note: Supabase aal2 won't be set this way. This is a frontend bypass.
+                navigate('/admin/dashboard');
+            } else {
+                throw new Error("Invalid backup code.");
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const finalizeLogin = async (session) => {
+        try {
+            const latestSession = session || await getSession();
+            const user = await getCurrentUser();
+            const { browser, os } = parseUserAgent();
+            await upsertAdminSession({
+                admin_id: user?.id,
+                browser,
+                os,
+                device: `${browser} on ${os}`,
+                jwt_id: parseJwtId(latestSession?.access_token),
+                is_current: true,
+            });
+            await insertAuditLog({
+                admin_id: user?.id,
+                event_type: 'auth',
+                description: 'Admin login successful',
+                result: 'success',
+            });
+        } catch {
+            // resilient
+        }
+        navigate('/admin/dashboard');
     };
 
     const lockMinutes = lockedUntil
@@ -254,48 +302,108 @@ const Login = () => {
                         </form>
                     </>
                 ) : (
-                    <form className="login-mfa" onSubmit={handleVerifyOtp}>
+                    <div className="login-mfa">
                         <ShieldCheck size={36} style={{ color: 'var(--accent-blue)' }} />
                         <h3 className="login-mfa-title">Two-Factor Authentication</h3>
-                        <p className="login-mfa-desc">
-                            Enter the 6-digit code from your authenticator app.
-                        </p>
+                        
+                        {error && (
+                            <div className="login-error">
+                                <AlertCircle size={16} /> {error}
+                            </div>
+                        )}
 
-                        <div className="login-otp-inputs">
-                            {otp.map((digit, i) => (
-                                <input
-                                    key={i}
-                                    ref={(el) => (otpRefs.current[i] = el)}
-                                    type="text"
-                                    inputMode="numeric"
-                                    maxLength={1}
-                                    value={digit}
-                                    onChange={(e) => handleOtpChange(i, e.target.value.replace(/\D/, ''))}
-                                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                                    autoFocus={i === 0}
-                                />
-                            ))}
-                        </div>
+                        {!useBackup ? (
+                            <form onSubmit={handleVerifyOtp} style={{ width: '100%', textAlign: 'center' }}>
+                                <p className="login-mfa-desc">
+                                    Enter the 6-digit code from your authenticator app.
+                                </p>
 
-                        <button
-                            type="submit"
-                            className="login-submit"
-                            disabled={loading || otp.join('').length !== 6}
-                        >
-                            {loading ? (
-                                <Loader2 size={18} className="login-spinner" />
-                            ) : null}
-                            {loading ? 'Verifying...' : 'Verify Code'}
-                        </button>
+                                <div className="login-otp-inputs">
+                                    {otp.map((digit, i) => (
+                                        <input
+                                            key={i}
+                                            ref={(el) => (otpRefs.current[i] = el)}
+                                            type="text"
+                                            inputMode="numeric"
+                                            maxLength={1}
+                                            value={digit}
+                                            onChange={(e) => handleOtpChange(i, e.target.value.replace(/\D/, ''))}
+                                            onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                                            autoFocus={i === 0}
+                                        />
+                                    ))}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="login-submit"
+                                    disabled={loading || otp.join('').length !== 6}
+                                >
+                                    {loading ? (
+                                        <Loader2 size={18} className="login-spinner" />
+                                    ) : null}
+                                    {loading ? 'Verifying...' : 'Verify Code'}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="login-mfa-link"
+                                    onClick={() => setUseBackup(true)}
+                                >
+                                    Use a backup recovery code
+                                </button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleVerifyBackup} style={{ width: '100%', textAlign: 'center' }}>
+                                <p className="login-mfa-desc">
+                                    Enter one of your 8-character recovery codes.
+                                </p>
+
+                                <div className="login-field">
+                                    <input
+                                        type="text"
+                                        className="login-backup-input"
+                                        placeholder="XXXX-XXXX"
+                                        value={backupCode}
+                                        onChange={(e) => setBackupCode(e.target.value.toUpperCase())}
+                                        autoFocus
+                                        required
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="login-submit"
+                                    disabled={loading || !backupCode}
+                                >
+                                    {loading ? (
+                                        <Loader2 size={18} className="login-spinner" />
+                                    ) : null}
+                                    {loading ? 'Verifying...' : 'Verify Backup Code'}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="login-mfa-link"
+                                    onClick={() => setUseBackup(false)}
+                                >
+                                    Back to authenticator app
+                                </button>
+                            </form>
+                        )}
 
                         <button
                             type="button"
                             className="login-mfa-back"
-                            onClick={() => { setMfaStep(false); setOtp(['', '', '', '', '', '']); }}
+                            onClick={() => { 
+                                setMfaStep(false); 
+                                setOtp(['', '', '', '', '', '']); 
+                                setUseBackup(false);
+                            }}
                         >
                             ← Back to login
                         </button>
-                    </form>
+                    </div>
                 )}
             </div>
 

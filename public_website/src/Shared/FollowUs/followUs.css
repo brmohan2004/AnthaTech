@@ -50,6 +50,10 @@
 .social-icon-btn.linkedin:hover { background-color: #0077b5; }
 .social-icon-btn.instagram:hover { background-color: #e4405f; }
 .social-icon-btn.twitter:hover { background-color: #1da1f2; }
+.social-icon-btn.github:hover { background-color: #333333; }
+.social-icon-btn.behance:hover { background-color: #053eff; }
+.social-icon-btn.facebook:hover { background-color: #1877f2; }
+.social-icon-btn.youtube:hover { background-color: #ff0000; }
 
 .follow-us-toggle {
     width: 60px;

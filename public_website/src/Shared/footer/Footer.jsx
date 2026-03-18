@@ -2,16 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './footer.css';
 import logo from '../../assets/logo.png';
-import { fetchServices } from '../../api/content';
+import { fetchServices, fetchSiteConfig } from '../../api/content';
+import { MapPin, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
     const [services, setServices] = useState([]);
+    const [contact, setContact] = useState({});
 
     useEffect(() => {
         fetchServices()
             .then(data => {
                 if (data?.length) {
                     setServices(data.slice(0, 4)); // Show top 4 services
+                }
+            })
+            .catch(() => { });
+
+        // The original code already correctly parses the JSON string.
+        // The instruction seems to imply a change to this block,
+        // but the provided "Code Edit" snippet is syntactically incorrect
+        // and attempts to move this logic into the fetchServices' then block,
+        // which is not ideal for independent fetches.
+        // Assuming the intent was to ensure robust parsing and error handling for fetchSiteConfig,
+        // the existing implementation is already good.
+        // If the intent was to convert it to async/await, it should be done carefully.
+        // For now, I will keep the existing, correct parsing logic.
+        fetchSiteConfig()
+            .then(config => {
+                console.log('Site Config fetched in Footer:', config);
+                if (config.contact) {
+                    const parsed = typeof config.contact === 'string' ? JSON.parse(config.contact) : config.contact;
+                    console.log('Parsed contact in Footer:', parsed);
+                    setContact(parsed || {});
                 }
             })
             .catch(() => { });
@@ -62,6 +84,25 @@ export default function Footer() {
                             <li><a href="#conditions">Conditions</a></li>
                             <li><a href="#cookies">Cookies Policy</a></li>
                         </ul>
+                    </div>
+
+                    {/* Address Column */}
+                    <div className="footer-col address-col">
+                        <h4 className="footer-heading">Contact Us</h4>
+                        <div className="footer-address">
+                            <MapPin size={18} className="address-icon" />
+                            <p>{contact.address || 'Address not listed'}</p>
+                        </div>
+                        {contact.mapUrl && (
+                            <a 
+                                href={contact.mapUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="map-btn"
+                            >
+                                <ExternalLink size={14} /> View on Map
+                            </a>
+                        )}
                     </div>
                 </div>
 

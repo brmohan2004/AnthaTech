@@ -4,6 +4,7 @@ import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
 import { getSiteConfig, updateSiteConfig } from '../../../api/content';
 import { useAuth } from '../../../contexts/AuthContext';
+import { signIn } from '../../../api/auth';
 import {
     Power,
     AlertTriangle,
@@ -39,6 +40,9 @@ const Maintenance = () => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingToggle, setPendingToggle] = useState(false);
     const [reasonInput, setReasonInput] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [verifying, setVerifying] = useState(false);
+    const [authError, setAuthError] = useState('');
     const timerRef = useRef(null);
 
     useEffect(() => {
@@ -95,19 +99,33 @@ const Maintenance = () => {
     const handleToggleClick = () => {
         setPendingToggle(!data.isEnabled);
         setReasonInput('');
+        setConfirmPassword('');
+        setAuthError('');
         setShowConfirm(true);
     };
 
     // Confirm the toggle
     const handleToggleConfirm = async () => {
+        if (!confirmPassword) {
+            setAuthError('Please enter your password to confirm.');
+            return;
+        }
+
         const enabling = pendingToggle;
-        const updated = {
-            ...data,
-            isEnabled: enabling,
-            activeSince: enabling ? new Date().toISOString() : null,
-            activationReason: enabling ? reasonInput.trim() : '',
-        };
+        setVerifying(true);
+        setAuthError('');
+
         try {
+            // Verify password using signIn
+            await signIn(profile.email, confirmPassword);
+
+            const updated = {
+                ...data,
+                isEnabled: enabling,
+                activeSince: enabling ? new Date().toISOString() : null,
+                activationReason: enabling ? reasonInput.trim() : '',
+            };
+            
             await updateSiteConfig('maintenance', JSON.stringify(updated));
             setData(updated);
             setSaved(updated);
@@ -119,8 +137,9 @@ const Maintenance = () => {
                     : 'Maintenance mode DISABLED — site is live.',
             });
         } catch (err) {
-            setToast({ type: 'error', message: 'Failed to toggle maintenance mode.' });
-            setShowConfirm(false);
+            setAuthError('Invalid password. Authentication failed.');
+        } finally {
+            setVerifying(false);
         }
     };
 
@@ -425,6 +444,25 @@ const Maintenance = () => {
                             </div>
                         )}
 
+                        <div className="form-group modal-reason">
+                            <label>
+                                Confirm Password
+                                <span className="label-hint"> — for extra security</span>
+                            </label>
+                            <input
+                                type="password"
+                                className={`form-input ${authError ? 'input--error' : ''}`}
+                                value={confirmPassword}
+                                onChange={(e) => {
+                                    setConfirmPassword(e.target.value);
+                                    if (authError) setAuthError('');
+                                }}
+                                placeholder="Enter your admin password"
+                                onKeyDown={(e) => e.key === 'Enter' && handleToggleConfirm()}
+                            />
+                            {authError && <span className="error-text">{authError}</span>}
+                        </div>
+
                         <div className="modal-actions">
                             <Button variant="ghost" onClick={() => setShowConfirm(false)}>
                                 Cancel
@@ -432,8 +470,10 @@ const Maintenance = () => {
                             <Button
                                 variant={pendingToggle ? 'danger' : 'primary'}
                                 onClick={handleToggleConfirm}
+                                loading={verifying}
+                                disabled={verifying || !confirmPassword}
                             >
-                                {pendingToggle ? 'Enable Maintenance Mode' : 'Bring Site Back Online'}
+                                {verifying ? 'Authenticating…' : (pendingToggle ? 'Enable Maintenance Mode' : 'Bring Site Back Online')}
                             </Button>
                         </div>
                     </div>

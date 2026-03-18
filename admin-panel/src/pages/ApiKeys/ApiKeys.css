@@ -173,6 +173,15 @@
     background: rgba(240, 90, 99, 0.08);
 }
 
+.apikey-action-btn--delete {
+    border-color: rgba(240, 90, 99, 0.3);
+    color: var(--status-red-text);
+}
+
+.apikey-action-btn--delete:hover {
+    background: rgba(240, 90, 99, 0.08);
+}
+
 .apikey-action-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;

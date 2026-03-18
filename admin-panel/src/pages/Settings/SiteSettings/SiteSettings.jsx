@@ -17,6 +17,8 @@ const defaultValues = {
         twitter: '',
         behance: '',
         github: '',
+        facebook: '',
+        youtube: '',
     },
     seo: {
         siteName: '',
@@ -195,7 +197,7 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Map Embed URL</label>
+                            <label>Map Link (Google Maps URL)</label>
                             <input
                                 type="url"
                                 className="form-input"
@@ -251,6 +253,24 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                                 className="form-input"
                                 value={data.social.github}
                                 onChange={(e) => handleChange('social', 'github', e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Facebook URL</label>
+                            <input
+                                type="url"
+                                className="form-input"
+                                value={data.social.facebook}
+                                onChange={(e) => handleChange('social', 'facebook', e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>YouTube URL</label>
+                            <input
+                                type="url"
+                                className="form-input"
+                                value={data.social.youtube}
+                                onChange={(e) => handleChange('social', 'youtube', e.target.value)}
                             />
                         </div>
                     </div>

@@ -322,3 +322,43 @@
 .login-spinner {
     animation: loginSpin 1s linear infinite;
 }
+
+.login-mfa-link {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--accent-blue);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    width: 100%;
+    text-align: center;
+}
+
+.login-mfa-link:hover {
+    text-decoration: underline;
+}
+
+.login-backup-input {
+    width: 100%;
+    max-width: 240px;
+    padding: 12px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    border: 2px solid var(--border-input);
+    border-radius: 10px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    transition: all 0.2s ease;
+    margin: 10px auto;
+    display: block;
+}
+
+.login-backup-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}

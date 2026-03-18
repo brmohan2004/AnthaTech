@@ -1,11 +1,11 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./MFASettings.css";
 import {
   Shield, ShieldCheck, ShieldOff, AlertTriangle, Smartphone,
   QrCode, CheckCircle, Key, RefreshCw, Eye, EyeOff, Lock,
   Copy, Download, Users, ChevronRight, Info
 } from "lucide-react";
-import { enrollMFA, verifyMFA, listMFAFactors, unenrollMFA, getVerifiedTotpFactors, updateAdminProfile, getCurrentUser } from '../../../api/auth';
+import { enrollMFA, verifyMFA, listMFAFactors, unenrollMFA, getVerifiedTotpFactors, updateAdminProfile, getCurrentUser, getAdminProfile } from '../../../api/auth';
 
 export default function MFASettings() {
   const [mfaEnabled, setMfaEnabled] = useState(false);
@@ -20,6 +20,7 @@ export default function MFASettings() {
   const [factorId, setFactorId] = useState(null);
   const [qrUri, setQrUri] = useState('');
   const [manualKey, setManualKey] = useState('');
+  const [backupCodes, setBackupCodes] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -28,9 +29,24 @@ export default function MFASettings() {
         const verifiedFactors = getVerifiedTotpFactors(factorsData);
         if (verifiedFactors.length > 0) {
           setMfaEnabled(true);
-          setFactorId(verifiedFactors[0].id);
+          const activeFactor = verifiedFactors[0];
+          setFactorId(activeFactor.id);
         }
-      } catch (err) { /* silent */ }
+        
+        const user = await getCurrentUser();
+        if (user) {
+          console.log('Loading profile for MFA info - User ID:', user.id);
+          const profile = await getAdminProfile(user.id);
+          console.log('Admin profile loaded:', profile);
+          if (profile?.mfa_backup_codes) {
+            setBackupCodes(profile.mfa_backup_codes);
+          } else {
+            console.log('No backup codes found in profile.');
+          }
+        }
+      } catch (err) { 
+        console.error('Error loading MFA info - Detailed log:', err);
+      }
     })();
   }, []);
 
@@ -54,15 +70,23 @@ export default function MFASettings() {
 
   const handleSetup = async () => {
     try {
+      setOtpError("");
       const enrollment = await enrollMFA();
-      setFactorId(enrollment.id);
-      setQrUri(enrollment.totp?.qr_code || '');
-      setManualKey(enrollment.totp?.secret || '');
+      console.log('MFA Enrollment started:', enrollment);
+      
+      const factor_id = enrollment.id;
+      setFactorId(factor_id);
+      
+      const qr_code = enrollment.totp?.qr_code || '';
+      const secret = enrollment.totp?.secret || '';
+      
+      setQrUri(qr_code);
+      setManualKey(secret);
       setShowSetup(true);
       setOtp("");
-      setOtpError("");
     } catch (err) {
-      setOtpError('Failed to start MFA enrollment.');
+      console.error('MFA Enrollment failed:', err);
+      setOtpError('Failed to start MFA enrollment: ' + (err.message || 'Unknown error'));
     }
   };
 
@@ -72,18 +96,36 @@ export default function MFASettings() {
       return;
     }
     try {
+      setOtpError("");
+      console.log('Verifying MFA for factor:', factorId);
       await verifyMFA(factorId, otp);
+      
       try {
         const user = await getCurrentUser();
-        if (user?.id) await updateAdminProfile(user.id, { mfa_enabled: true });
-      } catch {
-        // Keep UI functional even if profile flag update fails.
+        if (user?.id) {
+          // Generate 10 simple backup codes
+          const codes = Array.from({ length: 10 }, () => 
+            Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
+            Math.random().toString(36).substring(2, 6).toUpperCase()
+          );
+          
+          await updateAdminProfile(user.id, { 
+            mfa_enabled: true,
+            mfa_backup_codes: codes
+          });
+          // Update local state if needed
+        }
+      } catch (profileErr) {
+        console.warn('Failed to update profile but MFA is verified:', profileErr);
       }
+      
       setMfaEnabled(true);
       setShowSetup(false);
       setOtp("");
       setOtpError("");
+      window.location.reload(); // Refresh to ensure everything is synced
     } catch (err) {
+      console.error('MFA Verification failed:', err);
       setOtpError('Invalid code. Please try again.');
     }
   };
@@ -100,12 +142,29 @@ export default function MFASettings() {
     setTimeout(() => setCopiedCode(null), 1500);
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
     setRegenerating(true);
-    setTimeout(() => {
-      setRegenerating(false);
-      setCodesRevealed(false);
-    }, 900);
+    try {
+        const user = await getCurrentUser();
+        if (user?.id) {
+          // Create 10 backup codes
+          const codes = Array.from({ length: 10 }, () => 
+            Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
+            Math.random().toString(36).substring(2, 6).toUpperCase()
+          );
+          
+          await updateAdminProfile(user.id, { 
+              mfa_backup_codes: codes,
+              mfa_enabled: mfaEnabled 
+          });
+          setBackupCodes(codes);
+          setCodesRevealed(true);
+        }
+    } catch (err) {
+        console.error('Failed to regenerate codes:', err);
+    } finally {
+        setRegenerating(false);
+    }
   };
 
   const setupVisible = showSetup || !mfaEnabled;
@@ -175,11 +234,19 @@ export default function MFASettings() {
                 <p>Open Google Authenticator, Authy, or any TOTP app and scan the code below.</p>
 
                 <div className="qr-block">
-                  <div className="qr-frame">
+                   <div className="qr-frame">
                     <div className="qr-corner tl" /><div className="qr-corner tr" />
                     <div className="qr-corner bl" /><div className="qr-corner br" />
-                    {qrUri ? <img src={qrUri} alt="QR Code" width={136} height={136} /> : <QrCode size={136} strokeWidth={1.2} className="qr-icon" />}
+                    {qrUri ? (
+                        <img src={qrUri} alt="QR Code" width={136} height={136} className="qr-image" />
+                    ) : (
+                        <div className="qr-fallback">
+                            <QrCode size={136} strokeWidth={1.2} className="qr-icon" />
+                            <p className="qr-error-msg">Fail</p>
+                        </div>
+                    )}
                   </div>
+                  
                   <div className="qr-manual-row">
                     <span className="qr-manual-label">Manual key</span>
                     <code className="qr-manual-key">{manualKey}</code>
@@ -261,7 +328,7 @@ export default function MFASettings() {
           </div>
 
           <div className={`codes-grid ${codesRevealed ? "revealed" : "masked"}`}>
-            {[].map((code, i) => (
+            {backupCodes.map((code, i) => (
               <div className="code-cell" key={i}>
                 <Key size={11} className="code-key-icon" />
                 <span className="code-value">{codesRevealed ? code : "••••-••••"}</span>
@@ -292,7 +359,7 @@ export default function MFASettings() {
               {regenerating ? "Regenerating..." : "Regenerate Codes"}
             </button>
             <p className="backup-count">
-              0 codes remaining
+              {backupCodes.length} codes remaining
             </p>
           </div>
         </div>

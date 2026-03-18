@@ -17,6 +17,8 @@ const ApiKeys = () => {
     const [revealedKeyId, setRevealedKeyId] = useState(null);
     const [revokeTarget, setRevokeTarget] = useState(null);
     const [revokeTyped, setRevokeTyped] = useState('');
+    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [deleteTyped, setDeleteTyped] = useState('');
     const [copiedId, setCopiedId] = useState(null);
 
     // Add form state
@@ -61,6 +63,14 @@ const ApiKeys = () => {
         persistKeys(updated);
         setRevokeTarget(null);
         setRevokeTyped('');
+    };
+
+    const handleDelete = () => {
+        const updated = keys.filter(k => k.id !== deleteTarget?.id);
+        setKeys(updated);
+        persistKeys(updated);
+        setDeleteTarget(null);
+        setDeleteTyped('');
     };
 
     const handleAddKey = () => {
@@ -187,6 +197,12 @@ const ApiKeys = () => {
                                             >
                                                 <Ban size={14} /> Revoke
                                             </button>
+                                            <button
+                                                className="apikey-action-btn apikey-action-btn--delete"
+                                                onClick={() => setDeleteTarget(k)}
+                                            >
+                                                <Plus size={14} style={{ transform: 'rotate(45deg)' }} /> Delete
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -263,7 +279,6 @@ const ApiKeys = () => {
                 </div>
             )}
 
-            {/* Revoke Confirmation */}
             <ConfirmModal
                 isOpen={!!revokeTarget}
                 title={`Revoke "${revokeTarget?.name}"?`}
@@ -277,6 +292,22 @@ const ApiKeys = () => {
                 onConfirm={handleRevoke}
                 onCancel={() => { setRevokeTarget(null); setRevokeTyped(''); }}
                 icon={<Ban size={28} />}
+            />
+
+            {/* Delete Confirmation */}
+            <ConfirmModal
+                isOpen={!!deleteTarget}
+                title={`Delete "${deleteTarget?.name}"?`}
+                message="This key will be permanently deleted. This action cannot be undone."
+                confirmText="Delete Permanently"
+                variant="danger"
+                requireTyping
+                typeConfirmWord="DELETE"
+                typedValue={deleteTyped}
+                onTypedChange={setDeleteTyped}
+                onConfirm={handleDelete}
+                onCancel={() => { setDeleteTarget(null); setDeleteTyped(''); }}
+                icon={<Plus size={28} style={{ transform: 'rotate(45deg)', color: '#F05A63' }} />}
             />
         </div>
     );

@@ -12,7 +12,7 @@
 
 .footer-top {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 2fr;
     gap: 40px;
     margin-bottom: 100px;
 }
@@ -89,7 +89,7 @@
     margin: 0;
 }
 
-/* Large Brand Display */
+/* Brand Display Container */
 .footer-brand-display {
     display: flex;
     justify-content: center;
@@ -106,6 +106,48 @@
     letter-spacing: -8px;
     user-select: none;
     pointer-events: none;
+}
+
+/* Address Column Styles */
+.footer-address {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.address-icon {
+    color: #1d4ed8;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.footer-address p {
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.map-btn:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2);
 }
 
 /* Responsive */

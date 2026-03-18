@@ -681,3 +681,7 @@
   .codes-grid { grid-template-columns: 1fr; }
   .policy-row { flex-direction: column; }
 }
+/* Added Error Banner */
+.mfa-error-banner { background: #fee2e2; color: #b91c1c; padding: 14px 18px; border-radius: 10px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; border: 1px solid #fecaca; font-weight: 500; }
+.mfa-error-banner button { margin-left: auto; background: none; border: none; color: inherit; cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center; opacity: 0.6; transition: 0.2s; }
+.mfa-error-banner button:hover { opacity: 1; background: rgba(0,0,0,0.05); }

@@ -53,18 +53,41 @@ export default function MFASettings() {
   const handleDisable = async () => {
     if (!window.confirm("Disabling MFA reduces your account security. Are you sure you want to continue?")) return;
     try {
-      if (factorId) await unenrollMFA(factorId);
+      setOtpError("");
+      // List factors again to make sure we have all of them
+      const factorsData = await listMFAFactors();
+      const verifiedFactors = getVerifiedTotpFactors(factorsData);
+      
+      if (verifiedFactors.length > 0) {
+        for (const factor of verifiedFactors) {
+           await unenrollMFA(factor.id);
+        }
+      }
+      
       try {
         const user = await getCurrentUser();
-        if (user?.id) await updateAdminProfile(user.id, { mfa_enabled: false });
-      } catch {
-        // Keep UI functional even if profile flag update fails.
+        if (user?.id) {
+          await updateAdminProfile(user.id, { 
+            mfa_enabled: false,
+            mfa_backup_codes: [] // Clear backup codes too
+          });
+        }
+      } catch (profileErr) {
+        console.warn('Failed to update profile but MFA is unenrolled:', profileErr);
       }
+      
       setMfaEnabled(false);
       setShowSetup(false);
       setFactorId(null);
+      setOtp("");
+      
+      // Success - reload to refresh all context/state
+      window.location.reload();
     } catch (err) {
-      setOtpError('Failed to disable MFA.');
+      console.error('Failed to disable MFA:', err);
+      setOtpError('Failed to disable MFA: ' + (err.message || 'Unknown error'));
+      // Show error in alert too in case it is hidden
+      alert('Failed to disable MFA: ' + (err.message || 'Unknown error'));
     }
   };
 
@@ -167,7 +190,7 @@ export default function MFASettings() {
     }
   };
 
-  const setupVisible = showSetup || !mfaEnabled;
+  const setupVisible = showSetup;
 
   return (
     <div className="mfa-page">
@@ -179,6 +202,14 @@ export default function MFASettings() {
           <p className="mfa-page-sub">Protect your account with a second verification step using an authenticator app.</p>
         </div>
       </header>
+
+      {otpError && !setupVisible && (
+        <div className="mfa-error-banner">
+          <AlertTriangle size={18} />
+          <span>{otpError}</span>
+          <button onClick={() => setOtpError("")}>✕</button>
+        </div>
+      )}
 
       {/* ── Status Hero ── */}
       <div className={`mfa-status-hero ${mfaEnabled ? "is-on" : "is-off"}`}>

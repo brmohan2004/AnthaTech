@@ -7,6 +7,7 @@ import MediaPickerModal from '../../../components/ui/MediaPickerModal';
 import { getHeroContent, updateHeroContent, insertAuditLog } from '../../../api/content';
 import { getCurrentUser } from '../../../api/auth';
 import { uploadFile, generateFilePath } from '../../../api/media';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const emptyData = {
     badge: '',
@@ -21,6 +22,8 @@ const emptyData = {
 };
 
 const HeroManager = () => {
+    const { canEdit, checkPermission } = useAuth();
+    const hasEditPermission = canEdit('content-hero');
     const [formData, setFormData] = useState(emptyData);
     const [savedData, setSavedData] = useState(emptyData);
     const [isDirty, setIsDirty] = useState(false);
@@ -72,6 +75,10 @@ const HeroManager = () => {
     };
 
     const handleSave = async () => {
+        if (!checkPermission('content-hero')) {
+            setToast({ type: 'error', message: 'Read-only access: You do not have permission to modify this section.' });
+            return;
+        }
         setSaving(true);
         try {
             await updateHeroContent(formData);
@@ -153,13 +160,14 @@ const HeroManager = () => {
             <header className="page-header">
                 <div className="header-breadcrumbs">
                     Content &gt; <span>Hero Section</span>
+                    {!hasEditPermission && <span className="readonly-badge" style={{ marginLeft: 12, fontSize: 10, background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '2px 8px', borderRadius: 4, fontWeight: 500 }}>READ ONLY</span>}
                 </div>
                 <div className="header-actions">
                     <Button
                         variant="ghost"
                         icon={<RotateCcw size={16} />}
                         onClick={handleRevert}
-                        disabled={!isDirty}
+                        disabled={!isDirty || !hasEditPermission}
                     >
                         Revert
                     </Button>

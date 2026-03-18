@@ -14,6 +14,15 @@
     animation: fadeIn 0.3s ease;
 }
 
+.mobile-handle {
+    display: none;
+    width: 40px;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    margin: 12px auto 0;
+}
+
 .contact-modal-container {
     background: #ffffff;
     width: 100%;
@@ -437,11 +446,122 @@
 }
 
 @media (max-width: 900px) {
+    .contact-modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .contact-modal-container {
+        max-height: 95vh;
+        border-radius: 24px 24px 0 0;
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-handle {
+        display: block;
+    }
+
     .contact-modal-sidebar {
         display: none;
     }
 
     .contact-modal-main {
-        padding: 40px 20px;
+        padding: 0;
+    }
+
+    .modal-content-scrollable {
+        padding: 40px 24px 20px;
+    }
+
+    .modal-fixed-footer {
+        padding: 0 24px 24px;
+        box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .contact-selection-grid {
+        padding: 40px 24px;
+    }
+
+    .selection-card {
+        padding: 24px;
+        gap: 16px;
+    }
+
+    .selection-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+
+    .selection-text h4 {
+        font-size: 18px;
+    }
+
+    .quote-form {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .field-full {
+        grid-column: span 1;
+    }
+
+    .form-title {
+        font-size: 24px;
+    }
+
+    .booking-options {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .booking-btn {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .booking-btn h5 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .booking-btn p {
+        font-size: 13px;
+    }
+
+    .scheduler-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .time-slots {
+        grid-template-columns: repeat(3, 1fr);
+        max-height: 180px;
+    }
+
+    .calendar-mini {
+        padding: 12px;
+    }
+
+    .calendar-days {
+        gap: 4px;
+    }
+
+    .day-cell {
+        padding: 6px;
+        font-size: 12px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
     }
 }

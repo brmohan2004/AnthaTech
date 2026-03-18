@@ -13,8 +13,10 @@ import ScrollToTop from './Shared/ScrollToTop';
 import { fetchSiteConfig } from './api/content';
 import MaintenancePage from './Shared/Maintenance/MaintenancePage';
 import SEO from './Shared/SEO';
+import LegalPage from './Legal_Pages/LegalPage';
 import { useState, useEffect } from 'react';
 // ModalProvider moved to main.jsx
+
 
 function App() {
     const [maintenance, setMaintenance] = useState(null);
@@ -74,7 +76,7 @@ function App() {
     }
 
     return (
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <SEO config={siteConfig} />
             <ScrollToTop />
             <Routes>
@@ -86,9 +88,15 @@ function App() {
                 <Route path="/service/:serviceId" element={<ServiceDetailsPage />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/community" element={<CommunityPage />} />
+                <Route path="/privacy-policy" element={<LegalPage />} />
+                <Route path="/terms-conditions" element={<LegalPage />} />
+                <Route path="/conditions" element={<LegalPage />} />
+                <Route path="/cookies-policy" element={<LegalPage />} />
             </Routes>
+
             <FollowUs />
         </Router>
+
     );
 }
 

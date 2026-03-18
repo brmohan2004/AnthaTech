@@ -3,8 +3,12 @@ import {
     UserPlus, Search, Edit2, ShieldOff, ShieldCheck,
     Trash2, X, Send, ChevronDown, Lock, Users, Filter,
     KeyRound, Eye, Pencil, Check, LayoutDashboard,
-    FolderOpen, Mail, Image, BarChart3, Settings, Key as KeyIcon, HardDrive
+    FolderOpen, Mail, Image, BarChart3, Settings, Key as KeyIcon, HardDrive,
+    FileText, Home, Info, Briefcase, Wrench, Sparkles, ListOrdered, Star,
+    Shield, ScrollText, AlertTriangle, Globe, Construction, Webhook,
+    MonitorSmartphone, Fingerprint, ShieldAlert, Cookie,
 } from 'lucide-react';
+
 import './AdminUsers.css';
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
@@ -24,54 +28,98 @@ const roleToDisplay = (db) => {
 };
 
 const ACCESS_SECTIONS = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={16} />, category: 'Main' },
-    { id: 'content', label: 'Content Management', icon: <FolderOpen size={16} />, category: 'Main' },
-    { id: 'messages', label: 'Messages', icon: <Mail size={16} />, category: 'Main' },
-    { id: 'media', label: 'Media Library', icon: <Image size={16} />, category: 'Main' },
-    { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={16} />, category: 'Main' },
-    { id: 'settings', label: 'Site Settings', icon: <Settings size={16} />, category: 'System' },
-    { id: 'security', label: 'Security Center', icon: <ShieldCheck size={16} />, category: 'System' },
-    { id: 'api-keys', label: 'API Keys', icon: <KeyIcon size={16} />, category: 'System' },
-    { id: 'backup', label: 'Backup & Export', icon: <HardDrive size={16} />, category: 'System' },
-    { id: 'admin-users', label: 'Admin Users', icon: <Users size={16} />, category: 'System' },
+    // Dashboard
+    { id: 'dashboard',                         label: 'Dashboard',                  icon: <LayoutDashboard size={16} />,    category: 'Dashboard' },
+    // Messages
+    { id: 'messages-inbox',                    label: 'Inbox',                      icon: <Mail size={16} />,               category: 'Messages' },
+    { id: 'messages-contact-analytics',        label: 'Contact Form Analytics',     icon: <BarChart3 size={16} />,          category: 'Messages' },
+    // Community
+    { id: 'community-applications',            label: 'Applications',               icon: <FileText size={16} />,           category: 'Community' },
+    { id: 'community-content',                 label: 'Content Manager',            icon: <Settings size={16} />,           category: 'Community' },
+    { id: 'community-analytics',               label: 'Community Analytics',        icon: <BarChart3 size={16} />,          category: 'Community' },
+    // Content
+    { id: 'content-hero',                      label: 'Hero Section',               icon: <Home size={16} />,               category: 'Content' },
+    { id: 'content-about',                     label: 'About',                      icon: <Info size={16} />,               category: 'Content' },
+    { id: 'content-projects',                  label: 'Projects',                   icon: <Briefcase size={16} />,          category: 'Content' },
+    { id: 'content-services',                  label: 'Services',                   icon: <Wrench size={16} />,             category: 'Content' },
+    { id: 'content-highlights',                label: 'Highlights',                 icon: <Sparkles size={16} />,           category: 'Content' },
+    { id: 'content-process',                   label: 'Process Steps',              icon: <ListOrdered size={16} />,        category: 'Content' },
+    { id: 'content-reviews',                   label: 'Reviews',                    icon: <Star size={16} />,               category: 'Content' },
+    { id: 'content-blog',                      label: 'Blog / Insights',            icon: <FileText size={16} />,           category: 'Content' },
+    { id: 'content-legal',                     label: 'Legal Pages Manager',        icon: <ScrollText size={16} />,         category: 'Content' },
+    { id: 'content-privacy-policy',            label: 'Privacy Policy',             icon: <Shield size={16} />,             category: 'Content' },
+    { id: 'content-terms-conditions',          label: 'Terms & Conditions',         icon: <ScrollText size={16} />,         category: 'Content' },
+    { id: 'content-cookies-policy',            label: 'Cookies Policy',             icon: <Cookie size={16} />,             category: 'Content' },
+    // Analytics
+    { id: 'analytics-traffic',                 label: 'Traffic Overview',           icon: <BarChart3 size={16} />,          category: 'Analytics' },
+    { id: 'analytics-performance',             label: 'Performance Metrics',        icon: <BarChart3 size={16} />,          category: 'Analytics' },
+    // Media
+    { id: 'media',                             label: 'Media Library',              icon: <Image size={16} />,              category: 'Media Lab' },
+    // Security
+    { id: 'security-overview',                 label: 'Overview',                   icon: <Eye size={16} />,                category: 'Security' },
+    { id: 'security-sessions',                 label: 'Active Sessions',            icon: <MonitorSmartphone size={16} />,  category: 'Security' },
+    { id: 'security-mfa',                      label: 'MFA Settings',               icon: <Fingerprint size={16} />,        category: 'Security' },
+    { id: 'security-passwords',                label: 'Password Policy',            icon: <Lock size={16} />,               category: 'Security' },
+    { id: 'security-ip-blocklist',             label: 'IP Blocklist',               icon: <ShieldAlert size={16} />,        category: 'Security' },
+    { id: 'security-audit-log',                label: 'Audit Log',                  icon: <ScrollText size={16} />,         category: 'Security' },
+    { id: 'security-alerts',                   label: 'Suspicious Activity Alerts', icon: <AlertTriangle size={16} />,      category: 'Security' },
+    // Settings
+    { id: 'settings-general-info',             label: 'General Info',               icon: <Globe size={16} />,              category: 'Settings' },
+    { id: 'settings-maintenance',              label: 'Maintenance',                icon: <Construction size={16} />,       category: 'Settings' },
+    { id: 'settings-webhooks',                 label: 'Webhooks',                   icon: <Webhook size={16} />,            category: 'Settings' },
+    { id: 'settings-api-keys',                 label: 'API Keys',                   icon: <KeyRound size={16} />,           category: 'Settings' },
+    { id: 'settings-backup',                   label: 'Backup & Export',            icon: <HardDrive size={16} />,          category: 'Settings' },
+    { id: 'settings-admin-users',              label: 'Admin Users',                icon: <Users size={16} />,              category: 'Settings' },
 ];
+
+const CATEGORIES = ['Dashboard', 'Messages', 'Community', 'Content', 'Analytics', 'Media Lab', 'Security', 'Settings'];
+
+const makeFullAccess = () => Object.fromEntries(ACCESS_SECTIONS.map(s => [s.id, { view: true, edit: true }]));
+const makeNoAccess  = () => Object.fromEntries(ACCESS_SECTIONS.map(s => [s.id, { view: false, edit: false }]));
 
 const DEFAULT_PERMISSIONS = {
     Admin: {
-        dashboard: { view: true, edit: true },
-        content: { view: true, edit: true },
-        messages: { view: true, edit: true },
-        media: { view: true, edit: true },
-        analytics: { view: true, edit: false },
-        settings: { view: true, edit: false },
-        security: { view: true, edit: false },
-        'api-keys': { view: false, edit: false },
-        backup: { view: true, edit: false },
-        'admin-users': { view: true, edit: false },
+        ...makeFullAccess(),
+        'content-legal': { view: true, edit: true },
+        'content-privacy-policy': { view: true, edit: true },
+        'content-terms-conditions': { view: true, edit: true },
+        'content-cookies-policy': { view: true, edit: true },
+        'settings-api-keys': { view: false, edit: false },
+        'settings-admin-users': { view: true, edit: false },
     },
     Editor: {
-        dashboard: { view: true, edit: false },
-        content: { view: true, edit: true },
-        messages: { view: true, edit: false },
-        media: { view: true, edit: true },
-        analytics: { view: false, edit: false },
-        settings: { view: false, edit: false },
-        security: { view: false, edit: false },
-        'api-keys': { view: false, edit: false },
-        backup: { view: false, edit: false },
-        'admin-users': { view: false, edit: false },
+        ...makeNoAccess(),
+        'dashboard': { view: true, edit: false },
+        'content-hero': { view: true, edit: true },
+        'content-about': { view: true, edit: true },
+        'content-projects': { view: true, edit: true },
+        'content-services': { view: true, edit: true },
+        'content-highlights': { view: true, edit: true },
+        'content-process': { view: true, edit: true },
+        'content-reviews': { view: true, edit: true },
+        'content-blog': { view: true, edit: true },
+        'content-legal': { view: true, edit: true },
+        'content-privacy-policy': { view: true, edit: true },
+        'content-terms-conditions': { view: true, edit: true },
+        'content-cookies-policy': { view: true, edit: true },
+        'community-content': { view: true, edit: true },
+        'messages-inbox': { view: true, edit: false },
+        'media': { view: true, edit: true },
     },
     Viewer: {
-        dashboard: { view: true, edit: false },
-        content: { view: true, edit: false },
-        messages: { view: true, edit: false },
-        media: { view: true, edit: false },
-        analytics: { view: false, edit: false },
-        settings: { view: false, edit: false },
-        security: { view: false, edit: false },
-        'api-keys': { view: false, edit: false },
-        backup: { view: false, edit: false },
-        'admin-users': { view: false, edit: false },
+        ...makeNoAccess(),
+        'dashboard': { view: true, edit: false },
+        'content-hero': { view: true, edit: false },
+        'content-about': { view: true, edit: false },
+        'content-projects': { view: true, edit: false },
+        'content-services': { view: true, edit: false },
+        'content-highlights': { view: true, edit: false },
+        'content-process': { view: true, edit: false },
+        'content-reviews': { view: true, edit: false },
+        'content-blog': { view: true, edit: false },
+        'content-legal': { view: true, edit: false },
+        'messages-inbox': { view: true, edit: false },
+        'media': { view: true, edit: false },
     },
 };
 
@@ -188,6 +236,11 @@ const AdminUsers = () => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
+        
+        if (!checkPermission('settings-admin-users')) {
+            setToast({ type: 'error', message: 'You do not have permission to modify admin users.' });
+            return;
+        }
 
         try {
             if (editingUser) {
@@ -245,6 +298,11 @@ const AdminUsers = () => {
     };
 
     const saveAccessPerms = async () => {
+        if (!checkPermission('settings-admin-users')) {
+            setToast({ type: 'error', message: 'You do not have permission to modify access perms.' });
+            return;
+        }
+
         const user = accessModal.user;
         const newPerms = {
             ...rolePermissions,
@@ -254,6 +312,8 @@ const AdminUsers = () => {
         try {
             await updateSiteConfig('role_permissions', JSON.stringify(newPerms));
             setRolePermissions(newPerms);
+            // Refresh global context permissions
+            if (refreshPermissions) refreshPermissions();
             setAccessModal({ open: false, user: null });
             setToast({ type: 'success', message: `Access permissions updated for "${user.name}".` });
         } catch (err) {
@@ -631,7 +691,7 @@ const AdminUsers = () => {
                                     <span className="au-perm-grid-col"><Pencil size={13} /> Edit</span>
                                 </div>
 
-                                {['Main', 'System'].map(category => (
+                                {CATEGORIES.map(category => (
                                     <div key={category}>
                                         <div className="au-perm-category">{category}</div>
                                         {ACCESS_SECTIONS.filter(s => s.category === category).map(section => (
@@ -658,6 +718,7 @@ const AdminUsers = () => {
                                                             type="checkbox"
                                                             checked={accessPerms[section.id]?.edit || false}
                                                             onChange={() => toggleAccessPerm(section.id, 'edit')}
+                                                            disabled={!accessPerms[section.id]?.view}
                                                         />
                                                         <span className={`au-perm-check-box ${!accessPerms[section.id]?.view ? 'au-perm-check--disabled' : ''}`}>
                                                             {accessPerms[section.id]?.edit && <Check size={12} />}
@@ -668,6 +729,7 @@ const AdminUsers = () => {
                                         ))}
                                     </div>
                                 ))}
+
                             </div>
 
                             <div className="au-access-hint">

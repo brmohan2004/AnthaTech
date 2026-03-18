@@ -485,3 +485,21 @@ export async function fetchSiteConfig() {
   });
 }
 
+
+// ─── Legal Pages ─────────────────────────────────────────────
+export async function fetchLegalPage(slug) {
+  return withCache(`legal_${slug}`, async () => {
+    const { data, error } = await supabase
+      .from('legal_pages')
+      .select('*')
+      .eq('slug', slug)
+      .maybeSingle();
+    if (error) {
+      console.error(`Error fetching legal page (${slug}):`, error);
+      throw new Error(`Failed to load page: ${error.message}`);
+    }
+    return data || null;
+  });
+}
+
+

@@ -134,6 +134,14 @@ const Header = () => {
                                 Community
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink
+                                to="/privacy-policy"
+                                className={({ isActive }) => isActive ? "nav-link active" : "nav-link" || (location.pathname.includes('/privacy') || location.pathname.includes('/terms') || location.pathname.includes('/cookies'))}
+                            >
+                                Legal
+                            </NavLink>
+                        </li>
                     </ul>
                 </nav>
 
@@ -179,6 +187,9 @@ const Header = () => {
                         </li>
                         <li className="mobile-nav-item">
                             <NavLink to="/community" onClick={() => setIsMenuOpen(false)}>Community</NavLink>
+                        </li>
+                        <li className="mobile-nav-item">
+                            <NavLink to="/privacy-policy" onClick={() => setIsMenuOpen(false)}>Legal</NavLink>
                         </li>
                         <li className="mobile-nav-item mobile-cta-item">
                             <button className="mobile-cta-btn" onClick={() => { setIsMenuOpen(false); openContactModal(); }}>

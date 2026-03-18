@@ -33,6 +33,7 @@ import CommunityAnalytics from './pages/Analytics/Community/Community';
 import BackupExport from './pages/ApiKeys/Backup/Backup';
 import ApiKeys from './pages/ApiKeys/ApiKeys';
 import Login from './pages/Auth/Login';
+import LegalPages from './pages/Content/LegalPages/LegalPages';
 
 import { Outlet } from 'react-router-dom';
 
@@ -82,6 +83,7 @@ const AdminLayout = () => {
         '/admin/settings/webhooks': 'Webhook Manager',
         '/admin/api-keys': 'API Key Manager',
         '/admin/backup': 'Backup & Export Center',
+        '/admin/content/legal': 'Legal Pages Manager',
     };
 
     const title = titles[location.pathname] || 'Dashboard';
@@ -126,6 +128,7 @@ function AppRoutes() {
                 <Route path="/admin/content/community" element={<Community />} />
                 <Route path="/admin/community/applications" element={<CommunityApplications />} />
                 <Route path="/admin/content/blog" element={<Blog />} />
+                <Route path="/admin/content/legal" element={<LegalPages />} />
                 <Route path="/admin/messages" element={<Inbox />} />
                 <Route path="/admin/media" element={<MediaLibrary />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
@@ -165,7 +168,7 @@ function AppRoutes() {
 function App() {
     return (
         <AuthProvider>
-            <BrowserRouter>
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <AppRoutes />
             </BrowserRouter>
         </AuthProvider>

@@ -514,6 +514,45 @@ export async function deleteWebhook(id) {
   if (error) throw error;
 }
 
+// ─── Legal Pages ─────────────────────────────────────────────
+export async function getLegalPage(slug) {
+  const { data, error } = await supabase
+    .from('legal_pages')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertLegalPage(slug, updates) {
+  // Try update first
+  const { data: existing } = await supabase
+    .from('legal_pages')
+    .select('id')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (existing?.id) {
+    const { data, error } = await supabase
+      .from('legal_pages')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('slug', slug)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('legal_pages')
+      .insert({ slug, ...updates })
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+}
+
 // ─── Dashboard Stats ─────────────────────────────────────────
 export async function getDashboardStats() {
   return withCache('dashboard_stats', async () => {

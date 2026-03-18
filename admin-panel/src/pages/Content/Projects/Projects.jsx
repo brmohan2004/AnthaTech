@@ -8,6 +8,7 @@ import VersionHistoryDrawer from '../../../components/ui/VersionHistoryDrawer/Ve
 import ScheduledPublishPicker, { getCountdown } from '../../../components/ui/ScheduledPublishPicker/ScheduledPublishPicker';
 import { getProjects, createProject, updateProject, deleteProject, getContentHistory, insertAuditLog } from '../../../api/content';
 import { getCurrentUser } from '../../../api/auth';
+import { useAuth } from '../../../contexts/AuthContext';
 import { uploadFile, generateFilePath } from '../../../api/media';
 import MediaPickerModal from '../../../components/ui/MediaPickerModal';
 
@@ -41,6 +42,9 @@ const ProjectsManager = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const { canEdit, role } = useAuth();
+    const isReadOnly = role !== 'super_admin' && !canEdit('content-projects');
+
     const [versions, setVersions] = useState([]);
 
     // Editor state
@@ -297,14 +301,21 @@ const ProjectsManager = () => {
                         <Button variant="ghost" icon={<Clock size={16} />} onClick={() => setHistoryOpen(true)}>
                             History
                         </Button>
-                        <Button variant="secondary" onClick={() => saveProject(formData.status === 'Draft' ? 'Draft' : formData.status)}>
+                        <Button variant="secondary" onClick={() => saveProject(formData.status === 'Draft' ? 'Draft' : formData.status)} disabled={isReadOnly}>
                             Save as Draft
                         </Button>
-                        <Button variant="primary" icon={<Save size={16} />} onClick={() => saveProject('Published')}>
+                        <Button variant="primary" icon={<Save size={16} />} onClick={() => saveProject('Published')} disabled={isReadOnly}>
                             Publish ✓
                         </Button>
                     </div>
                 </header>
+
+                {isReadOnly && (
+                    <div className="readonly-banner">
+                        <ShieldCheck size={16} />
+                        <span><strong>Read-only mode.</strong> You don't have permission to edit content.</span>
+                    </div>
+                )}
 
                 <div className="sched-tab-bar" style={{ marginBottom: 24, padding: '0 32px' }}>
                     <button
@@ -603,7 +614,7 @@ const ProjectsManager = () => {
             </header>
 
             <div className="table-toolbar">
-                <Button variant="primary" icon={<Plus size={16} />} onClick={handleAddNew}>
+                <Button variant="primary" icon={<Plus size={16} />} onClick={handleAddNew} disabled={isReadOnly}>
                     Add New Project
                 </Button>
 

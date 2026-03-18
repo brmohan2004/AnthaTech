@@ -1,0 +1,26 @@
+name: Keep Supabase Project Alive
+on:
+  schedule:
+    - cron: '0 0 * * 1,4' # Run every Monday and Thursday (twice a week) at midnight
+  workflow_dispatch:      # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Supabase Client
+        run: npm install @supabase/supabase-js
+
+      - name: Run keep-alive script
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node supabase/keep-alive.js

@@ -22,9 +22,18 @@ const SEO = ({ config }) => {
     const currentPath = location.pathname;
     const pageMeta = seo.perPage?.find(p => {
         const pageName = (p.page || '').toLowerCase().trim();
-        if (pageName === 'home' && currentPath === '/') return true;
-        // Simple mapping, can be expanded
-        return currentPath.includes(pageName) && pageName !== '';
+        const routePath = currentPath.toLowerCase().trim();
+        
+        // Exact match
+        if (pageName === routePath) return true;
+        
+        // Special case for root
+        if (pageName === 'home' && routePath === '/') return true;
+        
+        // Prefix match, e.g. "/services/web-dev" matches "/services"
+        if (pageName !== '' && pageName !== '/' && routePath.startsWith(pageName)) return true;
+        
+        return false;
     });
 
     const title = pageMeta?.title || seo.defaultTitle || seo.siteName;

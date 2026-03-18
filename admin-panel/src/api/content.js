@@ -333,8 +333,15 @@ export async function updateSiteConfig(key, value) {
 
 export async function updateSiteConfigBatch(entries) {
   invalidateLocalCache('site_config');
-  // entries = { key1: value1, key2: value2, ... }
-  const promises = Object.entries(entries).map(([key, value]) =>
+  // entries can be an array of {key, value} objects OR a single object with key-value pairs
+  let updates = [];
+  if (Array.isArray(entries)) {
+    updates = entries;
+  } else {
+    updates = Object.entries(entries).map(([key, value]) => ({ key, value }));
+  }
+
+  const promises = updates.map(({ key, value }) =>
     supabase.from('site_config').update({ value }).eq('key', key)
   );
   const results = await Promise.all(promises);

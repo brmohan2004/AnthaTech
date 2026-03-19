@@ -36,7 +36,21 @@ export default function Hero() {
     };
 
     useEffect(() => {
-        loadHero();
+        let isMounted = true;
+        fetchHeroContent()
+            .then(data => {
+                if (isMounted && data) {
+                    setHero(data);
+                    setLoading(false);
+                }
+            })
+            .catch(err => {
+                if (isMounted) {
+                    setError(err.message);
+                    setLoading(false);
+                }
+            });
+        return () => { isMounted = false; };
     }, []);
 
     if (loading) {

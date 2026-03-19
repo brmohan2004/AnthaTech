@@ -56,7 +56,7 @@ export default function Community() {
                 <div className="ct-header">
                     <div className="ct-header-left">
                         <div className="section-badge">
-                            <span className="badge-text" style={{ textTransform: 'none' }}>Community</span>
+                            <span className="badge-text">Community</span>
                         </div>
                         <h2 className="ct-title">
                             <span className="ct-title-blue">{content.title_1 || 'Build together,'}</span><br />

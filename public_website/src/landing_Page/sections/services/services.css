@@ -1,7 +1,8 @@
 .services-section {
     padding: 80px 60px 20px 60px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 .services-section.is-page {
@@ -22,7 +23,6 @@
     align-items: flex-end;
     margin-bottom: 60px;
     padding: 0;
-    /* Align with card margins mostly */
 }
 
 .services-header-left {
@@ -31,80 +31,45 @@
     align-items: flex-start;
 }
 
-
 .services-title {
-    font-size: 56px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -1.5px;
     margin: 0;
+    color: var(--text-primary);
 }
 
 .text-dark-blue {
-    color: #0f2c59;
-    /* Matching the logo/theme blue */
+    color: var(--accent-primary);
 }
 
 .text-black {
-    color: #000000;
+    color: var(--text-primary);
 }
 
 /* Button on the right */
 .services-header-right {
     margin-bottom: 8px;
-    /* Alignment tweak for the text baseline */
-}
-
-.btn-solid-blue {
-    background-color: #0f2243;
-    /* Very dark rich blue */
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 14px 32px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-solid-blue:hover {
-    background-color: #081224;
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 10px 25px rgba(12, 45, 87, 0.3);
 }
 
 .services-cards-wrapper {
     padding: 20px 0 0 0;
-    /* Space for the floating button's offset */
     position: relative;
 }
 
 .sticky-card-wrapper {
     padding-bottom: 40vh;
-    /* Padding instead of margin — padding gets the background color, margin is transparent */
-    background-color: #ffffff;
-    transition: transform 0.3s ease;
+    background-color: var(--bg-primary);
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .sticky-card-wrapper:last-child {
     padding-bottom: 10vh;
-    /* Just enough scroll room for the last card to fully engage its sticky position,
-       without creating a huge gap before the next section */
 }
 
-/* Responsive */
+/* Responsive (Mostly handled by variables) */
 @media (max-width: 768px) {
-    .section-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
-    }
-
-    .section-badge .badge-text {
-        font-size: 11px;
-    }
-
     .services-section {
         padding: 60px 20px 20px 20px;
     }
@@ -117,11 +82,7 @@
         padding: 0;
     }
 
-    .services-title {
-        font-size: 40px;
-    }
-
     .services-cards-wrapper {
         padding: 0;
     }
-}
+}

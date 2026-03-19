@@ -1,10 +1,14 @@
 .pd-challenges-section {
-    background-color: #f7f7f7;
-    /* Very light gray */
+    background-color: var(--bg-secondary);
     padding: 100px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .pd-challenges-section {
+    background-color: var(--bg-primary);
 }
 
 .pd-challenges-container {
@@ -30,13 +34,13 @@
 .pd-challenges-title {
     font-size: 32px;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
     margin-bottom: 32px;
 }
 
 .pd-challenges-text p {
     font-size: 20px;
-    color: #1f2937;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 24px;
     font-weight: 500;

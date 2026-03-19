@@ -1,10 +1,11 @@
 .contact-section {
     padding: 80px 0 120px 0;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    transition: background-color 0.3s ease;
 }
 
 .contact-section.is-compact {
@@ -34,13 +35,11 @@
 }
 
 .contact-cta-button {
-    background-color: #e5e7eb;
-    /* Light Gray */
+    background-color: var(--bg-tertiary);
     height: 120px;
     min-width: 520px;
-    /* Increased to fit text */
     border-radius: 100px;
-    border: none;
+    border: 1px solid var(--border-color);
     outline: none;
     display: flex;
     align-items: center;
@@ -52,15 +51,18 @@
     cursor: pointer;
 }
 
+[data-theme='dark'] .contact-cta-button {
+    background-color: var(--bg-secondary);
+}
+
 /* The expanding white circle */
 .circle-bg {
     position: absolute;
     left: 10px;
     top: 10px;
-    /* Centered in the 120px height button */
     width: 100px;
     height: 100px;
-    background-color: #ffffff;
+    background-color: var(--text-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -69,31 +71,35 @@
     transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+[data-theme='dark'] .circle-bg {
+    background-color: var(--accent-primary);
+}
+
 .cta-text {
     position: absolute;
     left: 0;
     right: 0;
     font-size: 52px;
     font-weight: 400;
-    color: #111827;
-    /* Sharper dark gray/black */
+    color: var(--text-primary);
     text-align: center;
     padding-left: 100px;
-    /* Offset for circle */
     padding-right: 20px;
-    /* Safety padding */
     z-index: 2;
     transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     white-space: nowrap;
     backface-visibility: hidden;
-    /* Optimization to prevent blur */
     -webkit-font-smoothing: antialiased;
 }
 
 .arrow-icon {
-    color: #000000;
+    color: var(--bg-primary);
     transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 3;
+}
+
+[data-theme='dark'] .arrow-icon {
+    color: #ffffff;
 }
 
 /* HOVER EFFECTS */
@@ -108,7 +114,11 @@
 .contact-cta-button:hover .cta-text {
     padding-left: 0;
     padding-right: 0;
-    color: #000000;
+    color: var(--bg-primary);
+}
+
+[data-theme='dark'] .contact-cta-button:hover .cta-text {
+    color: #ffffff;
 }
 
 .contact-cta-button:hover {

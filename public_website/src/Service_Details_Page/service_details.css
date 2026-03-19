@@ -4,6 +4,11 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .sd-hero {
+    background-color: var(--bg-primary) !important;
 }
 
 .sd-hero-content {
@@ -13,24 +18,24 @@
 }
 
 .sd-title {
-    font-size: 84px;
+    font-size: var(--font-size-hero);
     font-weight: 400;
-    color: #111827;
+    color: var(--text-primary);
     margin: 20px 0 10px 0;
     letter-spacing: -2px;
 }
 
 .sd-subtitle {
-    font-size: 36px;
+    font-size: var(--font-size-h2);
     font-weight: 600;
-    color: #0c2d57;
+    color: var(--accent-primary);
     margin-bottom: 30px;
     line-height: 1.2;
 }
 
 .sd-description {
-    font-size: 20px;
-    color: #4b5563;
+    font-size: var(--font-size-h5);
+    color: var(--text-secondary);
     line-height: 1.6;
     max-width: 700px;
 }

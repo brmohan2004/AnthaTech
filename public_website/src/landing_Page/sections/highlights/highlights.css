@@ -1,7 +1,8 @@
 .highlights-section {
     padding: 100px 60px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 .highlights-container {
@@ -16,10 +17,10 @@
 
 /* Typography for the large header */
 .highlights-header {
-    font-size: 48px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
-    line-height: 1.25;
-    color: #000000;
+    line-height: var(--line-height-heading);
+    color: var(--text-primary);
     max-width: 900px;
     margin: 0;
     letter-spacing: -0.5px;
@@ -28,7 +29,7 @@
 }
 
 .text-highlight {
-    color: #0f2c59;
+    color: var(--accent-primary);
     /* The dark blue from the design */
 }
 
@@ -57,20 +58,16 @@
 }
 
 .highlight-title {
-    font-size: 28px;
+    font-size: var(--font-size-h3);
     font-weight: 700;
     line-height: 1.1;
-    color: #000000;
+    color: var(--text-primary);
     margin: 0;
     letter-spacing: -0.5px;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
-    .highlights-header {
-        font-size: 38px;
-    }
-
     .highlights-grid {
         column-gap: 60px;
     }
@@ -85,10 +82,6 @@
         gap: 60px;
     }
 
-    .highlights-header {
-        font-size: 32px;
-    }
-
     .highlights-grid {
         grid-template-columns: 1fr;
         row-gap: 50px;
@@ -96,10 +89,6 @@
 
     .highlight-item {
         gap: 24px;
-    }
-
-    .highlight-title {
-        font-size: 24px;
     }
 
     .highlight-icon svg {

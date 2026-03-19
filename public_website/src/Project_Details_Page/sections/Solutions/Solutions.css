@@ -1,10 +1,14 @@
 .pd-solutions-section {
-    background-color: #eeeeee;
-    /* Light gray background matching the design */
+    background-color: var(--bg-secondary);
     padding: 100px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .pd-solutions-section {
+    background-color: var(--bg-tertiary);
 }
 
 .pd-solutions-container {
@@ -20,6 +24,7 @@
     width: 64px;
     height: 64px;
     margin-bottom: 24px;
+    color: var(--accent-primary);
 }
 
 .pd-solutions-icon svg {
@@ -28,20 +33,19 @@
 }
 
 .pd-solutions-title {
-    font-size: 32px;
+    font-size: var(--font-size-h2);
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
     margin-bottom: 32px;
 }
 
 .pd-solutions-text p {
-    font-size: 20px;
-    color: #111827;
-    line-height: 1.6;
+    font-size: var(--font-size-body);
+    color: var(--text-primary);
+    line-height: var(--line-height-body);
     margin-bottom: 24px;
     font-weight: 400;
     text-align: left;
-    /* Text in the design is left-aligned within the centered container */
 }
 
 /* Override the centering for text block to make it look exactly like the design */
@@ -58,13 +62,5 @@
 @media (max-width: 768px) {
     .pd-solutions-section {
         padding: 60px 20px;
-    }
-
-    .pd-solutions-title {
-        font-size: 28px;
-    }
-
-    .pd-solutions-text p {
-        font-size: 18px;
     }
 }

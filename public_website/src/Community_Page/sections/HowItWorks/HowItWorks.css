@@ -1,6 +1,11 @@
 .how-section {
     padding: 100px 60px;
-    background: #f8fafc;
+    background: var(--bg-secondary);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .how-section {
+    background: var(--bg-primary);
 }
 
 .how-inner {
@@ -11,7 +16,7 @@
 .how-title {
     font-size: 52px;
     font-weight: 400;
-    color: #111827;
+    color: var(--text-primary);
     margin: 20px 0 60px;
     letter-spacing: -1.5px;
 }
@@ -26,22 +31,26 @@
     display: flex;
     gap: 28px;
     padding: 40px;
-    background: #ffffff;
+    background: var(--bg-primary);
     border-radius: 24px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
     transition: all 0.3s ease;
 }
 
+[data-theme='dark'] .how-step {
+    background: var(--bg-secondary);
+}
+
 .how-step:hover {
-    border-color: #0c2d57;
-    box-shadow: 0 8px 30px rgba(12, 45, 87, 0.08);
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     transform: translateY(-4px);
 }
 
 .how-step-num {
     font-size: 48px;
     font-weight: 900;
-    color: #0c2d57;
+    color: var(--accent-primary);
     opacity: 0.15;
     line-height: 1;
     min-width: 60px;
@@ -50,13 +59,13 @@
 .how-step-title {
     font-size: 22px;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-primary);
     margin: 0 0 10px;
 }
 
 .how-step-desc {
     font-size: 16px;
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.65;
     margin: 0;
 }

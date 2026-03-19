@@ -1,11 +1,12 @@
 .projects-hero-section {
     position: relative;
-    padding: 80px 60px 20px 60px;
-    background-color: #ffffff;
+    padding: 140px 60px 40px 60px;
+    background-color: var(--bg-primary);
     min-height: 400px;
     display: flex;
     align-items: center;
     overflow: hidden;
+    transition: background-color 0.3s ease;
 }
 
 .ph-container {
@@ -17,36 +18,37 @@
 }
 
 .ph-badge {
-    background: #f3f4f6;
+    background: var(--bg-tertiary);
     padding: 8px 24px;
     border-radius: 999px;
     display: inline-block;
     margin-bottom: 30px;
+    border: 1px solid var(--border-color);
 }
 
 .ph-badge span {
-    font-size: 15px;
+    font-size: var(--font-size-small);
     font-weight: 500;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .ph-title {
-    font-size: 80px;
+    font-size: var(--font-size-hero);
     font-weight: 400;
-    color: #000000;
-    line-height: 1.1;
+    color: var(--text-primary);
+    line-height: var(--line-height-hero);
     margin: 0 0 20px 0;
     letter-spacing: -2px;
 }
 
 .ph-subtitle {
-    font-size: 18px;
-    color: #1e3a5f;
+    font-size: var(--font-size-h5);
+    color: var(--text-secondary);
     /* Deep navy blue to match design */
     font-weight: 500;
     margin: 0;
     letter-spacing: -0.1px;
-    line-height: 1.5;
+    line-height: var(--line-height-body);
     max-width: 900px;
     /* To prevent too long lines */
 }
@@ -62,29 +64,10 @@
         text-align: left;
     }
 
-    .ph-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
-    }
-
-    .ph-badge span {
-        font-size: 11px;
-    }
-
     .ph-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        text-align: left;
-    }
-
-    .ph-title {
-        font-size: 52px;
-        text-align: left;
-    }
-
-    .ph-subtitle {
-        font-size: 16px;
         text-align: left;
     }
 }

@@ -1,0 +1,105 @@
+/* Centralized Theme and Typography Management */
+
+:root {
+    /* Font Families */
+    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-secondary: 'Outfit', sans-serif; /* or another stylish font if used */
+
+    /* Light Mode Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-tertiary: #9ca3af;
+    
+    --accent-primary: #3b82f6;
+    --accent-hover: #2563eb;
+    
+    --border-color: #e5e7eb;
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    /* Header & Footer */
+    --header-bg: rgba(255, 255, 255, 0.8);
+    --footer-bg: #1f2937;
+    --footer-text: #f9fafb;
+
+    /* Responsive Typography - Desktop (Default) */
+    --font-size-hero: 82px;
+    --font-size-h1: 48px;
+    --font-size-h2: 36px;
+    --font-size-h3: 30px;
+    --font-size-h4: 24px;
+    --font-size-h5: 20px;
+    --font-size-h6: 18px;
+    --font-size-body: 16px;
+    --font-size-small: 14px;
+    --font-size-tiny: 12px;
+
+    --line-height-hero: 1.05;
+    --line-height-heading: 1.2;
+    --line-height-body: 1.6;
+}
+
+/* Deep Black Dark Mode */
+[data-theme='dark'] {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
+    
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    
+    --accent-primary: #3b82f6; /* Keep blue accent or adjust */
+    --accent-hover: #60a5fa;
+    
+    --border-color: #1f2937;
+    --card-bg: #0a0a0a;
+    --card-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.05);
+    
+    --header-bg: rgba(0, 0, 0, 0.8);
+    --footer-bg: #000000;
+    --footer-text: #f9fafb;
+}
+
+/* Tablet Screens */
+@media (max-width: 1024px) {
+    :root {
+        --font-size-hero: 56px;
+        --font-size-h1: 40px;
+        --font-size-h2: 32px;
+        --font-size-h3: 26px;
+        --font-size-h4: 22px;
+        --font-size-h5: 18px;
+        --font-size-h6: 16px;
+    }
+}
+
+/* Mobile Screens */
+@media (max-width: 480px) {
+    :root {
+        --font-size-hero: 42px;
+        --font-size-h1: 32px;
+        --font-size-h2: 28px;
+        --font-size-h3: 24px;
+        --font-size-h4: 20px;
+        --font-size-h5: 16px;
+        --font-size-h6: 14px;
+        --font-size-body: 15px;
+    }
+}
+
+/* Utility Typography Classes */
+.h0, .hero-text { font-size: var(--font-size-hero); line-height: var(--line-height-hero); font-family: var(--font-primary); }
+h1, .h1 { font-size: var(--font-size-h1); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+h2, .h2 { font-size: var(--font-size-h2); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+h3, .h3 { font-size: var(--font-size-h3); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+h4, .h4 { font-size: var(--font-size-h4); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+h5, .h5 { font-size: var(--font-size-h5); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+h6, .h6 { font-size: var(--font-size-h6); line-height: var(--line-height-heading); font-family: var(--font-primary); }
+p, .body-text { font-size: var(--font-size-body); line-height: var(--line-height-body); }
+.small-text { font-size: var(--font-size-small); }
+.tiny-text { font-size: var(--font-size-tiny); }

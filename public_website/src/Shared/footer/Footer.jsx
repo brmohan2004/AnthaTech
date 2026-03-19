@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './footer.css';
 import logo from '../../assets/logo.png';
 import { fetchServices, fetchSiteConfig } from '../../api/content';
-import { MapPin, ExternalLink } from 'lucide-react';
+import { MapPin, ExternalLink, Mail, Phone } from 'lucide-react';
 
 export default function Footer() {
     const [services, setServices] = useState([]);
@@ -30,12 +30,49 @@ export default function Footer() {
         fetchSiteConfig()
             .then(config => {
                 console.log('Site Config fetched in Footer:', config);
+                let mergedContact = {};
+
                 if (config.contact) {
                     const parsed = typeof config.contact === 'string' ? JSON.parse(config.contact) : config.contact;
-                    console.log('Parsed contact in Footer:', parsed);
-                    setContact(parsed || {});
+                    mergedContact = { ...parsed };
                 }
+                
+                // Merge top-level config keys to support direct 'business_email', etc.
+                mergedContact = { ...mergedContact, ...config };
+
+                // Fuzzy matching for keys found in admin panel (Business Email, Phone Number, etc.)
+                Object.keys(config).forEach(k => {
+                  if (k === 'contact') return; // Skip the raw contact JSON string
+                  
+                  const val = config[k];
+                  if (!val || typeof val !== 'string') return;
+                  
+                  const keyLow = k.toLowerCase().replace(/[\s_-]/g, '');
+                  
+                  // If the value looks like an email and doesn't look like JSON, use it
+                  if (val.includes('@') && !val.includes('{') && !mergedContact.business_email) {
+                    mergedContact.business_email = val;
+                  }
+                  
+                  if (keyLow.includes('email')) mergedContact.business_email = val;
+                  if (keyLow.includes('phone')) mergedContact.phone = val;
+                  if (keyLow.includes('address')) mergedContact.address = val;
+                  if (keyLow.includes('maplink') || keyLow.includes('googlemaps') || keyLow.includes('mapurl')) {
+                    mergedContact.mapUrl = val;
+                  }
+                });
+
+                // Map businessEmail from JSON to business_email if needed
+                if (mergedContact.businessEmail && !mergedContact.business_email) {
+                    mergedContact.business_email = mergedContact.businessEmail;
+                }
+
+                console.log('Final merged contact info:', mergedContact);
+                setContact(mergedContact);
             })
+
+
+
             .catch(() => { });
     }, []);
 
@@ -89,15 +126,32 @@ export default function Footer() {
                     {/* Address Column */}
                     <div className="footer-col address-col">
                         <h4 className="footer-heading">Contact Us</h4>
-                        <div className="footer-address">
-                            <MapPin size={18} className="address-icon" />
+                        <div className="footer-contact-item">
+                            <MapPin size={18} className="contact-icon" />
                             <p>{contact.address || 'Address not listed'}</p>
                         </div>
+                        {(contact.business_email || contact.email) && (
+                            <div className="footer-contact-item">
+                                <Mail size={18} className="contact-icon" />
+                                <a href={`mailto:${contact.business_email || contact.email}`}>
+                                    {contact.business_email || contact.email}
+                                </a>
+                            </div>
+                        )}
+                        {contact.phone && (
+                            <div className="footer-contact-item">
+                                <Phone size={18} className="contact-icon" />
+                                <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+                            </div>
+                        )}
+
+
+
                         {contact.mapUrl && (
-                            <a 
-                                href={contact.mapUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
+                            <a
+                                href={contact.mapUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="map-btn"
                             >
                                 <ExternalLink size={14} /> View on Map
@@ -111,7 +165,7 @@ export default function Footer() {
                 </div>
 
                 <div className="footer-brand-display">
-                    <h1>Qynta</h1>
+                    <h1>QYNTA</h1>
                 </div>
             </div>
         </footer>

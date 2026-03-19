@@ -76,9 +76,10 @@ export default function About2() {
                                 ></span>
                                 <h3 className="stat-number">{stat.number}</h3>
                             </div>
-                            <p className="stat-text">{(stat.label || stat.text || '')?.split('\n').map((line, j) => (
+                            <p className="stat-text">{(stat.label || stat.text || '')?.toLowerCase().split('\n').map((line, j) => (
                                 <React.Fragment key={j}>{line}{j === 0 && <br />}</React.Fragment>
                             ))}</p>
+
                         </div>
                     ))}
                     {stats.length === 0 && <p className="no-stats-text">No statistics available at the moment.</p>}

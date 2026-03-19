@@ -1,8 +1,9 @@
 .pd-review-section {
     padding: 80px 20px 40px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     display: flex;
     justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 .pd-review-container {
@@ -11,16 +12,20 @@
 }
 
 .pd-review-card {
-    background-color: #f4f4f4;
-    /* Very light gray */
+    background-color: var(--bg-secondary);
     border-radius: 12px;
     padding: 50px 60px;
     margin-bottom: 40px;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='dark'] .pd-review-card {
+    background-color: var(--bg-tertiary);
 }
 
 .pd-review-text {
     font-size: 24px;
-    color: #111827;
+    color: var(--text-primary);
     line-height: 1.6;
     font-weight: 500;
     margin: 0;
@@ -38,19 +43,18 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background-color: #ffffff;
-    border: 1px solid #d1d5db;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
 }
 
 .pd-author-avatar svg {
     width: 32px;
     height: 32px;
-    color: #374151;
-    /* Dark gray */
+    color: var(--text-primary);
 }
 
 .pd-author-info {
@@ -61,13 +65,13 @@
 .pd-author-name {
     font-size: 20px;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
     margin: 0 0 6px 0;
 }
 
 .pd-author-title {
     font-size: 14px;
-    color: #4b5563;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 

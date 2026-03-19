@@ -1,3 +1,5 @@
+@import './styles/theme.css';
+
 /* Base reset and global styles for the app */
 * {
     margin: 0;
@@ -5,11 +7,59 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #ffffff;
-    color: #111827;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
     overflow-x: hidden;
+    position: relative;
 }
 
-/* Base utility classes can go here */
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: var(--line-height-body);
+    font-size: var(--font-size-body);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Base utility classes */
+.btn-solid-blue {
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    padding: 16px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-solid-blue:hover {
+    background-color: var(--accent-primary);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .btn-solid-blue {
+        padding: 14px 28px;
+        font-size: var(--font-size-small);
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-solid-blue {
+        padding: 12px 24px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+}
+

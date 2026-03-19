@@ -1,6 +1,11 @@
 .process-section {
     padding: 100px 60px;
-    background-color: #f8fafc;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .process-section {
+    background-color: var(--bg-primary);
 }
 
 .process-container {
@@ -11,7 +16,7 @@
 .process-title {
     font-size: 52px;
     font-weight: 400;
-    color: #111827;
+    color: var(--text-primary);
     margin: 20px 0 60px 0;
     letter-spacing: -1.5px;
 }
@@ -26,7 +31,7 @@
     display: flex;
     gap: 60px;
     padding: 40px 0;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .process-item:last-child {
@@ -36,7 +41,7 @@
 .process-number {
     font-size: 64px;
     font-weight: 800;
-    color: #0c2d57;
+    color: var(--accent-primary);
     opacity: 0.1;
     line-height: 1;
     min-width: 100px;
@@ -49,13 +54,13 @@
 .process-step-title {
     font-size: 28px;
     font-weight: 700;
-    color: #111827;
+    color: var(--text-primary);
     margin-bottom: 12px;
 }
 
 .process-step-text {
     font-size: 18px;
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.6;
     max-width: 800px;
 }

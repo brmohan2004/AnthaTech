@@ -1,7 +1,8 @@
 .other-projects-section {
     padding: 40px 60px 40px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     overflow: hidden;
+    transition: background-color 0.3s ease;
 }
 
 .op-container {
@@ -15,31 +16,33 @@
 }
 
 .op-badge {
-    background: #f3f4f6;
+    background: rgba(255, 255, 255, 0.1);
     padding: 8px 18px;
     border-radius: 999px;
     display: inline-block;
     margin-bottom: 24px;
+    border: 1px solid var(--border-color);
 }
 
 .op-badge span {
     font-size: 14px;
-    font-weight: 500;
-    color: #4b5563;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: none;
+    letter-spacing: 0.02em;
 }
 
 .op-title {
     font-size: 64px;
     font-weight: 600;
-    color: #05264e;
-    /* Adjust to match the exact dark blue in the screenshot */
+    color: var(--text-primary);
     line-height: 1.1;
     margin: 0;
 }
 
 .op-title-black {
     display: block;
-    color: #000000;
+    color: var(--text-primary);
 }
 
 .op-carousel-container {
@@ -67,17 +70,17 @@
 
 .op-card-wrapper {
     scroll-snap-align: start;
-    transform: scale(0.9);
+    transform: none;
     transform-origin: left top;
-    margin-right: -100px;
-    /* Counteract the scaling empty space */
+    margin-right: 0;
 }
 
 .op-controls-row {
     display: flex;
     justify-content: flex-end;
-    margin-top: -10px;
+    margin-top: 40px;
 }
+
 
 .op-controls {
     display: flex;
@@ -88,18 +91,18 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background-color: #e5e7eb;
-    border: none;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #111827;
+    color: var(--text-primary);
     transition: all 0.2s ease;
 }
 
 .op-control-btn:hover {
-    background-color: #d1d5db;
+    background-color: var(--bg-secondary);
     transform: scale(1.05);
 }
 
@@ -127,9 +130,20 @@
     }
 
     .op-card-wrapper {
-        transform: scale(0.85);
-        margin-right: -80px;
+        transform: none;
+        margin-right: 0;
+        width: 320px;
+        flex-shrink: 0;
     }
+
+    .op-carousel-track {
+        gap: 60px;
+        padding: 0 40px 32px 0;
+        display: flex;
+    }
+
+
+
 
     .op-control-btn {
         width: 48px;

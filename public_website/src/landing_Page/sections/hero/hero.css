@@ -1,24 +1,5 @@
 /* Hero Section Widget Styles */
 
-:root {
-    --primary-text: #111827;
-    --secondary-text: #4b5563;
-    --btn-primary-bg: #1e293b;
-    /* Deep slate / navy */
-    --btn-primary-hover: #0f172a;
-    --btn-secondary-bg: #f3f4f6;
-    /* Light gray */
-    --btn-secondary-hover: #e5e7eb;
-    --pill-bg: #f8fafc;
-    --pill-border: #e2e8f0;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
-
 .hero-section {
     position: relative;
     width: 100%;
@@ -27,9 +8,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     padding: 100px 0px 40px;
     overflow: hidden;
+    transition: background-color 0.3s ease;
 }
 
 /* Beautiful simulated window shadow overlay from the design */
@@ -53,6 +35,17 @@ body {
     transform: rotate(-15deg);
 }
 
+[data-theme='dark'] .hero-shadow-overlay {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.03) 30%,
+            rgba(255, 255, 255, 0) 31%,
+            rgba(255, 255, 255, 0.02) 40%,
+            rgba(255, 255, 255, 0) 41%,
+            rgba(255, 255, 255, 0.05) 55%,
+            rgba(255, 255, 255, 0) 80%);
+}
+
 .hero-container {
     max-width: 900px;
     width: 100%;
@@ -63,7 +56,6 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 0 20px;
-    /* Added some breathing room for mobile */
 }
 
 /* Pill badge styling */
@@ -71,46 +63,45 @@ body {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background: #f8fafc !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     border-radius: 999px !important;
-    padding: 12px 32px !important;
-    margin-bottom: 30px !important;
-    border: 1px solid #eef2f6 !important;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+    padding: 8px 18px !important;
+    margin-bottom: 24px !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
     transition: all 0.3s ease !important;
 }
 
 .badge-text {
-    font-size: 15px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
-    color: #334155 !important;
-    letter-spacing: 0.05em !important;
-    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
 }
 
 /* Typography styles */
 .hero-title {
-    font-size: 82px;
+    font-size: var(--font-size-hero);
     font-weight: 400;
-    /* Semi-bold weight */
-    line-height: 1.05;
-    color: var(--primary-text);
+    line-height: var(--line-height-hero);
+    color: var(--text-primary);
     margin-bottom: 30px;
     letter-spacing: -1px;
 }
 
 .text-gradient {
-    background: linear-gradient(90deg, #111827 0%, #3b82f6 100%);
+    background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .hero-subtitle {
-    font-size: 20px;
+    font-size: var(--font-size-h5);
     font-weight: 400;
-    color: var(--secondary-text);
-    line-height: 1.6;
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
     max-width: 600px;
     margin: 0 auto 40px;
 }
@@ -121,13 +112,12 @@ body {
     gap: 16px;
     justify-content: center;
     margin-bottom: 40px;
-    /* Reduced from 80px */
 }
 
 .btn {
     display: inline-block;
-    padding: 14px 32px;
-    font-size: 16px;
+    padding: 16px 32px;
+    font-size: var(--font-size-body);
     font-weight: 600;
     text-decoration: none;
     border-radius: 8px;
@@ -136,24 +126,26 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--btn-primary-bg);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(30, 41, 59, 0.2);
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
-    background-color: var(--btn-primary-hover);
+    background-color: var(--accent-primary);
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 12px 28px rgba(30, 41, 59, 0.35);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
-    background-color: var(--btn-secondary-bg);
-    color: var(--primary-text);
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
+
 .btn-secondary:hover {
-    background-color: var(--btn-secondary-hover);
+    background-color: var(--bg-secondary);
     transform: translateY(-3px) scale(1.02);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
@@ -167,18 +159,14 @@ body {
 }
 
 .trusted-label {
-    font-size: 14px;
-    color: #9ca3af;
+    font-size: var(--font-size-tiny);
+    color: var(--text-tertiary);
     margin-bottom: 12px;
-    /* Reduced from 20px */
     letter-spacing: 0.5px;
 }
 
 .logo-carousel-container {
     width: 100%;
-    /* Full viewport width */
-    max-width: 100%;
-    /* Take full width */
     overflow: hidden;
     position: relative;
     padding: 20px 0;
@@ -197,13 +185,13 @@ body {
 
 .carousel-edge-blur.left {
     left: 0;
-    background: linear-gradient(to right, #ffffff 20%, transparent 100%);
+    background: linear-gradient(to right, var(--bg-primary) 20%, transparent 100%);
     backdrop-filter: blur(4px);
 }
 
 .carousel-edge-blur.right {
     right: 0;
-    background: linear-gradient(to left, #ffffff 20%, transparent 100%);
+    background: linear-gradient(to left, var(--bg-primary) 20%, transparent 100%);
     backdrop-filter: blur(4px);
 }
 
@@ -215,100 +203,50 @@ body {
     align-items: center;
 }
 
-.client-logo-item {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .client-brand-logo {
     height: 48px;
     width: auto;
     object-fit: contain;
-    opacity: 0.5;
+    opacity: 0.7;
     transition: all 0.4s ease;
-    filter: grayscale(1) brightness(0.8);
+    filter: none;
+}
+
+[data-theme='dark'] .client-brand-logo {
+    filter: none;
 }
 
 .client-brand-logo:hover {
     opacity: 1;
-    filter: grayscale(0) brightness(1);
+    filter: grayscale(0) invert(0) brightness(1);
     transform: scale(1.1);
 }
 
 @keyframes scrollLogos {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(calc(-1 * (100% / 4)));
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-1 * (100% / 4))); }
 }
 
-/* Animations */
-@keyframes placeholder-shimmer {
-    0% {
-        left: -100%;
-    }
-
-    100% {
-        left: 200%;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in-up {
+ .fade-in-up {
     opacity: 0;
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.delay-1 {
-    animation-delay: 0.1s;
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.delay-2 {
-    animation-delay: 0.2s;
-}
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
 
-.delay-3 {
-    animation-delay: 0.3s;
-}
-
-.delay-4 {
-    animation-delay: 0.4s;
-}
-
-/* Responsive Adjustments */
+/* Responsive Adjustments (Mostly covered by theme.css variables) */
 @media (max-width: 768px) {
     .hero-badge {
         padding: 5px 14px !important;
         margin-bottom: 20px !important;
-    }
-
-    .hero-badge .badge-text {
-        font-size: 11px !important;
-    }
-
-    .hero-title {
-        font-size: 56px;
-    }
-
-    .hero-subtitle {
-        font-size: 18px;
-        padding: 0 20px;
     }
 
     .hero-cta-group {
@@ -320,20 +258,9 @@ body {
     .btn {
         width: 100%;
         text-align: center;
-    }
-
-    .trusted-logos {
-        gap: 16px;
-    }
-
-    .logo-placeholder {
-        width: 100px;
-        height: 40px;
+        padding: 12px 24px;
+        font-size: 14px;
     }
 }
 
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 42px;
-    }
-}
+

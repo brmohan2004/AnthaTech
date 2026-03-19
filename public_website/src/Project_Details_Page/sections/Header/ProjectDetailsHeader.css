@@ -4,30 +4,31 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff;
-    border-top: 4px solid #ffffff;
-    /* Top blue line from design */
+    background-color: var(--bg-primary);
+    border-top: 4px solid var(--accent-primary);
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color 0.3s ease;
 }
 
 .back-button {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background-color: #f0f0f0;
+    background-color: var(--bg-tertiary);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    border: none;
-    color: #111827;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
 .back-button:hover {
-    background-color: #e5e7eb;
+    background-color: var(--bg-secondary);
+    transform: scale(1.05);
 }
 
 .back-button svg {
@@ -36,21 +37,26 @@
 }
 
 .get-in-touch-btn {
-    background-color: #0c2d57;
-    /* Dark navy from design */
-    color: #ffffff;
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
     padding: 12px 28px;
     border-radius: 8px;
     font-weight: 600;
     text-decoration: none;
     font-size: 15px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
 }
 
+[data-theme='dark'] .get-in-touch-btn {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+}
+
 .get-in-touch-btn:hover {
-    background-color: #092140;
+    background-color: var(--accent-primary);
+    opacity: 0.9;
     transform: translateY(-1px);
 }
 

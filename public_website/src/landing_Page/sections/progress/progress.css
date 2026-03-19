@@ -2,7 +2,8 @@
     position: relative;
     height: 400vh;
     padding: 0;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
+    transition: background-color 0.3s ease;
 }
 
 .progress-sticky-container {
@@ -32,11 +33,12 @@
 }
 
 .progress-title {
-    font-size: 56px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -1.5px;
     margin: 0;
+    color: var(--text-primary);
 }
 
 .progress-cards-container {
@@ -66,12 +68,10 @@
     z-index: 100;
 }
 
-
-
 .indicator-track {
     width: 2px;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--border-color);
     position: relative;
     border-radius: 10px;
 }
@@ -81,7 +81,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #0f2c59;
+    background-color: var(--accent-primary);
     transition: height 0.5s ease-out;
     border-radius: 10px;
 }
@@ -96,33 +96,21 @@
 .indicator-dot {
     width: 6px;
     height: 6px;
-    background-color: #d1d5db;
+    background-color: var(--text-tertiary);
     border-radius: 50%;
     position: relative;
     transition: all 0.3s ease;
 }
 
 .indicator-dot.active {
-    background-color: #0f2c59;
+    background-color: var(--accent-primary);
     transform: scale(1.6);
-    box-shadow: 0 0 10px rgba(15, 44, 89, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-
-
 @media (max-width: 768px) {
-    .section-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
-    }
-
-    .section-badge .badge-text {
-        font-size: 11px;
-    }
-
     .progress-section {
         height: 350vh;
-        /* Slightly less for mobile */
     }
 
     .progress-sticky-container {
@@ -151,13 +139,8 @@
         align-items: flex-start;
     }
 
-    .progress-title {
-        font-size: 36px;
-    }
-
     .progress-cards-container {
         height: 500px;
-        /* Taller for mobile stack */
     }
 
     .progress-stack {
@@ -171,8 +154,8 @@
     }
 
     /* Override stack for mobile */
-    .progress-stack>div {
+    .progress-stack > div {
         width: 100% !important;
         left: 0;
     }
-}
+}

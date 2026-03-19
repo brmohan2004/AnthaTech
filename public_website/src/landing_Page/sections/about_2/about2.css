@@ -1,7 +1,8 @@
 .about2-section {
     padding: 60px 60px 80px 60px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 .about2-container {
@@ -27,19 +28,20 @@
 }
 
 .about2-title {
-    font-size: 56px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -1.5px;
     margin: 0;
+    color: var(--text-primary);
 }
 
 .text-dark-blue {
-    color: #0f2c59;
+    color: var(--accent-primary);
 }
 
 .text-black {
-    color: #000000;
+    color: var(--text-primary);
 }
 
 .about2-header-right {
@@ -66,21 +68,18 @@
     align-items: center;
     position: relative;
     padding-left: 20px;
-    /* Base padding to let the dot breathe */
     margin-bottom: 16px;
 }
 
 .stat-number {
-    font-size: 96px;
-    /* Huge text */
+    font-size: var(--font-size-hero);
     font-weight: 600;
-    color: #000000;
+    color: var(--text-primary);
     margin: 0;
     line-height: 1;
     letter-spacing: -4px;
     position: relative;
     z-index: 2;
-    /* Sits above the glow */
 }
 
 /* Soft glowing dots */
@@ -90,11 +89,9 @@
     border-radius: 50%;
     position: absolute;
     left: 0;
-    /* Align directly to the left, slightly behind the text padding */
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
-    /* Under the text, but visible */
 }
 
 .dot-red {
@@ -113,13 +110,15 @@
 }
 
 .stat-text {
-    font-size: 36px;
+    font-size: var(--font-size-h5);
     font-weight: 400;
-    color: #000000;
-    line-height: 1.2;
+    color: var(--text-primary);
+    line-height: 1.4;
     margin: 0;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
+    text-transform: capitalize;
 }
+
 
 @media (max-width: 1024px) {
     .about2-stats {
@@ -129,15 +128,6 @@
 }
 
 @media (max-width: 768px) {
-    .section-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
-    }
-
-    .section-badge .badge-text {
-        font-size: 11px;
-    }
-
     .about2-section {
         padding: 60px 20px;
     }
@@ -149,15 +139,8 @@
         margin-bottom: 60px;
     }
 
-    .about2-title {
-        font-size: 40px;
-    }
-
-    .stat-number {
-        font-size: 72px;
-    }
-
     .stat-text {
-        font-size: 28px;
+        font-size: 18px;
     }
 }
+

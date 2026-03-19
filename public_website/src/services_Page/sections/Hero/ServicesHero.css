@@ -1,12 +1,12 @@
 .services-hero-section {
     position: relative;
-    padding: 80px 60px 20px 60px;
-    /* More top padding for the fixed header */
-    background-color: #ffffff;
+    padding: 140px 60px 40px 60px;
+    background-color: var(--bg-primary);
     min-height: 400px;
     display: flex;
     align-items: center;
     overflow: hidden;
+    transition: background-color 0.3s ease;
 }
 
 .sh-container {
@@ -18,37 +18,36 @@
 }
 
 .sh-badge {
-    background: #f3f4f6;
+    background: var(--bg-tertiary);
     padding: 8px 24px;
     border-radius: 999px;
     display: inline-block;
     margin-bottom: 30px;
+    border: 1px solid var(--border-color);
 }
 
 .sh-badge span {
     font-size: 15px;
     font-weight: 500;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .sh-title {
     font-size: 80px;
     font-weight: 400;
-    color: #000000;
+    color: var(--text-primary);
     line-height: 1.1;
     margin: 0 0 20px 0;
     letter-spacing: -2px;
 }
 
 .sh-title .text-blue {
-    color: #0c2d57;
-    /* Deep navy blue from the text */
+    color: var(--accent-primary);
 }
 
 .sh-subtitle {
     font-size: 16px;
-    color: #1e3a5f;
-    /* Same deep navy for the subtitle */
+    color: var(--text-secondary);
     font-weight: 500;
     margin: 0;
     letter-spacing: -0.1px;

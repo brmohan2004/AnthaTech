@@ -1,18 +1,21 @@
 .project-card {
-    background-color: #f0f0f0;
-    /* Soft gray from design */
+    background-color: var(--bg-tertiary);
     border-radius: 20px;
     display: flex;
     flex-direction: row;
     width: 1100px;
     height: 560px;
     position: relative;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.02);
+    box-shadow: var(--card-shadow);
     text-decoration: none;
-    /* Removed underline */
     color: inherit;
-    /* Keep text colors */
     cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .project-card {
+    background-color: var(--bg-secondary);
 }
 
 /* Link Icon on Top Right of the card */
@@ -22,22 +25,21 @@
     right: -24px;
     width: 80px;
     height: 80px;
-    background-color: #e5e5e5;
+    background-color: var(--bg-tertiary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #111827;
+    color: var(--text-primary);
     transition: all 0.3s ease;
     z-index: 10;
-    border: 10px solid #ffffff;
-    /* Thick white 'cutout' border */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    /* Optional subtle shadow to lift it */
+    border: 10px solid var(--bg-primary);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .project-link-icon:hover {
-    background-color: #d4d4d4;
+    background-color: var(--accent-primary);
+    color: var(--bg-primary);
     transform: scale(1.05);
 }
 
@@ -77,19 +79,20 @@
 }
 
 .info-pill {
-    background-color: #e5e7eb;
-    color: #111827;
-    font-size: 13px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: var(--font-size-tiny);
     font-weight: 500;
     padding: 6px 16px;
     border-radius: 30px;
     margin-bottom: 24px;
+    border: 1px solid var(--border-color);
 }
 
 .project-name {
-    font-size: 36px;
+    font-size: var(--font-size-h2);
     font-weight: 600;
-    color: #000000;
+    color: var(--text-primary);
     letter-spacing: -1px;
 }
 
@@ -97,22 +100,16 @@
     .project-card {
         width: 800px;
     }
-
-    .project-image-wrapper {
-        width: 60%;
-    }
-
-    .project-info {
-        width: 40%;
-    }
 }
 
 @media (max-width: 768px) {
     .project-card {
         flex-direction: column;
-        width: 320px;
+        width: 100%;
+        max-width: 320px;
         height: auto;
     }
+
 
     .project-image-wrapper {
         width: 100%;
@@ -125,4 +122,4 @@
         width: 100%;
         padding: 24px;
     }
-}
+}

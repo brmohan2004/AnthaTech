@@ -83,7 +83,8 @@ const LegalPage = () => {
                 <div className="skeleton skeleton-title"></div>
               ) : (
                 <>
-                  <div className="hero-badge">{activePageInfo.icon} Legal</div>
+                  <div className="legal-badge-pill">{activePageInfo.icon} Legal</div>
+
                   <h1>{page?.title || activePageInfo.title}</h1>
                   <div className="last-updated">
                     Last Updated: {page?.last_updated ? new Date(page.last_updated).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'March 18, 2026'}

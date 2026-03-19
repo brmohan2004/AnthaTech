@@ -1,6 +1,11 @@
 .apply-section {
     padding: 100px 60px;
-    background: #f8fafc;
+    background: var(--bg-secondary);
+    transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .apply-section {
+    background: var(--bg-primary);
 }
 
 .apply-inner {
@@ -16,14 +21,14 @@
 .apply-title {
     font-size: 52px;
     font-weight: 400;
-    color: #111827;
+    color: var(--text-primary);
     margin: 20px 0 16px;
     letter-spacing: -1.5px;
 }
 
 .apply-desc {
     font-size: 18px;
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -37,26 +42,26 @@
 .apply-track-btn {
     flex: 1;
     padding: 14px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border-color);
     border-radius: 16px;
-    background: #ffffff;
+    background: var(--bg-primary);
     font-size: 16px;
     font-weight: 600;
-    color: #4b5563;
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.25s ease;
     font-family: inherit;
 }
 
 .apply-track-btn.active {
-    border-color: #0c2d57;
-    background: #0c2d57;
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
     color: #ffffff;
 }
 
 .apply-track-btn:not(.active):hover {
-    border-color: #0c2d57;
-    color: #0c2d57;
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
 }
 
 /* Form */
@@ -81,17 +86,17 @@
 .apply-form-group label {
     font-size: 14px;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .apply-form-group input,
 .apply-form-group textarea {
-    background: #ffffff;
-    border: 1.5px solid #e2e8f0;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
     border-radius: 12px;
     padding: 14px 18px;
     font-size: 15px;
-    color: #111827;
+    color: var(--text-primary);
     outline: none;
     transition: border-color 0.25s ease;
     font-family: inherit;
@@ -100,8 +105,8 @@
 
 .apply-form-group input:focus,
 .apply-form-group textarea:focus {
-    border-color: #0c2d57;
-    box-shadow: 0 0 0 3px rgba(12, 45, 87, 0.08);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .apply-form-group input::placeholder,
@@ -110,8 +115,8 @@
 }
 
 .apply-submit-btn {
-    background: #0c2d57;
-    color: #ffffff;
+    background: var(--text-primary);
+    color: var(--bg-primary);
     padding: 18px 40px;
     border-radius: 99px;
     font-size: 17px;
@@ -120,8 +125,13 @@
     cursor: pointer;
     transition: all 0.3s ease;
     align-self: flex-start;
-    box-shadow: 0 8px 24px rgba(12, 45, 87, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     font-family: inherit;
+}
+
+[data-theme='dark'] .apply-submit-btn {
+    background: var(--accent-primary);
+    color: #ffffff;
 }
 
 .apply-submit-btn:hover {
@@ -134,9 +144,9 @@
 .apply-success {
     text-align: center;
     padding: 80px 40px;
-    background: #ffffff;
+    background: var(--bg-primary);
     border-radius: 24px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
 }
 
 .apply-success-icon {
@@ -157,13 +167,13 @@
 .apply-success h3 {
     font-size: 28px;
     font-weight: 800;
-    color: #111827;
+    color: var(--text-primary);
     margin: 0 0 12px;
 }
 
 .apply-success p {
     font-size: 16px;
-    color: #4b5563;
+    color: var(--text-secondary);
     line-height: 1.6;
     max-width: 440px;
     margin: 0 auto;
@@ -172,12 +182,12 @@
 /* Responsive */
 @media (max-width: 768px) {
     .section-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
+        padding: 8px 18px !important;
+        margin-bottom: 20px !important;
     }
 
     .section-badge .badge-text {
-        font-size: 11px;
+        font-size: 12px !important;
     }
 
     .apply-section {

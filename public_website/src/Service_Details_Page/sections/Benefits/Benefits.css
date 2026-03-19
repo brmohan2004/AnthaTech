@@ -1,6 +1,7 @@
 .benefits-section {
     padding: 100px 60px 40px;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
+    transition: background-color 0.3s ease;
 }
 
 .benefits-container {
@@ -9,13 +10,18 @@
 }
 
 .benefits-card {
-    background-color: #0c2d57;
+    background-color: var(--bg-tertiary);
     padding: 80px;
     border-radius: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #ffffff;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='dark'] .benefits-card {
+    background-color: var(--bg-secondary);
 }
 
 .benefits-headline {
@@ -43,8 +49,8 @@
 .check-icon {
     width: 32px;
     height: 32px;
-    background-color: #4ade80;
-    color: #0c2d57;
+    background-color: var(--accent-primary);
+    color: #ffffff;
     border-radius: 50%;
     display: flex;
     justify-content: center;

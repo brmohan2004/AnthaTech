@@ -1,21 +1,23 @@
 .service-card {
-    background-color: #f4f4f4;
-    /* Light grey/off-white background */
+    background-color: var(--bg-tertiary);
     border-radius: 20px;
     padding: 0;
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 500px;
-    /* Provides the large blocky feel */
     width: 100%;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-radius 0.4s ease, opacity 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-radius 0.4s ease, opacity 0.4s ease, background-color 0.3s ease;
     transform-origin: center top;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='dark'] .service-card:not(.custom-theme):not(.theme-dark-green):not(.theme-indigo-blue):not(.theme-charcoal-black) {
+    background-color: var(--bg-secondary);
 }
 
 .service-card-top {
     flex: 1;
-    /* Takes up empty space at the top */
     min-height: 200px;
     position: relative;
 }
@@ -39,22 +41,22 @@
     right: -20px;
     width: 72px;
     height: 72px;
-    background-color: #e5e5e5;
+    background-color: var(--bg-tertiary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #111827;
+    color: var(--text-primary);
     transition: all 0.3s ease;
     z-index: 10;
     text-decoration: none;
-    border: 8px solid #ffffff;
-    /* White cutout border effect */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 8px solid var(--bg-primary);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .service-link-icon:hover {
-    background-color: #d4d4d4;
+    background-color: var(--accent-primary);
+    color: var(--bg-primary);
     transform: scale(1.05);
 }
 
@@ -67,9 +69,9 @@
 }
 
 .service-title {
-    font-size: 40px;
+    font-size: var(--font-size-h2);
     font-weight: 600;
-    color: #000000;
+    color: var(--text-primary);
     margin: 0 0 24px 0;
     letter-spacing: -1px;
 }
@@ -82,28 +84,28 @@
 }
 
 .service-tag {
-    background-color: #ffffff;
-    color: #111827;
-    font-size: 14px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: var(--font-size-small);
     font-weight: 500;
     padding: 10px 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
 }
 
 .service-description {
-    font-size: 18px;
-    line-height: 1.5;
-    color: #111827;
-    /* Dark black text */
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
     max-width: 800px;
     margin: 0 0 32px 0;
 }
 
 .service-action-btn {
-    background-color: #ffffff;
-    color: #111827;
-    font-size: 14px;
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+    font-size: var(--font-size-small);
     font-weight: 500;
     padding: 14px 28px;
     border-radius: 8px;
@@ -114,56 +116,33 @@
 }
 
 .service-action-btn:hover {
-    background-color: #f9fafb;
+    background-color: var(--accent-primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Ensure light colors on dark mode */
+[data-theme='dark'] .service-tag {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+[data-theme='dark'] .service-action-btn {
+    background-color: #f9fafb;
+    color: #000000;
+}
+
+[data-theme='dark'] .service-action-btn:hover {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+}
+
 
 .service-graphic-img {
     width: 280px;
     height: 280px;
     object-fit: contain;
-}
-
-/* Theme: Dark Green Overrides */
-.theme-dark-green {
-    background-color: #1a2016;
-    /* Deep olive green background */
-}
-
-.theme-dark-green .service-title {
-    color: #c5f070;
-    /* Lime green text */
-}
-
-.theme-dark-green .service-tag {
-    background-color: transparent;
-    color: #c5f070;
-    border: 1px solid #4a5a3a;
-    box-shadow: none;
-}
-
-.theme-dark-green .service-description {
-    color: #a3b19c;
-}
-
-.theme-dark-green .service-action-btn {
-    background-color: #c5f070;
-    color: #111827;
-}
-
-.theme-dark-green .service-action-btn:hover {
-    background-color: #b0d865;
-}
-
-.theme-dark-green .service-link-icon {
-    border-color: #1a2016;
-    background-color: #273021;
-    color: #c5f070;
-}
-
-.theme-dark-green .service-link-icon:hover {
-    background-color: #3b4731;
 }
 
 /* Theme: Indigo Blue */
@@ -176,10 +155,9 @@
 }
 
 .theme-indigo-blue .service-tag {
-    background-color: transparent;
+    background-color: rgba(129, 140, 248, 0.1);
     color: #818cf8;
-    border: 1px solid #312e81;
-    box-shadow: none;
+    border: 1px solid rgba(129, 140, 248, 0.3);
 }
 
 .theme-indigo-blue .service-description {
@@ -189,12 +167,6 @@
 .theme-indigo-blue .service-action-btn {
     background-color: #818cf8;
     color: #ffffff;
-}
-
-.theme-indigo-blue .service-link-icon {
-    border-color: #111a3b;
-    background-color: #1e293b;
-    color: #818cf8;
 }
 
 /* Theme: Charcoal Black */
@@ -207,10 +179,9 @@
 }
 
 .theme-charcoal-black .service-tag {
-    background-color: transparent;
+    background-color: rgba(56, 189, 248, 0.1);
     color: #38bdf8;
-    border: 1px solid #1e293b;
-    box-shadow: none;
+    border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 .theme-charcoal-black .service-description {
@@ -222,44 +193,9 @@
     color: #ffffff;
 }
 
-.theme-charcoal-black .service-link-icon:hover {
-    background-color: #3b4731;
-}
-
-/* Custom Theme Support */
-.service-card.custom-theme .service-title,
-.service-card.custom-theme .service-description,
-.service-card.custom-theme .service-tag {
-    color: #ffffff;
-}
-
-.service-card.custom-theme .service-tag {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.service-card.custom-theme .service-action-btn {
-    background-color: #ffffff;
-    color: #111827;
-}
-
-.service-card.custom-theme .service-link-icon {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border-color: transparent;
-}
-
 @media (max-width: 768px) {
     .service-card-content {
         padding: 0 24px 32px 24px;
-    }
-
-    .service-title {
-        font-size: 32px;
-    }
-
-    .service-description {
-        font-size: 16px;
     }
 
     .service-link-icon {
@@ -274,4 +210,11 @@
         width: 180px;
         height: 180px;
     }
-}
+
+    .service-action-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+    }
+}

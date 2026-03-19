@@ -1,11 +1,12 @@
 .insights-hero-section {
     position: relative;
-    padding: 80px 60px 20px 60px;
-    background-color: #ffffff;
+    padding: 140px 60px 40px 60px;
+    background-color: var(--bg-primary);
     min-height: 440px;
     display: flex;
     align-items: center;
     overflow: hidden;
+    transition: background-color 0.3s ease;
 }
 
 .ih-container {
@@ -17,40 +18,40 @@
 }
 
 .ih-badge {
-    background: #f3f4f6;
+    background: var(--bg-tertiary);
     padding: 8px 24px;
     border-radius: 999px;
     display: inline-block;
     margin-bottom: 30px;
+    border: 1px solid var(--border-color);
 }
 
 .ih-badge span {
-    font-size: 15px;
+    font-size: var(--font-size-small);
     font-weight: 500;
-    color: #111827;
+    color: var(--text-primary);
 }
 
 .ih-title {
-    font-size: 80px;
+    font-size: var(--font-size-hero);
     font-weight: 400;
-    color: #000000;
-    line-height: 1.1;
+    color: var(--text-primary);
+    line-height: var(--line-height-hero);
     margin: 0 0 24px 0;
     letter-spacing: -2.5px;
 }
 
 .ih-title .text-blue {
-    color: #0c2d57;
-    /* Consistent navy blue */
+    color: var(--accent-primary);
 }
 
 .ih-subtitle {
-    font-size: 18px;
-    color: #1e3a5f;
+    font-size: var(--font-size-h5);
+    color: var(--text-secondary);
     font-weight: 500;
     margin: 0;
     letter-spacing: -0.2px;
-    line-height: 1.5;
+    line-height: var(--line-height-body);
     max-width: 800px;
 }
 
@@ -65,29 +66,10 @@
         text-align: left;
     }
 
-    .ih-badge {
-        padding: 5px 14px;
-        margin-bottom: 20px;
-    }
-
-    .ih-badge span {
-        font-size: 11px;
-    }
-
     .ih-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        text-align: left;
-    }
-
-    .ih-title {
-        font-size: 52px;
-        text-align: left;
-    }
-
-    .ih-subtitle {
-        font-size: 16px;
         text-align: left;
     }
 }

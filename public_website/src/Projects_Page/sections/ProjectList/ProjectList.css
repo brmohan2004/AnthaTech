@@ -1,7 +1,8 @@
 .project-list-section {
     padding: 0px 0 0px 0;
-    background-color: #ffffff;
+    background-color: var(--bg-primary);
     width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 .pl-container {

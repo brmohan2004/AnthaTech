@@ -36,3 +36,6 @@ pnpm-debug.log*
 
 # Vite artifacts
 .vite/
+# Temporary Scripts (with credentials)
+admin-panel/sync_seo_to_db.js
+

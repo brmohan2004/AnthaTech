@@ -252,8 +252,14 @@ const SeoSettings = () => {
         (robots.allowPaths || []).forEach(p => lines.push(`Allow: ${p}`));
         (robots.disallowPaths || []).forEach(p => lines.push(`Disallow: ${p}`));
         if (robots.crawlDelay) lines.push(`Crawl-delay: ${robots.crawlDelay}`);
+        
+        if (robots.customRulesText) {
+            lines.push('');
+            lines.push(robots.customRulesText);
+        }
+
         lines.push('');
-        lines.push(`Sitemap: ${schema.orgUrl || 'https://your-domain.com'}/sitemap.xml`);
+        lines.push(`Sitemap: ${schema.orgUrl || 'https://anthatech.me'}/sitemap.xml`);
         return lines.join('\n');
     }, [robots, schema.orgUrl]);
 

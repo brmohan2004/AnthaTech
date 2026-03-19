@@ -47,11 +47,15 @@ const SchemaTab = ({ schema, setSchema, generatedSchema, copySchema, copiedSchem
                     <input className="seo-input" value={schema.orgName || ''} onChange={e => ch('orgName', e.target.value)} placeholder="Antha Tech" />
                 </div>
                 <div className="seo-form-group">
-                    <label>Website URL</label>
-                    <input className="seo-input" value={schema.orgUrl || ''} onChange={e => ch('orgUrl', e.target.value)} placeholder="https://anthatech.me" />
+                    <label>Organization Description</label>
+                    <input className="seo-input" value={schema.orgDesc || ''} onChange={e => ch('orgDesc', e.target.value)} placeholder="Premier digital agency in Chennai..." />
                 </div>
             </div>
             <div className="seo-form-row">
+                <div className="seo-form-group">
+                    <label>Website URL</label>
+                    <input className="seo-input" value={schema.orgUrl || ''} onChange={e => ch('orgUrl', e.target.value)} placeholder="https://anthatech.me" />
+                </div>
                 <div className="seo-form-group">
                     <label>Logo URL</label>
                     <input className="seo-input" value={schema.orgLogo || ''} onChange={e => ch('orgLogo', e.target.value)} placeholder="https://..." />

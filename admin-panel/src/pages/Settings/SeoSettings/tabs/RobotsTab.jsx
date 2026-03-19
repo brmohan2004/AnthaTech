@@ -81,6 +81,19 @@ const RobotsTab = ({ robots, setRobots, robotsPreview, newRule, setNewRule, addR
                 </button>
             </div>
 
+            {/* Advanced Rules */}
+            <div className="seo-form-group">
+                <label>Advanced / Additional Rules <span className="label-hint">(Raw text appended to file)</span></label>
+                <textarea 
+                    className="seo-input" 
+                    rows={4} 
+                    value={robots.customRulesText || ''} 
+                    onChange={e => setRobots(p => ({ ...p, customRulesText: e.target.value }))} 
+                    placeholder="User-agent: Google-Extended&#10;Allow: /&#10;&#10;User-agent: GPTBot&#10;Allow: /" 
+                    style={{ fontFamily: "'Consolas', monospace", fontSize: '12px' }} 
+                />
+            </div>
+
             {/* Preview */}
             <div>
                 <div className="seo-section-title">

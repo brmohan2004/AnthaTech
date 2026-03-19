@@ -341,12 +341,25 @@ export async function updateSiteConfigBatch(entries) {
     updates = Object.entries(entries).map(([key, value]) => ({ key, value }));
   }
 
-  const promises = updates.map(({ key, value }) =>
-    supabase.from('site_config').update({ value }).eq('key', key)
-  );
-  const results = await Promise.all(promises);
-  const failed = results.find(r => r.error);
-  if (failed) throw failed.error;
+  // Use upsert logic: update first, insert if key doesn't exist
+  const promises = updates.map(async ({ key, value }) => {
+    const { data: updateData, error: updateError } = await supabase
+      .from('site_config')
+      .update({ value })
+      .eq('key', key)
+      .select();
+
+    if (updateError) throw updateError;
+
+    // If no rows were updated, the key doesn't exist yet — insert it
+    if (!updateData || updateData.length === 0) {
+      const { error: insertError } = await supabase
+        .from('site_config')
+        .insert([{ key, value }]);
+      if (insertError) throw insertError;
+    }
+  });
+  await Promise.all(promises);
 }
 
 // ─── Content History ─────────────────────────────────────────

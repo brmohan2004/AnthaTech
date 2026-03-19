@@ -83,6 +83,7 @@ function mapProject(p) {
     review_company: p.review?.company || '',
     mobile_image_url: p.mobile_image || '',
     tab_image_url: p.tab_image || '',
+    desktop_image_url: p.desktop_image || p.image || '',
   };
 }
 

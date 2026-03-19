@@ -113,6 +113,15 @@
         padding: 60px 20px;
     }
 
+    .op-badge {
+        padding: 5px 14px;
+        margin-bottom: 20px;
+    }
+
+    .op-badge span {
+        font-size: 11px;
+    }
+
     .op-title {
         font-size: 40px;
     }

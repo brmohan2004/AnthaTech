@@ -228,3 +228,12 @@
   font-weight: 700;
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .hero-badge {
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+}

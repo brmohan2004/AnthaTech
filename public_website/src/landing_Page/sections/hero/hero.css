@@ -293,6 +293,15 @@ body {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+    .hero-badge {
+        padding: 5px 14px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .hero-badge .badge-text {
+        font-size: 11px !important;
+    }
+
     .hero-title {
         font-size: 56px;
     }

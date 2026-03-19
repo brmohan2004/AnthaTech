@@ -111,6 +111,15 @@
 
 
 @media (max-width: 768px) {
+    .section-badge {
+        padding: 5px 14px;
+        margin-bottom: 20px;
+    }
+
+    .section-badge .badge-text {
+        font-size: 11px;
+    }
+
     .progress-section {
         height: 350vh;
         /* Slightly less for mobile */

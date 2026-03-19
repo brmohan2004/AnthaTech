@@ -155,4 +155,18 @@
         font-size: 52px;
         letter-spacing: -2px;
     }
+
+    .cp-hero-badge {
+        padding: 5px 14px !important;
+        margin-bottom: 20px;
+    }
+
+    .cp-hero-badge .badge-text {
+        font-size: 11px !important;
+    }
+
+    .cp-tag {
+        padding: 5px 14px;
+        font-size: 11px;
+    }
 }

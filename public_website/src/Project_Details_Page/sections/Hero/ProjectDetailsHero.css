@@ -267,6 +267,15 @@
         display: block;
     }
 
+    .pd-badge {
+        padding: 5px 14px;
+        margin-bottom: 20px;
+    }
+
+    .pd-badge span {
+        font-size: 11px;
+    }
+
     .pd-mockup-section {
         max-width: 320px;
     }

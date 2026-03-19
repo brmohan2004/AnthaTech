@@ -36,6 +36,15 @@
 }
 
 @media (max-width: 768px) {
+    .section-badge {
+        padding: 5px 14px;
+        margin-bottom: 20px;
+    }
+
+    .section-badge .badge-text {
+        font-size: 11px;
+    }
+
     .sd-hero {
         padding: 120px 20px 80px;
         min-height: 100vh;

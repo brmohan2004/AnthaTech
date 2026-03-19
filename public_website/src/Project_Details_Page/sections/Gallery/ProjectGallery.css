@@ -105,6 +105,18 @@
 }
 
 @media (max-width: 768px) {
+    .pd-gallery-header {
+        padding: 0 24px 20px;
+    }
+
+    .gallery-badge {
+        padding: 5px 14px;
+    }
+
+    .gallery-badge span {
+        font-size: 11px;
+    }
+
     /* For smaller devices, we might want to revert to a simpler horizontal scroll or a shorter parallax */
     .pd-gallery-parallax-section {
         height: 250vh;

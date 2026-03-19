@@ -95,6 +95,7 @@ const navSections = [
         children: [
             { id: 'set-general', label: 'General Info', icon: <Globe size={16} />, path: '/admin/settings/general-info', permId: 'settings-general-info' },
             { id: 'set-maint', label: 'Maintenance', icon: <Construction size={16} />, path: '/admin/settings/maintenance', permId: 'settings-maintenance' },
+            { id: 'set-seo', label: 'SEO / Meta', icon: <Search size={16} />, path: '/admin/settings/seo', permId: 'settings-seo' },
             { id: 'set-webhooks', label: 'Webhooks', icon: <Webhook size={16} />, path: '/admin/settings/webhooks', permId: 'settings-webhooks' },
             { id: 'set-apikeys', label: 'API Keys', icon: <Key size={16} />, path: '/admin/api-keys', permId: 'settings-api-keys' },
             { id: 'set-backup', label: 'Backup', icon: <HardDrive size={16} />, path: '/admin/backup', permId: 'settings-backup' },

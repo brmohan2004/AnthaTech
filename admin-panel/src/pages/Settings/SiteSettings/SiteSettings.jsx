@@ -20,13 +20,6 @@ const defaultValues = {
         facebook: '',
         youtube: '',
     },
-    seo: {
-        siteName: '',
-        defaultTitle: '',
-        defaultDesc: '',
-        ogImage: '',
-        perPage: [],
-    },
 };
 
 const SiteSettings = ({ defaultTab = 'contact' }) => {
@@ -46,7 +39,6 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                 const loaded = {
                     contact: configMap.contact ? (typeof configMap.contact === 'string' ? JSON.parse(configMap.contact) : configMap.contact) : defaultValues.contact,
                     social: configMap.social ? (typeof configMap.social === 'string' ? JSON.parse(configMap.social) : configMap.social) : defaultValues.social,
-                    seo: configMap.seo ? (typeof configMap.seo === 'string' ? JSON.parse(configMap.seo) : configMap.seo) : defaultValues.seo,
                 };
                 setData(loaded);
                 setSavedData(loaded);
@@ -69,34 +61,6 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
         setData((prev) => ({
             ...prev,
             [tab]: { ...prev[tab], [field]: value },
-        }));
-    };
-
-    const handleMetaChange = (index, field, value) => {
-        setData((prev) => {
-            const newArr = [...prev.seo.perPage];
-            newArr[index] = { ...newArr[index], [field]: value };
-            return { ...prev, seo: { ...prev.seo, perPage: newArr } };
-        });
-    };
-
-    const addMetaRow = () => {
-        setData((prev) => ({
-            ...prev,
-            seo: {
-                ...prev.seo,
-                perPage: [...prev.seo.perPage, { page: '', title: '', desc: '', ogImage: '' }],
-            },
-        }));
-    };
-
-    const removeMetaRow = (idx) => {
-        setData((prev) => ({
-            ...prev,
-            seo: {
-                ...prev.seo,
-                perPage: prev.seo.perPage.filter((_, i) => i !== idx),
-            },
         }));
     };
 
@@ -125,7 +89,7 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
         <div className="site-settings">
             <header className="page-header">
                 <div className="header-breadcrumbs">
-                    Settings &gt; <span>{activeTab === 'contact' ? 'Contact Info' : activeTab === 'social' ? 'Social Links' : 'SEO / Meta'}</span>
+                    Settings &gt; <span>{activeTab === 'contact' ? 'Contact Info' : 'Social Links'}</span>
                 </div>
                 <div className="header-actions">
                     <Button
@@ -157,12 +121,6 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                     onClick={() => setActiveTab('social')}
                 >
                     Social Links
-                </button>
-                <button
-                    className={activeTab === 'seo' ? 'tab active' : 'tab'}
-                    onClick={() => setActiveTab('seo')}
-                >
-                    SEO / Meta
                 </button>
             </div>
 
@@ -273,89 +231,6 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                                 onChange={(e) => handleChange('social', 'youtube', e.target.value)}
                             />
                         </div>
-                    </div>
-                )}
-
-                {activeTab === 'seo' && (
-                    <div className="tab-content">
-                        <div className="form-group">
-                            <label>Site Name</label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={data.seo.siteName}
-                                onChange={(e) => handleChange('seo', 'siteName', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Default Meta Title</label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={data.seo.defaultTitle}
-                                onChange={(e) => handleChange('seo', 'defaultTitle', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Default Meta Description</label>
-                            <textarea
-                                className="form-input"
-                                rows={2}
-                                value={data.seo.defaultDesc}
-                                onChange={(e) => handleChange('seo', 'defaultDesc', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Default OG Image URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.seo.ogImage}
-                                onChange={(e) => handleChange('seo', 'ogImage', e.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-section-divider">Per-Page Meta</div>
-                        {data.seo.perPage.map((row, idx) => (
-                            <div key={idx} className="meta-row">
-                                <input
-                                    type="text"
-                                    className="form-input meta-input"
-                                    placeholder="Page Name"
-                                    value={row.page}
-                                    onChange={(e) => handleMetaChange(idx, 'page', e.target.value)}
-                                />
-                                <input
-                                    type="text"
-                                    className="form-input meta-input"
-                                    placeholder="Title"
-                                    value={row.title}
-                                    onChange={(e) => handleMetaChange(idx, 'title', e.target.value)}
-                                />
-                                <input
-                                    type="text"
-                                    className="form-input meta-input"
-                                    placeholder="Description"
-                                    value={row.desc}
-                                    onChange={(e) => handleMetaChange(idx, 'desc', e.target.value)}
-                                />
-                                <input
-                                    type="url"
-                                    className="form-input meta-input"
-                                    placeholder="OG Image URL"
-                                    value={row.ogImage}
-                                    onChange={(e) => handleMetaChange(idx, 'ogImage', e.target.value)}
-                                />
-                                <button
-                                    className="meta-remove"
-                                    onClick={() => removeMetaRow(idx)}
-                                    title="Remove row"
-                                >✕</button>
-                            </div>
-                        ))}
-                        <button className="add-meta-row" onClick={addMetaRow}>
-                            + Add Row
-                        </button>
                     </div>
                 )}
             </div>

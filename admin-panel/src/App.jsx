@@ -34,6 +34,7 @@ import BackupExport from './pages/ApiKeys/Backup/Backup';
 import ApiKeys from './pages/ApiKeys/ApiKeys';
 import Login from './pages/Auth/Login';
 import LegalPages from './pages/Content/LegalPages/LegalPages';
+import SeoSettings from './pages/Settings/SeoSettings/SeoSettings';
 
 import { Outlet } from 'react-router-dom';
 
@@ -84,6 +85,7 @@ const AdminLayout = () => {
         '/admin/api-keys': 'API Key Manager',
         '/admin/backup': 'Backup & Export Center',
         '/admin/content/legal': 'Legal Pages Manager',
+        '/admin/settings/seo': 'SEO / Meta Manager',
     };
 
     const title = titles[location.pathname] || 'Dashboard';
@@ -148,6 +150,7 @@ function AppRoutes() {
                 <Route path="/admin/settings/webhooks" element={<Webhooks />} />
                 <Route path="/admin/settings/general-info" element={<SiteSettings defaultTab="contact" />} />
                 <Route path="/admin/api-keys" element={<ApiKeys />} />
+                <Route path="/admin/settings/seo" element={<SeoSettings />} />
                 <Route path="/admin/backup" element={<BackupExport />} />
 
                 {/* Fallback for unbuilt pages */}

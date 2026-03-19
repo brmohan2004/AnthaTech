@@ -28,8 +28,8 @@ const ProjectGallery = ({ project }) => {
                     <span>Project Gallery</span>
                 </div>
 
-                {/* Top Carousel Section — only shown if gallery images exist */}
-                {carouselImages.length > 0 && (
+                {/* Top Carousel Section — only shown if gallery images exist AND preview link is present (otherwise shown in hero) */}
+                {carouselImages.length > 0 && project?.preview_link && (
                 <div className="gallery-carousel-area">
                     <button className="gallery-nav-btn prev" onClick={handlePrev}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin-panel/
+
+# Specific AI Crawler Access to enable Gemini / Search AI
+User-agent: Google-Extended
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+
+Sitemap: https://anthatech.me/sitemap.xml

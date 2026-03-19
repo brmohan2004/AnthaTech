@@ -56,6 +56,7 @@ export default function About1() {
                         src={logo}
                         alt="Antha Tech Logo"
                         className="about-logo"
+                        loading="lazy"
                     />
                 </div>
 

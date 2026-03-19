@@ -153,7 +153,7 @@ export default function Services() {
                                 link={service.link}
                                 theme={service.theme}
                                 serviceGraphic={
-                                    <img src={service.graphicSrc} alt={`${service.title} Service`} className="service-graphic-img" />
+                                    <img src={service.graphicSrc} alt={`${service.title} Service`} className="service-graphic-img" loading="lazy" />
                                 }
                             />
                         </div>

@@ -83,7 +83,7 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div className="footer-col brand-col">
                         <div className="footer-logo">
-                            <img src={logo} alt="ANTHA Tech Logo" className="logo-img" />
+                            <img src={logo} alt="ANTHA Tech Logo" className="logo-img" loading="lazy" />
                             <span className="logo-subtext">by QYNTA</span>
                         </div>
                     </div>

@@ -105,7 +105,7 @@ export default function Hero() {
                     <div className="logo-track">
                         {[...clientLogos, ...clientLogos, ...clientLogos, ...clientLogos].map((logo, index) => (
                             <div key={index} className="client-logo-item">
-                                <img src={logo} alt={`Client ${index}`} className="client-brand-logo" />
+                                <img src={logo} alt={`Antha Tech Client Partner ${index + 1}`} className="client-brand-logo" loading="lazy" />
                             </div>
                         ))}
                     </div>

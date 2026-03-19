@@ -6,7 +6,10 @@ import { ModalProvider } from './context/ModalContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { HelmetProvider } from 'react-helmet-async'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+import { hydrateRoot, createRoot } from 'react-dom/client'
+
+const container = document.getElementById('root');
+const app = (
     <React.StrictMode>
         <ThemeProvider>
             <ModalProvider>
@@ -15,5 +18,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 </HelmetProvider>
             </ModalProvider>
         </ThemeProvider>
-    </React.StrictMode>,
-)
+    </React.StrictMode>
+);
+
+if (container.hasChildNodes()) {
+    hydrateRoot(container, app);
+} else {
+    createRoot(container).render(app);
+}

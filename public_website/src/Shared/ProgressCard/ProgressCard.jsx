@@ -34,7 +34,7 @@ export default function ProgressCard({ title, description, activeIndex, index, t
             </div>
             {image && (
                 <div className="progress-card-image">
-                    <img src={image} alt={title} />
+                    <img src={image} alt={title} loading="lazy" />
                 </div>
             )}
         </div>

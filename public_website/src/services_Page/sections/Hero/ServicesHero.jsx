@@ -1,9 +1,11 @@
 import React from 'react';
+import BackgroundAnimation from '../../../Shared/BackgroundAnimation/BackgroundAnimation';
 import './ServicesHero.css';
 
 const ServicesHero = () => {
     return (
         <section className="services-hero-section">
+            <BackgroundAnimation />
             <div className="sh-container">
                 <div className="sh-badge">
                     <span>Our Services</span>

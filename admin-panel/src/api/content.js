@@ -510,6 +510,37 @@ export async function unblockIP(id) {
   if (error) throw error;
 }
 
+// ─── Country Settings ────────────────────────────────────────
+export async function getCountrySettings() {
+  const { data, error } = await supabase.from('country_settings').select('*').order('name');
+  if (error) throw error;
+  return data;
+}
+
+export async function updateCountrySettings(countries) {
+  // Sync the table with the provided country list
+  // For simplicity, we'll upsert all and handle deletions by not including them?
+  // Actually, handle them one by one to ensure we don't accidentally delete others if we ever use this elsewhere.
+  const promises = countries.map(async (c) => {
+    const { id, updated_at, ...rest } = c;
+    if (typeof id === 'string' && id.length > 10) { // existing uuid
+        const { error } = await supabase.from('country_settings').update(rest).eq('id', id);
+        if (error) throw error;
+    } else { // new entry
+        const { id: _, ...newRest } = rest;
+        const { error } = await supabase.from('country_settings').insert([newRest]);
+        if (error) throw error;
+    }
+  });
+
+  await Promise.all(promises);
+}
+
+export async function deleteCountrySetting(id) {
+    const { error } = await supabase.from('country_settings').delete().eq('id', id);
+    if (error) throw error;
+}
+
 // ─── Webhooks ────────────────────────────────────────────────
 export async function getWebhooks() {
   const { data, error } = await supabase.from('webhooks').select('*').order('created_at', { ascending: false });

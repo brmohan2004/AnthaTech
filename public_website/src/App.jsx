@@ -30,7 +30,7 @@ function App() {
                 
                 // Parse standard JSON fields from site_config
                 const processed = { ...config };
-                ['contact', 'social', 'seo', 'seo_schema', 'seo_sitemap', 'seo_robots', 'seo_redirects', 'maintenance'].forEach(key => {
+                ['contact', 'social', 'pricing', 'seo', 'seo_schema', 'seo_sitemap', 'seo_robots', 'seo_redirects', 'maintenance'].forEach(key => {
                     if (config[key] && typeof config[key] === 'string') {
                         try {
                             processed[key] = JSON.parse(config[key]);

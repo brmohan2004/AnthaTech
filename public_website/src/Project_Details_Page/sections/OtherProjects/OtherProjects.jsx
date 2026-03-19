@@ -11,13 +11,15 @@ const OtherProjects = ({ projects: externalProjects }) => {
 
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: -600, behavior: 'smooth' });
+            const amount = Math.min(scrollContainerRef.current.clientWidth * 0.8, 600);
+            scrollContainerRef.current.scrollBy({ left: -amount, behavior: 'smooth' });
         }
     };
 
     const scrollRight = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: 600, behavior: 'smooth' });
+            const amount = Math.min(scrollContainerRef.current.clientWidth * 0.8, 600);
+            scrollContainerRef.current.scrollBy({ left: amount, behavior: 'smooth' });
         }
     };
 

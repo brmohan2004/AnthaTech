@@ -44,8 +44,21 @@ export default function Community() {
         return <ErrorMessage message={error} retry={loadCommunity} />;
     }
 
-    const stats = Array.isArray(content.stats) ? content.stats : [];
-    const tracks = Array.isArray(content.tracks) ? content.tracks : [];
+    const stats = Array.isArray(content.stats) && content.stats.length > 0 && content.stats[0].label
+        ? content.stats
+        : [
+            { label: 'Creative Nodes', value: '500+' },
+            { label: 'Live Tracks', value: '50+' },
+            { label: 'Open Jobs', value: '25+' }
+        ];
+    const tracks = Array.isArray(content.tracks) && content.tracks.length > 0 && content.tracks[0].label
+        ? content.tracks
+        : [
+            { icon: '🎨', label: 'Design Network', desc: 'Connect with fellow designers and share creative resources.' },
+            { icon: '⚙️', label: 'Engineering Guild', desc: 'Collaborate on technical architecture and coding practices.' },
+            { icon: '🚀', label: 'Product Vision', desc: 'Discuss product strategies and innovative digital milestones.' },
+            { icon: '📈', label: 'Growth Pipeline', desc: 'Unlock exclusive projects and career growth opportunities.' }
+        ];
     const steps = Array.isArray(content.steps) && content.steps.length > 0
         ? content.steps
         : ['Request to Join', 'Verification', 'Join Community', 'Exclusive Projects'];

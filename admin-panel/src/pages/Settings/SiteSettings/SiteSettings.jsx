@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SiteSettings.css';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
-import { getSiteConfig, updateSiteConfigBatch } from '../../../api/content';
+import { getSiteConfig, updateSiteConfigBatch, getCountrySettings, updateCountrySettings, deleteCountrySetting } from '../../../api/content';
 
 const defaultValues = {
     contact: {
@@ -26,6 +26,9 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
     const [activeTab, setActiveTab] = useState(defaultTab);
     const [data, setData] = useState(defaultValues);
     const [savedData, setSavedData] = useState(defaultValues);
+    const [pricingList, setPricingList] = useState([]);
+    const [savedPricingList, setSavedPricingList] = useState([]);
+    const [deletedCountries, setDeletedCountries] = useState([]);
     const [isDirty, setIsDirty] = useState(false);
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -35,13 +38,19 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
         (async () => {
             try {
                 setLoading(true);
-                const configMap = await getSiteConfig();
+                const [configMap, countries] = await Promise.all([
+                    getSiteConfig(),
+                    getCountrySettings()
+                ]);
+
                 const loaded = {
                     contact: configMap.contact ? (typeof configMap.contact === 'string' ? JSON.parse(configMap.contact) : configMap.contact) : defaultValues.contact,
                     social: configMap.social ? (typeof configMap.social === 'string' ? JSON.parse(configMap.social) : configMap.social) : defaultValues.social,
                 };
                 setData(loaded);
                 setSavedData(loaded);
+                setPricingList(countries);
+                setSavedPricingList(countries);
             } catch (err) {
                 setToast({ type: 'error', message: 'Failed to load settings.' });
             } finally {
@@ -52,10 +61,14 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
 
     // track dirtiness for the current tab
     useEffect(() => {
+        if (activeTab === 'pricing') {
+            setIsDirty(JSON.stringify(pricingList) !== JSON.stringify(savedPricingList));
+            return;
+        }
         const current = data[activeTab];
         const orig = savedData[activeTab];
         setIsDirty(JSON.stringify(current) !== JSON.stringify(orig));
-    }, [activeTab, data, savedData]);
+    }, [activeTab, data, savedData, pricingList, savedPricingList]);
 
     const handleChange = (tab, field, value) => {
         setData((prev) => ({
@@ -72,10 +85,25 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
     const handleSave = async () => {
         try {
             setSaving(true);
-            await updateSiteConfigBatch([
-                { key: activeTab, value: JSON.stringify(data[activeTab]) }
-            ]);
-            setSavedData(prev => ({ ...prev, [activeTab]: data[activeTab] }));
+            if (activeTab === 'pricing') {
+                // handle deletions
+                const deletePromises = deletedCountries.map(id => {
+                    if (typeof id === 'string' && id.length > 10) return deleteCountrySetting(id);
+                    return Promise.resolve();
+                });
+                await Promise.all(deletePromises);
+                
+                await updateCountrySettings(pricingList);
+                const updated = await getCountrySettings();
+                setPricingList(updated);
+                setSavedPricingList(updated);
+                setDeletedCountries([]);
+            } else {
+                await updateSiteConfigBatch([
+                    { key: activeTab, value: JSON.stringify(data[activeTab]) }
+                ]);
+                setSavedData(prev => ({ ...prev, [activeTab]: data[activeTab] }));
+            }
             setIsDirty(false);
             setToast({ type: 'success', message: 'Settings saved successfully.' });
         } catch (err) {
@@ -121,6 +149,12 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                     onClick={() => setActiveTab('social')}
                 >
                     Social Links
+                </button>
+                <button
+                    className={activeTab === 'pricing' ? 'tab active' : 'tab'}
+                    onClick={() => setActiveTab('pricing')}
+                >
+                    Country & Pricing
                 </button>
             </div>
 
@@ -230,6 +264,122 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                                 value={data.social.youtube}
                                 onChange={(e) => handleChange('social', 'youtube', e.target.value)}
                             />
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'pricing' && (
+                    <div className="tab-content">
+                        <div className="pricing-header" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <p className="tab-description" style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                                Configure country-specific billing details. These affect the contact forms on the public website.
+                            </p>
+                            <Button variant="ghost" size="sm" onClick={() => {
+                                const newCountry = {
+                                    id: Date.now(), // temporary numeric id
+                                    name: '',
+                                    code: '',
+                                    phone_code: '+',
+                                    currency: '',
+                                    budgets: [''],
+                                    is_active: true
+                                };
+                                setPricingList([...pricingList, newCountry]);
+                            }}>
+                                + Add Country
+                            </Button>
+                        </div>
+
+                        <div className="countries-list" style={{ display: 'grid', gap: '24px' }}>
+                            {pricingList.map((country, index) => (
+                                <div key={country.id} className="country-card" style={{ padding: '20px', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+                                        <h4 style={{ margin: 0 }}>Country #{index + 1}</h4>
+                                        <button 
+                                            style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', fontSize: '13px' }}
+                                            onClick={() => {
+                                                setDeletedCountries([...deletedCountries, country.id]);
+                                                setPricingList(pricingList.filter(c => c.id !== country.id));
+                                            }}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                    
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                        <div className="form-group">
+                                            <label>Country Name</label>
+                                            <input 
+                                                className="form-input" 
+                                                value={country.name} 
+                                                placeholder="e.g. India"
+                                                onChange={e => {
+                                                    const updated = [...pricingList];
+                                                    updated[index].name = e.target.value;
+                                                    setPricingList(updated);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Country Code (ISO)</label>
+                                            <input 
+                                                className="form-input" 
+                                                value={country.code} 
+                                                placeholder="e.g. IN"
+                                                onChange={e => {
+                                                    const updated = [...pricingList];
+                                                    updated[index].code = e.target.value;
+                                                    setPricingList(updated);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                        <div className="form-group">
+                                            <label>Phone Code</label>
+                                            <input 
+                                                className="form-input" 
+                                                value={country.phone_code} 
+                                                placeholder="+91"
+                                                onChange={e => {
+                                                    const updated = [...pricingList];
+                                                    updated[index].phone_code = e.target.value;
+                                                    setPricingList(updated);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Currency Symbol</label>
+                                            <input 
+                                                className="form-input" 
+                                                value={country.currency} 
+                                                placeholder="₹"
+                                                onChange={e => {
+                                                    const updated = [...pricingList];
+                                                    updated[index].currency = e.target.value;
+                                                    setPricingList(updated);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Budget Ranges (Comma separated)</label>
+                                        <textarea 
+                                            className="form-input" 
+                                            value={country.budgets.join(', ')} 
+                                            placeholder="< ₹80k, ₹80k - ₹4L, ₹4L+"
+                                            rows={2}
+                                            onChange={e => {
+                                                const updated = [...pricingList];
+                                                updated[index].budgets = e.target.value.split(',').map(s => s.trim());
+                                                setPricingList(updated);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchPageHero } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
+import BackgroundAnimation from '../../../Shared/BackgroundAnimation/BackgroundAnimation';
 import './ProjectsHero.css';
 
 const ProjectsHero = () => {
@@ -31,6 +32,7 @@ const ProjectsHero = () => {
     if (loading) {
         return (
             <section className="projects-hero-section">
+                <BackgroundAnimation />
                 <div className="ph-container">
                     <div className="ph-loading">Loading Projects...</div>
                 </div>
@@ -44,6 +46,7 @@ const ProjectsHero = () => {
 
     return (
         <section className="projects-hero-section">
+            <BackgroundAnimation />
             <div className="ph-container">
                 <div className="ph-badge">
                     <span>{hero.badge_text || 'Our projects'}</span>

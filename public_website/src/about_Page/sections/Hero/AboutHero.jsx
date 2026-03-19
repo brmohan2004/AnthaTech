@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAboutContent } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
+import BackgroundAnimation from '../../../Shared/BackgroundAnimation/BackgroundAnimation';
 import './AboutHero.css';
 
 const AboutHero = () => {
@@ -29,6 +30,7 @@ const AboutHero = () => {
     if (loading) {
         return (
             <section className="about-hero-section">
+                <BackgroundAnimation />
                 <div className="ah-container">
                     <div className="ah-loading">Loading Header...</div>
                 </div>
@@ -47,6 +49,7 @@ const AboutHero = () => {
         
         return (
             <section className="about-hero-section">
+                <BackgroundAnimation />
                 <div className="ah-container">
                     <div className="ah-badge">
                         <span>{display.badge_text}</span>
@@ -67,6 +70,7 @@ const AboutHero = () => {
 
     return (
         <section className="about-hero-section">
+            <BackgroundAnimation />
             <div className="ah-container">
                 <div className="ah-badge">
                     <span>{hero.badge_text}</span>

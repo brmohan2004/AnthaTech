@@ -474,6 +474,21 @@ export async function fetchPageHero(page) {
 }
 
 
+// ─── Country Settings ─────────────────────────────────────────────
+export async function fetchCountrySettings() {
+  const { data, error } = await supabase
+    .from('country_settings')
+    .select('*')
+    .eq('is_active', true)
+    .order('name');
+  if (error) {
+    console.error('Error fetching country settings:', error);
+    return [];
+  }
+  return data;
+}
+
+
 // ─── Site Config ─────────────────────────────────────────────
 export async function fetchSiteConfig() {
   return withCache('site_config_all', async () => {

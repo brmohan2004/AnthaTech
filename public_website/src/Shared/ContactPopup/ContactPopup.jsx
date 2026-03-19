@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { submitContactMessage } from '../../api/content';
+import { submitContactMessage, fetchCountrySettings } from '../../api/content';
+import { useEffect } from 'react';
 import './ContactPopup.css';
 
 const HELP_OPTIONS = ['Web Design', 'App Dev', 'Branding', 'SEO', 'Consulting', 'Marketing', 'E-commerce'];
@@ -8,13 +9,39 @@ const TIME_SLOTS = ['09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', 
 const ContactPopup = ({ isOpen, onClose }) => {
     const [view, setView] = useState('selection'); // selection, quote, booking, success
     const [quoteForm, setQuoteForm] = useState({
-        name: '', email: '', mobile: '', project: '', budget: '', help: []
+        name: '', email: '', mobile: '', project: '', budget: '', customBudget: '', help: []
     });
     const [booking, setBooking] = useState({
-        name: '', email: '', duration: '15 min', date: 'Mar 10', time: '10:00 AM', type: 'Video Call', message: ''
+        name: '', email: '', duration: '15 min', date: 'Mar 10', time: '10:00 AM', type: 'Video Call', message: '', country: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [pricingData, setPricingData] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const countries = await fetchCountrySettings();
+                if (countries && countries.length > 0) {
+                    setPricingData(countries);
+                    setSelectedCountry(countries[0]);
+                }
+            } catch (err) {
+                console.error("Failed to load country settings", err);
+            }
+        })();
+    }, []);
+
+    // Update country selection
+    const handleCountryChange = (countryName) => {
+        const country = pricingData.find(c => c.name === countryName);
+        setSelectedCountry(country);
+        // Reset budget if it doesn't exist in new country's ranges
+        if (country && !country.budgets.includes(quoteForm.budget)) {
+            setQuoteForm(prev => ({ ...prev, budget: '' }));
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -31,7 +58,9 @@ const ContactPopup = ({ isOpen, onClose }) => {
         setIsSubmitting(true);
         setErrorMsg(null);
         try {
-            const combinedMessage = `Quote Request\nMobile: ${quoteForm.mobile}\nBudget: ${quoteForm.budget}\nNeeds: ${quoteForm.help.join(', ')}\nDetails: ${quoteForm.project}`;
+            const countryInfo = selectedCountry ? `Country: ${selectedCountry.name}\n` : '';
+            const budgetInfo = quoteForm.budget === 'Custom' ? `Budget (Custom): ${quoteForm.customBudget}` : `Budget: ${quoteForm.budget}`;
+            const combinedMessage = `Quote Request\n${countryInfo}Mobile: ${quoteForm.mobile}\n${budgetInfo}\nNeeds: ${quoteForm.help.join(', ')}\nDetails: ${quoteForm.project}`;
             await submitContactMessage({
                 name: quoteForm.name,
                 email: quoteForm.email,
@@ -50,7 +79,9 @@ const ContactPopup = ({ isOpen, onClose }) => {
         setIsSubmitting(true);
         setErrorMsg(null);
         try {
-            const combinedMessage = `Booking Request\nDuration: ${booking.duration}\nDate: ${booking.date} at ${booking.time}\nType: ${booking.type}\nNote: ${booking.message}`;
+            const countryInfo = selectedCountry ? `Country: ${selectedCountry.name}\n` : '';
+            const mobileInfo = booking.mobile ? `Mobile: ${booking.mobile}\n` : '';
+            const combinedMessage = `Booking Request\n${countryInfo}${mobileInfo}Duration: ${booking.duration}\nDate: ${booking.date} at ${booking.time}\nType: ${booking.type}\nNote: ${booking.message}`;
             await submitContactMessage({
                 name: booking.name,
                 email: booking.email,
@@ -93,6 +124,21 @@ const ContactPopup = ({ isOpen, onClose }) => {
                 </div>
 
                 <form className="quote-form" id="quote-form-element" onSubmit={handleQuoteSubmit}>
+                    <div className="form-group field-full">
+                        <label>Select Country</label>
+                        <select 
+                            value={selectedCountry?.name || ''} 
+                            onChange={e => handleCountryChange(e.target.value)}
+                            required
+                        >
+                            <option value="" disabled>Select your country</option>
+                            {pricingData.length > 0 ? (
+                                pricingData.map(c => <option key={c.id} value={c.name}>{c.name}</option>)
+                            ) : (
+                                <option value="USA">United States</option>
+                            )}
+                        </select>
+                    </div>
                     <div className="form-group">
                         <label>Name</label>
                         <input type="text" placeholder="Your Name" required value={quoteForm.name} onChange={e => setQuoteForm({ ...quoteForm, name: e.target.value })} />
@@ -103,17 +149,54 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     </div>
                     <div className="form-group">
                         <label>Mobile Number</label>
-                        <input type="tel" placeholder="+1 (555) 000-0000" required value={quoteForm.mobile} onChange={e => setQuoteForm({ ...quoteForm, mobile: e.target.value })} />
+                        <input 
+                            type="tel" 
+                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"} 
+                            required 
+                            value={quoteForm.mobile} 
+                            onChange={e => {
+                                let val = e.target.value;
+                                // Automatically prepend phone code if missing and it exists
+                                if (selectedCountry?.phone_code && val && !val.startsWith(selectedCountry.phone_code)) {
+                                    if (val.startsWith('+')) {
+                                        // manual prefix
+                                    } else {
+                                        val = selectedCountry.phone_code + ' ' + val;
+                                    }
+                                }
+                                setQuoteForm({ ...quoteForm, mobile: val });
+                            }} 
+                        />
                     </div>
                     <div className="form-group">
                         <label>Estimated Budget</label>
                         <select value={quoteForm.budget} onChange={e => setQuoteForm({ ...quoteForm, budget: e.target.value })}>
                             <option value="">Select Range</option>
-                            <option value="< $5k">Under $5k</option>
-                            <option value="$5k - $15k">$5k - $15k</option>
-                            <option value="$15k+">$15k+</option>
+                            {selectedCountry?.budgets ? (
+                                selectedCountry.budgets.map(b => <option key={b} value={b}>{b}</option>)
+                            ) : (
+                                <>
+                                    <option value="< $1k">Under $1k</option>
+                                    <option value="$1k - $5k">$1k - $5k</option>
+                                    <option value="$5k+">$5k+</option>
+                                </>
+                            )}
+                            <option value="Custom">Custom Amount...</option>
                         </select>
                     </div>
+
+                    {quoteForm.budget === 'Custom' && (
+                        <div className="form-group field-full">
+                            <label>Specify Budget</label>
+                            <input 
+                                type="text" 
+                                placeholder={`e.g. ${selectedCountry?.currency || '$'} 15,000`} 
+                                value={quoteForm.customBudget} 
+                                required
+                                onChange={e => setQuoteForm({ ...quoteForm, customBudget: e.target.value })} 
+                            />
+                        </div>
+                    )}
                     <div className="form-group field-full">
                         <label>How can we help? (Select multiple)</label>
                         <div className="help-options">
@@ -151,6 +234,21 @@ const ContactPopup = ({ isOpen, onClose }) => {
                 {errorMsg && <div style={{ color: '#F05A63', background: 'rgba(240,90,99,0.05)', padding: '10px', borderRadius: '4px', marginBottom: '16px', fontSize: '13px' }}>{errorMsg}</div>}
 
                 <form id="booking-form-element" onSubmit={handleBookingSubmit} className="quote-form" style={{ marginBottom: '24px' }}>
+                    <div className="form-group field-full">
+                        <label>Select Country</label>
+                        <select 
+                            value={selectedCountry?.name || ''} 
+                            onChange={e => handleCountryChange(e.target.value)}
+                            required
+                        >
+                            <option value="" disabled>Select your country</option>
+                            {pricingData.length > 0 ? (
+                                pricingData.map(c => <option key={c.id} value={c.name}>{c.name}</option>)
+                            ) : (
+                                <option value="USA">United States</option>
+                            )}
+                        </select>
+                    </div>
                     <div className="form-group">
                         <label>Name</label>
                         <input type="text" placeholder="Your Name" required value={booking.name} onChange={e => setBooking({ ...booking, name: e.target.value })} />
@@ -158,6 +256,22 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     <div className="form-group">
                         <label>Email</label>
                         <input type="email" placeholder="email@example.com" required value={booking.email} onChange={e => setBooking({ ...booking, email: e.target.value })} />
+                    </div>
+                    <div className="form-group field-full">
+                        <label>Phone Number</label>
+                        <input 
+                            type="tel" 
+                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"} 
+                            required 
+                            value={booking.mobile || ''} 
+                            onChange={e => {
+                                let val = e.target.value;
+                                if (selectedCountry?.phone_code && val && !val.startsWith(selectedCountry.phone_code)) {
+                                    if (!val.startsWith('+')) val = selectedCountry.phone_code + ' ' + val;
+                                }
+                                setBooking({ ...booking, mobile: val });
+                            }} 
+                        />
                     </div>
                 </form>
 

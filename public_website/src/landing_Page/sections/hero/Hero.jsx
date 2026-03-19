@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
 import { fetchHeroContent } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
+import BackgroundAnimation from '../../../Shared/BackgroundAnimation/BackgroundAnimation';
 import './hero.css';
 import client1 from '../../../assets/client_1.png';
 import client2 from '../../../assets/client_2.png';
@@ -73,6 +74,7 @@ export default function Hero() {
 
     return (
         <section className="hero-section">
+            <BackgroundAnimation />
             <div className="hero-shadow-overlay"></div>
 
             <div className="hero-container">

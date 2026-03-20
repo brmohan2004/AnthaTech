@@ -47,9 +47,18 @@ const ServiceDetailsPage = () => {
 
     if (loading) {
         return (
-            <div className="service-details-container loading">
+            <div className="service-details-container">
                 <ServiceDetailsHeader />
-                <div className="sd-loading-spinner">Loading service details...</div>
+                <main>
+                    <section className="sd-hero" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                        <div className="sd-hero-content">
+                            <div className="skeleton skeleton-badge"></div>
+                            <div className="skeleton skeleton-title"></div>
+                            <div className="skeleton skeleton-subtitle"></div>
+                            <div className="skeleton skeleton-subtitle" style={{ width: '100%', height: '100px' }}></div>
+                        </div>
+                    </section>
+                </main>
                 <Footer />
             </div>
         );

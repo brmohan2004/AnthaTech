@@ -55,9 +55,11 @@ const ProjectDetails = () => {
 
     if (loading) {
         return (
-            <div className="project-details-page-loading">
+            <div className="project-details-page">
                 <ProjectDetailsHeader />
-                <div className="pd-loading-spinner">Loading project details...</div>
+                <main className="project-details-content">
+                    <ProjectDetailsHero loading={true} />
+                </main>
                 <Footer />
             </div>
         );

@@ -34,7 +34,9 @@ const InsightsHero = () => {
             <section className="insights-hero-section">
                 <BackgroundAnimation />
                 <div className="ih-container">
-                    <div className="ih-loading">Loading Insights...</div>
+                    <div className="skeleton skeleton-badge"></div>
+                    <div className="skeleton skeleton-title"></div>
+                    <div className="skeleton skeleton-subtitle"></div>
                 </div>
             </section>
         );

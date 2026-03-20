@@ -1,7 +1,32 @@
 import React from 'react';
 import './ProjectDetailsHero.css';
 
-const ProjectDetailsHero = ({ project }) => {
+const ProjectDetailsHero = ({ project, loading }) => {
+    if (loading) {
+        return (
+            <section className="project-details-hero">
+                <div className="pd-hero-container">
+                    <div className="pd-mockup-section">
+                        <div className="mockup-container desktop-only">
+                            <div className="skeleton skeleton-mockup"></div>
+                        </div>
+                        <div className="mockup-container tablet-only">
+                            <div className="skeleton skeleton-mockup" style={{ aspectRatio: '3/4' }}></div>
+                        </div>
+                        <div className="mockup-container mobile-only">
+                            <div className="skeleton skeleton-mockup" style={{ aspectRatio: '9/19' }}></div>
+                        </div>
+                    </div>
+                    <div className="pd-content-section">
+                        <div className="skeleton skeleton-badge"></div>
+                        <div className="skeleton skeleton-title"></div>
+                        <div className="skeleton skeleton-subtitle" style={{ height: '120px' }}></div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
     const badge = project?.category;
     const title = project?.title;
     const desc = project?.hero_description;

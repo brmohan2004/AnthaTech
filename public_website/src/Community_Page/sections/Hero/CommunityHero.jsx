@@ -30,7 +30,10 @@ const CommunityHero = () => {
         return (
             <section className="cp-hero">
                 <div className="cp-hero-inner">
-                    <div className="cp-hero-loading">Loading Community Header...</div>
+                    <div className="skeleton skeleton-badge" style={{ margin: '0 auto 24px' }}></div>
+                    <div className="skeleton skeleton-title" style={{ margin: '0 auto 20px' }}></div>
+                    <div className="skeleton skeleton-subtitle" style={{ margin: '0 auto 32px' }}></div>
+                    <div className="skeleton skeleton-btn" style={{ margin: '0 auto' }}></div>
                 </div>
             </section>
         );

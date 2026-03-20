@@ -34,7 +34,9 @@ const ProjectsHero = () => {
             <section className="projects-hero-section">
                 <BackgroundAnimation />
                 <div className="ph-container">
-                    <div className="ph-loading">Loading Projects...</div>
+                    <div className="skeleton skeleton-badge"></div>
+                    <div className="skeleton skeleton-title"></div>
+                    <div className="skeleton skeleton-subtitle"></div>
                 </div>
             </section>
         );

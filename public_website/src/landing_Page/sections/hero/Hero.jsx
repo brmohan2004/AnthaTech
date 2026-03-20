@@ -49,8 +49,15 @@ export default function Hero() {
     if (loading) {
         return (
             <section className="hero-section">
+                <BackgroundAnimation />
                 <div className="hero-container">
-                    <div className="hero-loading">Loading hero section...</div>
+                    <div className="skeleton skeleton-badge" style={{ margin: '0 auto 24px' }}></div>
+                    <div className="skeleton skeleton-title" style={{ height: '120px', width: '80%', margin: '0 auto 24px' }}></div>
+                    <div className="skeleton skeleton-subtitle" style={{ height: '48px', width: '60%', margin: '0 auto 40px' }}></div>
+                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                        <div className="skeleton skeleton-btn"></div>
+                        <div className="skeleton skeleton-btn"></div>
+                    </div>
                 </div>
             </section>
         );

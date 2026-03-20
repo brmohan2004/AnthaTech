@@ -49,7 +49,7 @@ const Login = () => {
             // Check if MFA is required
             const factorsData = await listMFAFactors();
             const verifiedFactors = getVerifiedTotpFactors(factorsData);
-            
+
             const user = await getCurrentUser();
             const profile = await getAdminProfile(user?.id);
             setCurrentUserProfile(profile);
@@ -143,7 +143,7 @@ const Login = () => {
                 // For now, let's try to list factors again or fail gracefully.
                 throw new Error("MFA is enabled on your profile but no verification factor was found. Please use a backup code or contact support.");
             }
-            
+
             await verifyMFA(mfaFactorId, code);
             await finalizeLogin(session);
         } catch (err) {
@@ -166,7 +166,7 @@ const Login = () => {
                 // Success! Consume the code
                 const newCodes = codes.filter(c => c !== backupCode.trim().toUpperCase());
                 await updateAdminProfile(currentUserProfile.id, { mfa_backup_codes: newCodes });
-                
+
                 // Since this is a bypass, we just go to dashboard
                 // In a real app, you might still need to challenge a dummy factor or just trust the profile.
                 // Note: Supabase aal2 won't be set this way. This is a frontend bypass.
@@ -297,7 +297,7 @@ const Login = () => {
                                 {loading ? (
                                     <Loader2 size={18} className="login-spinner" />
                                 ) : null}
-                                {loading ? 'Signing in...' : 'Sign In to Admin'}
+                                {loading ? 'Signing in...' : 'Sign In'}
                             </button>
                         </form>
                     </>
@@ -305,7 +305,7 @@ const Login = () => {
                     <div className="login-mfa">
                         <ShieldCheck size={36} style={{ color: 'var(--accent-blue)' }} />
                         <h3 className="login-mfa-title">Two-Factor Authentication</h3>
-                        
+
                         {error && (
                             <div className="login-error">
                                 <AlertCircle size={16} /> {error}
@@ -395,9 +395,9 @@ const Login = () => {
                         <button
                             type="button"
                             className="login-mfa-back"
-                            onClick={() => { 
-                                setMfaStep(false); 
-                                setOtp(['', '', '', '', '', '']); 
+                            onClick={() => {
+                                setMfaStep(false);
+                                setOtp(['', '', '', '', '', '']);
                                 setUseBackup(false);
                             }}
                         >

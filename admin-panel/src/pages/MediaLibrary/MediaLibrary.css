@@ -372,6 +372,73 @@
 	color: var(--text-secondary);
 }
 
+/* Renaming Styles */
+.media-card-rename-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.media-card-rename-input,
+.media-table-rename-input {
+	width: 100%;
+	padding: 0.35rem 0.6rem;
+	border-radius: 0.4rem;
+	border: 1px solid var(--accent-blue);
+	background: var(--bg-card);
+	font-size: 0.875rem;
+	color: var(--text-primary);
+	outline: none;
+}
+
+.media-card-rename-actions {
+	display: flex;
+	gap: 0.35rem;
+}
+
+.rename-btn {
+	border: none;
+	border-radius: 0.3rem;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.rename-btn.save {
+	background: var(--status-green-bg);
+	color: var(--status-green-text);
+}
+
+.rename-btn.save:hover {
+	background: var(--accent-green);
+	color: white;
+}
+
+.rename-btn.cancel {
+	background: var(--bg-hover);
+	color: var(--text-secondary);
+}
+
+.rename-btn.cancel:hover {
+	background: var(--border);
+	color: var(--text-primary);
+}
+
+.media-table-rename-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	flex: 1;
+}
+
+.media-table-rename-input {
+	max-width: 240px;
+}
+
 @media (max-width: 1200px) {
 	.media-grid {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -403,4 +470,5 @@
 		grid-template-columns: repeat(1, minmax(0, 1fr));
 	}
 }
+
 

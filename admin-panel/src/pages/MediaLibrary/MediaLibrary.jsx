@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { UploadCloud, Grid3X3, List, Search, Image as ImageIcon, FileText, Video, Trash2, Copy } from 'lucide-react';
+import { UploadCloud, Grid3X3, List, Search, Image as ImageIcon, FileText, Video, Trash2, Copy, Edit2, Check, X } from 'lucide-react';
 import './MediaLibrary.css';
-import { uploadFile, deleteFile, getPublicUrl, listFiles, generateFilePath } from '../../api/media';
+import { uploadFile, deleteFile, getPublicUrl, listFiles, generateFilePath, renameFile } from '../../api/media';
 import ToastMessage from '../../components/ui/ToastMessage';
 
 const getFileKind = (type) => {
@@ -18,6 +18,8 @@ const MediaLibrary = () => {
 	const [files, setFiles] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [toast, setToast] = useState(null);
+	const [editingFileId, setEditingFileId] = useState(null);
+	const [editingFileName, setEditingFileName] = useState('');
 
 	const loadFiles = async () => {
 		try {
@@ -100,6 +102,29 @@ const MediaLibrary = () => {
 		} catch (err) {
 			setToast({ type: 'error', message: err.message || 'Failed to delete file.' });
 		}
+	};
+
+	const handleStartRename = (file) => {
+		setEditingFileId(file.id);
+		setEditingFileName(file.name);
+	};
+
+	const handleSaveRename = async (id) => {
+		if (!editingFileName.trim()) return;
+		const file = files.find(f => f.id === id);
+		try {
+			await renameFile(file.path, editingFileName.trim());
+			setFiles(prev => prev.map(f => f.id === id ? { ...f, name: editingFileName.trim() } : f));
+			setEditingFileId(null);
+			setToast({ type: 'success', message: 'File renamed successfully.' });
+		} catch (err) {
+			setToast({ type: 'error', message: err.message || 'Failed to rename file.' });
+		}
+	};
+
+	const handleCancelRename = () => {
+		setEditingFileId(null);
+		setEditingFileName('');
 	};
 
 	const filteredFiles = files.filter((file) => {
@@ -231,10 +256,37 @@ const MediaLibrary = () => {
 								{renderFileThumbnail(file)}
 							</div>
 							<div className="media-card-body">
-								<div className="media-card-name" title={file.name}>{file.name}</div>
+								{editingFileId === file.id ? (
+									<div className="media-card-rename-wrapper">
+										<input
+											type="text"
+											className="media-card-rename-input"
+											value={editingFileName}
+											onChange={(e) => setEditingFileName(e.target.value)}
+											autoFocus
+											onKeyDown={(e) => {
+												if (e.key === 'Enter') handleSaveRename(file.id);
+												if (e.key === 'Escape') handleCancelRename();
+											}}
+										/>
+										<div className="media-card-rename-actions">
+											<button onClick={() => handleSaveRename(file.id)} className="rename-btn save"><Check size={12} /></button>
+											<button onClick={handleCancelRename} className="rename-btn cancel"><X size={12} /></button>
+										</div>
+									</div>
+								) : (
+									<div className="media-card-name" title={file.name}>{file.name}</div>
+								)}
 								<div className="media-card-meta">{file.size} · {file.uploadedAt}</div>
 							</div>
 							<div className="media-card-actions">
+								<button
+									className="media-card-btn"
+									onClick={() => handleStartRename(file)}
+									title="Rename"
+								>
+									<Edit2 size={14} />
+								</button>
 								<button
 									className="media-card-btn"
 									onClick={() => handleCopyUrl(file.url)}
@@ -272,7 +324,25 @@ const MediaLibrary = () => {
 									<td>
 										<div className="media-table-name">
 											<span className="media-table-icon">{renderFileIcon(file)}</span>
-											<span className="media-table-filename" title={file.name}>{file.name}</span>
+											{editingFileId === file.id ? (
+												<div className="media-table-rename-wrapper">
+													<input
+														type="text"
+														className="media-table-rename-input"
+														value={editingFileName}
+														onChange={(e) => setEditingFileName(e.target.value)}
+														autoFocus
+														onKeyDown={(e) => {
+															if (e.key === 'Enter') handleSaveRename(file.id);
+															if (e.key === 'Escape') handleCancelRename();
+														}}
+													/>
+													<button onClick={() => handleSaveRename(file.id)} className="rename-btn save"><Check size={12} /></button>
+													<button onClick={handleCancelRename} className="rename-btn cancel"><X size={12} /></button>
+												</div>
+											) : (
+												<span className="media-table-filename" title={file.name}>{file.name}</span>
+											)}
 										</div>
 									</td>
 									<td>{getFileKind(file.type)}</td>
@@ -280,6 +350,13 @@ const MediaLibrary = () => {
 									<td>{file.uploadedAt}</td>
 									<td>
 										<div className="media-table-actions">
+											<button
+												className="media-card-btn"
+												onClick={() => handleStartRename(file)}
+												title="Rename"
+											>
+												<Edit2 size={14} />
+											</button>
 											<button
 												className="media-card-btn"
 												onClick={() => handleCopyUrl(file.url)}

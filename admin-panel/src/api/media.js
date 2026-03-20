@@ -61,6 +61,15 @@ export async function deleteFiles(paths) {
   await saveMediaRegistry(updated);
 }
 
+export async function renameFile(path, newName) {
+  const registry = await getMediaRegistry();
+  const fileIndex = registry.findIndex(f => f.path === path);
+  if (fileIndex === -1) throw new Error('File not found in registry.');
+  
+  registry[fileIndex].name = newName;
+  await saveMediaRegistry(registry);
+}
+
 // Just return the path since path could just be the Cloudinary URL in our new logic, 
 // or if we need to look it up we do. We'll simply return the path directly or look it up.
 export function getPublicUrl(path) {

@@ -5,14 +5,6 @@ import { fetchHeroContent } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
 import BackgroundAnimation from '../../../Shared/BackgroundAnimation/BackgroundAnimation';
 import './hero.css';
-import client1 from '../../../assets/client_1.png';
-import client2 from '../../../assets/client_2.png';
-import client3 from '../../../assets/client_3.png';
-import client4 from '../../../assets/client_4.png';
-import client5 from '../../../assets/client_5.png';
-import client6 from '../../../assets/client_6.png';
-
-const LOCAL_LOGOS = [client1, client2, client3, client4, client5, client6];
 
 export default function Hero() {
     const navigate = useNavigate();
@@ -70,7 +62,7 @@ export default function Hero() {
 
     const clientLogos = (Array.isArray(hero.client_logos) && hero.client_logos.length)
         ? hero.client_logos
-        : LOCAL_LOGOS;
+        : [];
 
     return (
         <section className="hero-section">

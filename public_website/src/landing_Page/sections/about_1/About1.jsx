@@ -4,7 +4,7 @@ import { useModal } from '../../../context/ModalContext';
 import { fetchAboutContent } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
 import './about1.css';
-import logoImg from '../../../assets/logo.png';
+import logoImg from '../../../assets/logo.webp';
 
 export default function About1() {
     const navigate = useNavigate();

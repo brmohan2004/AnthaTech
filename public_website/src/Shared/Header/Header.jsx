@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
-import logoImg from '../../assets/logo.png';
+import logoImg from '../../assets/logo.webp';
 import { useModal } from '../../context/ModalContext';
 import { fetchSiteConfig } from '../../api/content';
 import ThemeToggle from './ThemeToggle';

@@ -104,7 +104,7 @@ const SEO = ({ config }) => {
                     "@id": `${orgUrl}/#organization`,
                     "name": s.orgName || siteName || "Antha Tech",
                     "url": orgUrl,
-                    "logo": s.orgLogo || "https://anthatech.me/logo.png",
+                    "logo": s.orgLogo || "https://anthatech.me/logo.webp",
                     "description": s.orgDesc || description || '',
                     "foundingDate": s.orgFoundingDate || '2024',
                     "contactPoint": { "@type": "ContactPoint", "telephone": s.orgPhone || '', "contactType": "customer service", "email": s.orgEmail || 'info.anthatech@gmail.com' },

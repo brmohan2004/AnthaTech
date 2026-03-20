@@ -1,6 +1,6 @@
 import React from 'react';
 import './AboutServices.css';
-import logoImg from '../../../assets/logo.png';
+import logoImg from '../../../assets/logo.webp';
 
 const AboutServices = () => {
     return (

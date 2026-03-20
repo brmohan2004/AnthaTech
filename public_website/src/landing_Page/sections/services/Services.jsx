@@ -5,12 +5,6 @@ import ServiceCard from '../../../Shared/ServiceCard/ServiceCard';
 import { fetchServices } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
 
-import brandingImg from '../../../assets/branding_service.png';
-import designImg from '../../../assets/design_service.png';
-import devImg from '../../../assets/dev_service.png';
-
-const LOCAL_GRAPHICS = [brandingImg, designImg, devImg];
-
 export default function Services() {
     const cardsRef = useRef([]);
     const navigate = useNavigate();
@@ -37,14 +31,14 @@ export default function Services() {
                 const publishedServices = normalizedRows.filter(s => s.status === 'published');
                 console.log('Filtered Published Services:', publishedServices);
                 
-                setServicesData(publishedServices.map((s, i) => ({
+                setServicesData(publishedServices.map((s) => ({
                     title: s.title,
                     tags: Array.isArray(s.tags) ? s.tags : [],
                     description: s.short_description || '',
                     buttonText: `${s.title} services`,
                     link: `/service/${s.slug}`,
                     theme: s.theme || 'theme-dark-green',
-                    graphicSrc: s.graphic_url || LOCAL_GRAPHICS[i] || brandingImg,
+                    graphicSrc: s.graphic_url || null,
                 })));
                 setLoading(false);
             })

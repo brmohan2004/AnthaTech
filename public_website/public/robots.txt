@@ -3,7 +3,6 @@ Allow: /
 Disallow: /admin
 Disallow: /login
 Disallow: /api
-Crawl-delay: 10
 
 User-agent: Google-Extended
 Allow: /

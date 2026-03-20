@@ -5,13 +5,6 @@ import ProgressCard from '../../../Shared/ProgressCard/ProgressCard';
 import { fetchProcessSteps } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
 
-import progress1 from '../../../assets/progress_1.png';
-import progress2 from '../../../assets/progress_2.png';
-import progress3 from '../../../assets/progress_3.png';
-import progress4 from '../../../assets/progress_4.png';
-
-const LOCAL_IMAGES = [progress1, progress2, progress3, progress4];
-
 export default function Progress() {
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRef = useRef(null);
@@ -73,7 +66,7 @@ export default function Progress() {
         title: s.title || '',
         description: s.description || s.text || '',
         step: s.step || String(i + 1).padStart(2, '0'),
-        image: s.image || s.image_url || LOCAL_IMAGES[i] || progress1,
+        image: s.image || s.image_url || null,
     })) : [];
 
     return (

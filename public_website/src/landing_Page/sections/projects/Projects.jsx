@@ -5,14 +5,6 @@ import ProjectCard from '../../../Shared/ProjectCard/ProjectCard';
 import { fetchProjects } from '../../../api/content';
 import ErrorMessage from '../../../Shared/ErrorMessage/ErrorMessage';
 
-import proj1 from '../../../assets/project_1.png';
-import proj2 from '../../../assets/project_2.png';
-import proj3 from '../../../assets/project_3.png';
-import proj4 from '../../../assets/project_4.png';
-import proj5 from '../../../assets/project_5.png';
-
-const LOCAL_IMAGES = { proj1, proj2, proj3, proj4, proj5 };
-
 export default function Projects() {
     const carouselRef = useRef(null);
     const [projectsData, setProjectsData] = useState([]);
@@ -24,11 +16,11 @@ export default function Projects() {
         setError(null);
         fetchProjects()
             .then(rows => {
-                setProjectsData((rows || []).map((p, i) => ({
+                setProjectsData((rows || []).map((p) => ({
                     id: p.slug,
                     pill: p.category_pill || '',
                     title: p.title,
-                    image: p.cover_image_url || Object.values(LOCAL_IMAGES)[i] || proj1,
+                    image: p.cover_image_url || null,
                 })));
                 setLoading(false);
             })

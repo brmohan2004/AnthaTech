@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './footer.css';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo.webp';
 import { fetchServices, fetchSiteConfig } from '../../api/content';
 import { MapPin, ExternalLink, Mail, Phone } from 'lucide-react';
 

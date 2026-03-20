@@ -6,7 +6,7 @@ export default function ProjectCard({ id, pill, title, image }) {
     return (
         <Link to={`/project-details/${id}`} className="project-card" id={id} style={{ textDecoration: 'none' }}>
             <div className="project-image-wrapper">
-                {image && <img src={image} alt={title} className="project-preview-img" loading="lazy" />}
+                {image && <img src={image} alt={title} className="project-preview-img" width="600" height="400" loading="lazy" />}
             </div>
 
             <div className="project-info">

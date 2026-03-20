@@ -109,11 +109,25 @@ const MediaLibrary = () => {
 		return matchesFilter && matchesSearch;
 	});
 
+	const renderFileThumbnail = (file) => {
+		const kind = getFileKind(file.type);
+		if (kind === 'image' && file.url && file.url !== '#') {
+			return <img src={file.url} alt={file.name} className="media-thumbnail-img" loading="lazy" />;
+		}
+		return (
+			<div className="media-card-icon">
+				{kind === 'image' ? <ImageIcon size={20} /> : 
+				 kind === 'video' ? <Video size={20} /> : 
+				 <FileText size={20} />}
+			</div>
+		);
+	};
+
 	const renderFileIcon = (file) => {
 		const kind = getFileKind(file.type);
-		if (kind === 'image') return <ImageIcon size={20} />;
-		if (kind === 'video') return <Video size={20} />;
-		return <FileText size={20} />;
+		if (kind === 'image') return <ImageIcon size={18} />;
+		if (kind === 'video') return <Video size={18} />;
+		return <FileText size={18} />;
 	};
 
 	return (
@@ -214,7 +228,7 @@ const MediaLibrary = () => {
 					{filteredFiles.map((file) => (
 						<div className="media-card" key={file.id}>
 							<div className="media-card-thumbnail">
-								<div className="media-card-icon">{renderFileIcon(file)}</div>
+								{renderFileThumbnail(file)}
 							</div>
 							<div className="media-card-body">
 								<div className="media-card-name" title={file.name}>{file.name}</div>

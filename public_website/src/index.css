@@ -7,15 +7,21 @@
     box-sizing: border-box;
 }
 
-html, body {
+html {
     margin: 0;
     padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-    position: relative;
+    height: 100%;
+    overflow: hidden;
 }
 
 body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
     font-family: var(--font-primary);
     background-color: var(--bg-primary);
     color: var(--text-primary);

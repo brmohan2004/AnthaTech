@@ -1,24 +1,19 @@
-.pd-gallery-parallax-section {
-    position: relative;
-    height: 400vh;
+.pd-gallery-list-section {
     background-color: var(--bg-primary);
-    transition: background-color 0.3s ease;
+    padding: 120px 0;
+    overflow-x: hidden;
 }
 
-.gallery-sticky-wrapper {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
+.gallery-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 15px;
 }
 
 .pd-gallery-header {
-    width: 100%;
-    margin-bottom: 20px;
-    padding-left: 24px;
+    margin-bottom: 60px;
+    text-align: center;
 }
 
 .gallery-badge {
@@ -26,6 +21,8 @@
     padding: 8px 18px;
     border-radius: 999px;
     display: inline-block;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .gallery-badge span {
@@ -36,100 +33,149 @@
     letter-spacing: 0.1em;
 }
 
-/* Horizontal Track for Framer Motion */
-.gallery-horizontal-track {
-    display: flex;
-    padding: 0 40px;
-    gap: 40px;
-    will-change: transform;
+.gallery-title {
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    margin-top: 10px;
 }
 
-/* Gallery Item */
-.gallery-item {
-    flex: 0 0 840px; /* Standard size */
-    height: 520px;
-    border-radius: 20px;
+.gallery-vertical-list {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.gallery-item-list {
+    position: relative;
+    width: 100%;
+    cursor: zoom-in;
+}
+
+.gallery-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Standard desktop / cinema aspect ratio */
+    max-height: 90vh; /* Ensure it fits within the viewport on most screens */
+    border-radius: 24px;
     overflow: hidden;
     background: var(--bg-secondary);
-    box-shadow: var(--card-shadow);
-    transition: transform 0.3s ease;
-    cursor: pointer;
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.2);
 }
 
-.gallery-item:hover {
-    transform: scale(0.99);
-}
-
-.gallery-item img {
+.gallery-image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* Progress Indicator */
-.gallery-progress-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 60px;
+.gallery-item-list:hover img {
+    transform: scale(1.04);
 }
 
-.gallery-progress-track {
-    width: 300px;
-    height: 4px;
-    background: var(--border-color);
-    border-radius: 100px;
-    overflow: hidden;
-    position: relative;
-}
-
-.gallery-progress-bar {
+.image-overlay {
     position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.gallery-item-list:hover .image-overlay {
+    opacity: 1;
+}
+
+.view-btn {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 32px;
     background: var(--accent-primary);
     border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Responsive tweaks */
-@media (max-width: 1024px) {
-    .pd-gallery-parallax-section {
-        height: 300vh;
-    }
+.gallery-item-list:hover .view-btn {
+    transform: translateY(0);
+}
 
-    .gallery-item {
-        flex: 0 0 70vw;
-        height: 450px;
+.view-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px);
+}
+
+.image-number {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    font-size: 160px;
+    font-weight: 900;
+    color: var(--accent-primary);
+    opacity: 0.08;
+    z-index: -1;
+    pointer-events: none;
+    line-height: 1;
+}
+
+/* Responsiveness */
+@media (max-width: 1200px) {
+    .gallery-image-wrapper {
+        border-radius: 20px;
+    }
+    .gallery-title {
+        font-size: 48px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .pd-gallery-list-section {
+        padding: 100px 0;
+    }
+    .gallery-image-wrapper {
+        max-height: 80vh;
+    }
+    .gallery-vertical-list {
+        gap: 80px;
     }
 }
 
 @media (max-width: 768px) {
-    .pd-gallery-header {
-        padding: 0 24px 20px;
+    .pd-gallery-list-section {
+        padding: 60px 0;
     }
-
-    .gallery-badge {
-        padding: 5px 14px;
+    .gallery-container {
+        padding: 0 15px; /* Stick to 15px as requested earlier */
     }
-
-    .gallery-badge span {
-        font-size: 11px;
+    .gallery-image-wrapper {
+        aspect-ratio: 4 / 3; /* More vertical-friendly aspect ratio for mobile */
+        border-radius: 16px;
+        max-height: none;
     }
-
-    /* For smaller devices, we might want to revert to a simpler horizontal scroll or a shorter parallax */
-    .pd-gallery-parallax-section {
-        height: 250vh;
+    .gallery-vertical-list {
+        gap: 60px;
     }
-    
-    .gallery-item {
-        flex: 0 0 calc(100vw - 80px);
-        height: 60vh;
-        border-radius: 12px;
+    .image-number {
+        font-size: 80px;
+        top: -30px;
+        opacity: 0.12;
     }
-    
-    .gallery-progress-track {
-        width: 160px;
+    .gallery-title {
+        font-size: 32px;
+    }
+    .image-overlay {
+        padding: 24px;
+    }
+    .view-btn {
+        font-size: 14px;
+        padding: 10px 20px;
     }
 }

@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import './ProjectGallery.css';
 import ImageLightbox from './ImageLightbox';
 
@@ -8,18 +8,7 @@ const ProjectGallery = ({ project }) => {
         ? project.gallery_urls
         : [];
 
-    const sectionRef = useRef(null);
     const [lightboxSrc, setLightboxSrc] = useState(null);
-
-    // Track scroll progress within the section
-    const { scrollYProgress } = useScroll({
-        target: sectionRef,
-    });
-
-    // Transform vertical scroll progress into horizontal translation
-    // Calculation: (Number of images * item width) - viewport width
-    // To keep it simple and responsive, let's use a percentage-based move
-    const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(images.length - 1) * 60}%`]);
 
     const openLightbox = (src) => setLightboxSrc(src);
     const closeLightbox = () => setLightboxSrc(null);
@@ -27,34 +16,47 @@ const ProjectGallery = ({ project }) => {
     if (images.length === 0) return null;
 
     return (
-        <section ref={sectionRef} className="pd-gallery-parallax-section">
-            <div className="gallery-sticky-wrapper">
+        <section className="pd-gallery-list-section">
+            <div className="gallery-container">
                 <div className="pd-gallery-header">
                     <div className="gallery-badge">
-                        <span>Gallery</span>
+                        <span>Project Gallery</span>
                     </div>
+                    <h2 className="gallery-title">Visual Showcase</h2>
                 </div>
 
-                <motion.div style={{ x }} className="gallery-horizontal-track">
+                <div className="gallery-vertical-list">
                     {images.map((url, idx) => (
-                        <div 
-                            key={idx} 
-                            className="gallery-item"
+                        <motion.div 
+                            key={idx}
+                            initial={{ 
+                                opacity: 0, 
+                                x: idx % 2 === 0 ? -100 : 100,
+                                scale: 0.9
+                            }}
+                            whileInView={{ 
+                                opacity: 1, 
+                                x: 0,
+                                scale: 1
+                            }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ 
+                                duration: 0.8, 
+                                ease: [0.16, 1, 0.3, 1],
+                                delay: 0.1
+                            }}
+                            className="gallery-item-list"
                             onClick={() => openLightbox(url)}
                         >
-                            <img src={url} alt={`Visualization ${idx + 1}`} />
-                        </div>
+                            <div className="gallery-image-wrapper">
+                                <img src={url} alt={`Gallery image ${idx + 1}`} />
+                                <div className="image-overlay">
+                                    <span className="view-btn">View Image</span>
+                                </div>
+                                <div className="image-number">{String(idx + 1).padStart(2, '0')}</div>
+                            </div>
+                        </motion.div>
                     ))}
-                </motion.div>
-                
-                {/* Visual Progress indicator at the bottom */}
-                <div className="gallery-progress-container">
-                    <div className="gallery-progress-track">
-                        <motion.div 
-                            className="gallery-progress-bar" 
-                            style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
-                        ></motion.div>
-                    </div>
                 </div>
             </div>
 

@@ -30,7 +30,8 @@ const initialProjectState = {
     relatedProjects: [],
     previewLink: '',
     mobile_image: null,
-    tab_image: null
+    tab_image: null,
+    desktop_image: null
 };
 
 
@@ -227,6 +228,9 @@ const ProjectsManager = () => {
         } else if (mediaTarget === 'tab') {
             setFormData(prev => ({ ...prev, tab_image: url }));
             setToast({ type: 'success', message: 'Tab image updated.' });
+        } else if (mediaTarget === 'desktop') {
+            setFormData(prev => ({ ...prev, desktop_image: url }));
+            setToast({ type: 'success', message: 'Desktop image updated.' });
         }
         setMediaTarget(null); // Close the modal
     };
@@ -245,7 +249,7 @@ const ProjectsManager = () => {
                 category: formData.category,
                 status,
                 publish_at: publishAt,
-                image: formData.image || formData.coverImage,
+                image: formData.coverImage,
                 hero_description: formData.heroDescription,
                 challenges: formData.challenges.map(c => c.text).filter(Boolean),
                 gallery: formData.gallery,
@@ -255,6 +259,7 @@ const ProjectsManager = () => {
                 preview_link: formData.previewLink,
                 mobile_image: formData.mobile_image,
                 tab_image: formData.tab_image,
+                desktop_image: formData.desktop_image,
             };
             if (formData.id) {
                 await updateProject(formData.id, payload);
@@ -491,6 +496,28 @@ const ProjectsManager = () => {
                                         )}
                                     </div>
                                     <p className="text-secondary mt-2" style={{ fontSize: '12px' }}>This image will show on the tab/desktop secondary portion.</p>
+                                </div>
+
+                                {/* Desktop View Mockup Image */}
+                                <div className="panel">
+                                    <div className="panel-header-flex">
+                                        <h3 className="panel-title mb-0">Desktop View Mockup (1 image)</h3>
+                                        <Button variant="secondary" size="sm" onClick={() => setMediaTarget('desktop')}>📁 Media Library</Button>
+                                    </div>
+                                    <div className="gallery-single-preview">
+                                        {formData.desktop_image ? (
+                                            <div className="gallery-preview-item large">
+                                                <img src={formData.desktop_image} alt="Desktop View" />
+                                                <button className="del-btn" onClick={() => setFormData(prev => ({ ...prev, desktop_image: null }))}><X size={12} /></button>
+                                            </div>
+                                        ) : (
+                                            <div className="gallery-placeholder">
+                                                <ImageIcon size={32} />
+                                                <span>No desktop mockup image added</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-secondary mt-2" style={{ fontSize: '12px' }}>This image will show on the desktop mockup monitor of the public website. If empty, it will use the first image from the gallery.</p>
                                 </div>
                             </div>
                         )}

@@ -71,11 +71,17 @@ function mapHero(d) {
 
 function mapProject(p) {
   if (!p) return null;
+  const gallery_urls = Array.isArray(p.gallery) 
+    ? p.gallery
+        .map(img => (typeof img === 'object' && img !== null) ? img.url : img)
+        .filter(url => url !== (p.image || '')) 
+    : [];
+
   return {
     ...p,
     category_pill: p.category || '',
     cover_image_url: p.image || '',
-    gallery_urls: Array.isArray(p.gallery) ? p.gallery.map(img => (typeof img === 'object' && img !== null) ? img.url : img) : [],
+    gallery_urls,
     preview_link: p.preview_link || '',
     review_quote: p.review?.quote || '',
     review_author: p.review?.author || '',
@@ -83,7 +89,7 @@ function mapProject(p) {
     review_company: p.review?.company || '',
     mobile_image_url: p.mobile_image || '',
     tab_image_url: p.tab_image || '',
-    desktop_image_url: p.desktop_image || p.image || '',
+    desktop_image_url: p.desktop_image || gallery_urls[0] || '',
   };
 }
 

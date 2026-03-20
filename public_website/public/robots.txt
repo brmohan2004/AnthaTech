@@ -1,13 +1,16 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /admin-panel/
+Disallow: /admin
+Disallow: /login
+Disallow: /api
+Crawl-delay: 10
 
-# Specific AI Crawler Access to enable Gemini / Search AI
 User-agent: Google-Extended
 Allow: /
+
 User-agent: GPTBot
 Allow: /
+
 User-agent: ClaudeBot
 Allow: /
 

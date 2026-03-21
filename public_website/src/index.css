@@ -13,6 +13,7 @@ html {
     min-height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    touch-action: pan-x pan-y;
 }
 
 body {

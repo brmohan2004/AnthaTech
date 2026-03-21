@@ -26,6 +26,8 @@ import {
 /* ── Constants ─────────────────────────────────────────── */
 const EVENT_OPTIONS = [
     { id: 'new_message', label: 'New Message' },
+    { id: 'quotation_requested', label: 'Quotation Requested' },
+    { id: 'call_scheduled', label: 'Call Scheduled' },
     { id: 'new_application', label: 'New Application' },
     { id: 'project_published', label: 'Project Published' },
     { id: 'blog_published', label: 'Blog Published' },
@@ -34,6 +36,8 @@ const EVENT_OPTIONS = [
 
 const EVENT_COLORS = {
     new_message: { bg: '#EFF6FF', text: '#1D4ED8', border: '#BFDBFE' },
+    quotation_requested: { bg: '#FFF7ED', text: '#C2410C', border: '#FED7AA' },
+    call_scheduled: { bg: '#F0FDF4', text: '#15803D', border: '#BBF7D0' },
     new_application: { bg: '#F5F3FF', text: '#6D28D9', border: '#DDD6FE' },
     project_published: { bg: '#ECFDF5', text: '#065F46', border: '#A7F3D0' },
     blog_published: { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A' },

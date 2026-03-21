@@ -47,14 +47,15 @@
 
 .preview-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto; /* Natural height */
+    object-fit: contain; /* Ensure full image is visible */
+    display: block;
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Monitor Specifics */
 .monitor {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: auto; /* Flexible aspect ratio */
     border-radius: 16px;
     padding: 5px;
 }
@@ -65,7 +66,7 @@
 
 /* Tablet Specifics */
 .tablet {
-    aspect-ratio: 3.5 / 4.5;
+    aspect-ratio: auto; /* Flexible aspect ratio */
     max-width: 520px;
     margin: 0 auto;
     border-radius: 36px;
@@ -78,7 +79,7 @@
 
 /* Phone Specifics */
 .phone {
-    aspect-ratio: 9 / 18.0;
+    aspect-ratio: auto; /* Flexible aspect ratio */
     max-width: 340px;
     margin: 0 auto;
     border-radius: 48px;

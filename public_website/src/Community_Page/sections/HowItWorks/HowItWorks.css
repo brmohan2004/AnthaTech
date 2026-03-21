@@ -14,7 +14,7 @@
 }
 
 .how-title {
-    font-size: 52px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     color: var(--text-primary);
     margin: 20px 0 60px;
@@ -57,7 +57,7 @@
 }
 
 .how-step-title {
-    font-size: 22px;
+    font-size: var(--font-size-h4);
     font-weight: 700;
     color: var(--text-primary);
     margin: 0 0 10px;
@@ -90,9 +90,7 @@
         padding: 70px 20px;
     }
 
-    .how-title {
-        font-size: 36px;
-    }
+
 
     .how-step {
         flex-direction: column;

@@ -1,4 +1,5 @@
 import supabase from '../config/supabaseClient';
+import { triggerWebhooks } from '../utils/webhookTrigger';
 
 // ─── Caching Logic ───────────────────────────────────────────
 const CACHE_TTL = 30 * 1000; // 30 seconds cache (reduced for testing)
@@ -339,6 +340,15 @@ export async function submitCommunityApplication(application) {
     throw new Error(`Submission failed: ${error.message}`);
   }
   updateSubmissionTime();
+  
+  // Trigger webhook notifications
+  triggerWebhooks('new_application', {
+    full_name: application.full_name,
+    email: application.email,
+    track: application.track,
+    message: application.message
+  });
+
   return true;
 }
 
@@ -406,6 +416,19 @@ export async function submitContactMessage(message) {
   }
 
   updateSubmissionTime();
+
+  // Trigger webhook notifications
+  const isQuote = message.message && message.message.startsWith('Quote Request');
+  const isBooking = message.message && message.message.startsWith('Booking Request');
+  const eventName = isQuote ? 'quotation_requested' : isBooking ? 'call_scheduled' : 'new_message';
+
+  triggerWebhooks(eventName, {
+    name: message.name,
+    email: message.email,
+    message: message.message,
+    type: isQuote ? 'quote' : isBooking ? 'booking' : 'general'
+  });
+
   return true;
 }
 

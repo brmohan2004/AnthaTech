@@ -10,7 +10,7 @@
 }
 
 .perks-title {
-    font-size: 52px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     color: var(--text-primary);
     margin: 20px 0 60px;
@@ -52,7 +52,7 @@
 }
 
 .perk-title {
-    font-size: 20px;
+    font-size: var(--font-size-h4);
     font-weight: 700;
     color: var(--text-primary);
     margin: 0 0 12px;
@@ -85,9 +85,7 @@
         padding: 70px 20px;
     }
 
-    .perks-title {
-        font-size: 36px;
-    }
+    /* .perks-title font-size now handled by global variable */
 
     .perks-grid {
         grid-template-columns: 1fr;

@@ -53,10 +53,10 @@
 }
 
 .cp-hero-title {
-    font-size: 80px;
+    font-size: var(--font-size-hero);
     font-weight: 400;
     color: #ffffff;
-    line-height: 1.05;
+    line-height: var(--line-height-hero);
     letter-spacing: -3px;
     margin: 0 0 28px;
 }
@@ -66,9 +66,9 @@
 }
 
 .cp-hero-desc {
-    font-size: 20px;
+    font-size: var(--font-size-h5);
     color: rgba(255, 255, 255, 0.75);
-    line-height: 1.7;
+    line-height: var(--line-height-body);
     max-width: 620px;
     margin: 0 auto 40px;
 }
@@ -80,7 +80,7 @@
     color: #0c2d57;
     padding: 16px 36px;
     border-radius: 99px;
-    font-size: 17px;
+    font-size: var(--font-size-body);
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -109,7 +109,7 @@
     color: rgba(255, 255, 255, 0.8);
     padding: 8px 18px;
     border-radius: 99px;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     font-weight: 500;
     backdrop-filter: blur(8px);
 }
@@ -132,14 +132,14 @@
 }
 
 .cp-stat-value {
-    font-size: 36px;
+    font-size: var(--font-size-h2);
     font-weight: 800;
     color: #4ade80;
     line-height: 1;
 }
 
 .cp-stat-label {
-    font-size: 13px;
+    font-size: var(--font-size-tiny);
     color: rgba(255, 255, 255, 0.65);
     font-weight: 500;
     text-transform: uppercase;
@@ -152,7 +152,6 @@
     }
 
     .cp-hero-title {
-        font-size: 52px;
         letter-spacing: -2px;
     }
 
@@ -162,11 +161,11 @@
     }
 
     .cp-hero-badge .badge-text {
-        font-size: 11px !important;
+        font-size: var(--font-size-tiny) !important;
     }
 
     .cp-tag {
         padding: 5px 14px;
-        font-size: 11px;
+        font-size: var(--font-size-tiny);
     }
 }

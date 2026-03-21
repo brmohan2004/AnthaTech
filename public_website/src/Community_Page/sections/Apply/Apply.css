@@ -19,7 +19,7 @@
 }
 
 .apply-title {
-    font-size: 52px;
+    font-size: var(--font-size-h1);
     font-weight: 400;
     color: var(--text-primary);
     margin: 20px 0 16px;
@@ -165,7 +165,7 @@
 }
 
 .apply-success h3 {
-    font-size: 28px;
+    font-size: var(--font-size-h3);
     font-weight: 800;
     color: var(--text-primary);
     margin: 0 0 12px;
@@ -194,9 +194,7 @@
         padding: 70px 20px;
     }
 
-    .apply-title {
-        font-size: 36px;
-    }
+    /* .apply-title size now handled globally */
 
     .apply-form-row {
         grid-template-columns: 1fr;

@@ -75,6 +75,12 @@ export async function triggerWebhooks(eventName, payload) {
                     const finalUrl = `${h.url}&text=${encodeURIComponent(msg)}`;
                     response = await fetch(finalUrl, { method: 'GET' });
                 }
+                // TELEGRAM LOGIC (100% Free & Unlimited)
+                else if (h.url.includes('api.telegram.org')) {
+                    const text = `🚀 *New ${eventName.replace('_', ' ')}!*\n👤 *Name:* ${payload.name}\n📧 *Email:* ${payload.email}\n📝 *Info:* ${payload.message}`.slice(0, 4000);
+                    const finalUrl = `${h.url}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
+                    response = await fetch(finalUrl, { method: 'GET' });
+                }
                 // GENERIC POST / ZAPIER LOGIC
                 else {
                     response = await fetch(h.url, {

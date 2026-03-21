@@ -1,23 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { submitContactMessage, fetchCountrySettings } from '../../api/content';
-import { useEffect } from 'react';
 import './ContactPopup.css';
 
 const HELP_OPTIONS = ['Web Design', 'App Dev', 'Branding', 'SEO', 'Consulting', 'Marketing', 'E-commerce'];
 const TIME_SLOTS = ['09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '03:30 PM', '05:00 PM'];
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const ContactPopup = ({ isOpen, onClose }) => {
+    const today = new Date();
     const [view, setView] = useState('selection'); // selection, quote, booking, success
     const [quoteForm, setQuoteForm] = useState({
         name: '', email: '', mobile: '', project: '', budget: '', customBudget: '', help: []
     });
     const [booking, setBooking] = useState({
-        name: '', email: '', duration: '15 min', date: 'Mar 10', time: '10:00 AM', type: 'Video Call', message: '', country: ''
+        name: '', email: '', duration: '15 min', date: `${SHORT_MONTHS[today.getMonth()]} ${today.getDate()}`, time: '10:00 AM', type: 'Video Call', message: '', country: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
     const [pricingData, setPricingData] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState(null);
+
+    // Calendar state
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const [currentYear, setCurrentYear] = useState(today.getFullYear());
+    const [selectedFullDate, setSelectedFullDate] = useState(today);
+
+    const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+    const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
+
+    const handlePrevMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(prev => prev - 1);
+        } else {
+            setCurrentMonth(prev => prev - 1);
+        }
+    };
+
+    const handleNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(prev => prev + 1);
+        } else {
+            setCurrentMonth(prev => prev + 1);
+        }
+    };
+
+    const handleDateClick = (day) => {
+        const newDate = new Date(currentYear, currentMonth, day);
+        setSelectedFullDate(newDate);
+        setBooking(prev => ({ ...prev, date: `${SHORT_MONTHS[currentMonth]} ${day}` }));
+    };
 
     useEffect(() => {
         (async () => {
@@ -107,7 +141,7 @@ const ContactPopup = ({ isOpen, onClose }) => {
             <button className="selection-card" onClick={() => setView('booking')}>
                 <div className="selection-icon">📅</div>
                 <div className="selection-text">
-                    <h4>Book a Free Call</h4>
+                    <h4>Book a Free Meeting</h4>
                     <p>Schedule a 1-on-1 discovery call with our experts.</p>
                 </div>
             </button>
@@ -126,8 +160,8 @@ const ContactPopup = ({ isOpen, onClose }) => {
                 <form className="quote-form" id="quote-form-element" onSubmit={handleQuoteSubmit}>
                     <div className="form-group field-full">
                         <label>Select Country</label>
-                        <select 
-                            value={selectedCountry?.name || ''} 
+                        <select
+                            value={selectedCountry?.name || ''}
                             onChange={e => handleCountryChange(e.target.value)}
                             required
                         >
@@ -149,11 +183,11 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     </div>
                     <div className="form-group">
                         <label>Mobile Number</label>
-                        <input 
-                            type="tel" 
-                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"} 
-                            required 
-                            value={quoteForm.mobile} 
+                        <input
+                            type="tel"
+                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"}
+                            required
+                            value={quoteForm.mobile}
                             onChange={e => {
                                 let val = e.target.value;
                                 // Automatically prepend phone code if missing and it exists
@@ -165,7 +199,7 @@ const ContactPopup = ({ isOpen, onClose }) => {
                                     }
                                 }
                                 setQuoteForm({ ...quoteForm, mobile: val });
-                            }} 
+                            }}
                         />
                     </div>
                     <div className="form-group">
@@ -188,12 +222,12 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     {quoteForm.budget === 'Custom' && (
                         <div className="form-group field-full">
                             <label>Specify Budget</label>
-                            <input 
-                                type="text" 
-                                placeholder={`e.g. ${selectedCountry?.currency || '$'} 15,000`} 
-                                value={quoteForm.customBudget} 
+                            <input
+                                type="text"
+                                placeholder={`e.g. ${selectedCountry?.currency || '$'} 15,000`}
+                                value={quoteForm.customBudget}
                                 required
-                                onChange={e => setQuoteForm({ ...quoteForm, customBudget: e.target.value })} 
+                                onChange={e => setQuoteForm({ ...quoteForm, customBudget: e.target.value })}
                             />
                         </div>
                     )}
@@ -229,15 +263,15 @@ const ContactPopup = ({ isOpen, onClose }) => {
     const renderBooking = () => (
         <>
             <div className="modal-content-scrollable">
-                <h3 className="form-title">Book a free call</h3>
+                <h3 className="form-title">Book a Free Meeting</h3>
                 <p className="form-subtitle">Choose a duration and schedule your discovery session.</p>
                 {errorMsg && <div style={{ color: '#F05A63', background: 'rgba(240,90,99,0.05)', padding: '10px', borderRadius: '4px', marginBottom: '16px', fontSize: '13px' }}>{errorMsg}</div>}
 
                 <form id="booking-form-element" onSubmit={handleBookingSubmit} className="quote-form" style={{ marginBottom: '24px' }}>
                     <div className="form-group field-full">
                         <label>Select Country</label>
-                        <select 
-                            value={selectedCountry?.name || ''} 
+                        <select
+                            value={selectedCountry?.name || ''}
                             onChange={e => handleCountryChange(e.target.value)}
                             required
                         >
@@ -259,18 +293,18 @@ const ContactPopup = ({ isOpen, onClose }) => {
                     </div>
                     <div className="form-group field-full">
                         <label>Phone Number</label>
-                        <input 
-                            type="tel" 
-                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"} 
-                            required 
-                            value={booking.mobile || ''} 
+                        <input
+                            type="tel"
+                            placeholder={selectedCountry?.phone_code ? `${selectedCountry.phone_code} 00000 00000` : "+1 (555) 000-0000"}
+                            required
+                            value={booking.mobile || ''}
                             onChange={e => {
                                 let val = e.target.value;
                                 if (selectedCountry?.phone_code && val && !val.startsWith(selectedCountry.phone_code)) {
                                     if (!val.startsWith('+')) val = selectedCountry.phone_code + ' ' + val;
                                 }
                                 setBooking({ ...booking, mobile: val });
-                            }} 
+                            }}
                         />
                     </div>
                 </form>
@@ -290,18 +324,35 @@ const ContactPopup = ({ isOpen, onClose }) => {
 
                 <div className="scheduler-container">
                     <div className="calendar-mini">
-                        <div className="calendar-header">March 2026</div>
+                        <div className="calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <button type="button" onClick={handlePrevMonth} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', fontSize: '18px', padding: '0 8px' }}>&lt;</button>
+                            <span>{MONTH_NAMES[currentMonth]} {currentYear}</span>
+                            <button type="button" onClick={handleNextMonth} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', fontSize: '18px', padding: '0 8px' }}>&gt;</button>
+                        </div>
                         <div className="calendar-days">
                             {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <span key={d} style={{ fontSize: '11px', color: '#94a3b8' }}>{d}</span>)}
-                            {Array.from({ length: 31 }, (_, i) => (
-                                <div
-                                    key={i}
-                                    className={`day-cell ${i === 9 ? 'active' : ''}`}
-                                    onClick={() => { }}
-                                >
-                                    {i + 1}
-                                </div>
+                            {Array.from({ length: getFirstDayOfMonth(currentYear, currentMonth) }, (_, i) => (
+                                <div key={`empty-${i}`} className="day-cell" style={{ visibility: 'hidden' }}></div>
                             ))}
+                            {Array.from({ length: getDaysInMonth(currentYear, currentMonth) }, (_, i) => {
+                                const day = i + 1;
+                                const isSelected = selectedFullDate.getDate() === day && selectedFullDate.getMonth() === currentMonth && selectedFullDate.getFullYear() === currentYear;
+                                const dateObj = new Date(currentYear, currentMonth, day);
+                                const todayDate = new Date();
+                                todayDate.setHours(0, 0, 0, 0);
+                                const isPast = dateObj < todayDate;
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`day-cell ${isSelected ? 'active' : ''}`}
+                                        onClick={() => !isPast && handleDateClick(day)}
+                                        style={isPast ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
+                                    >
+                                        {day}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 

@@ -40,9 +40,11 @@ export async function triggerWebhooks(eventName, payload) {
                     const sid = h.url.split('/Accounts/')[1].split('/')[0];
                     const auth = btoa(`${sid}:${h.secret}`);
                     
-                    // Try to get recipient number from URL query, fallback to payload or hardcoded
+                    // Get recipient number and ensure it keeps the + sign (URL params decode + to space)
                     const urlObj = new URL(h.url);
-                    const recipient = urlObj.searchParams.get('to') || '+919962442165'; 
+                    let recipient = urlObj.searchParams.get('to') || '+919962442165'; 
+                    recipient = recipient.replace(/\s+/g, '+'); // Fix + becoming space
+                    if (!recipient.startsWith('+')) recipient = '+' + recipient;
 
                     const msg = `🔔 *New ${eventName.replace('_', ' ')}!*
                     👤 Name: ${payload.name}
@@ -87,6 +89,12 @@ export async function triggerWebhooks(eventName, payload) {
                     });
                 }
 
+                if (!response.ok) {
+                    console.error(`[Webhook] Fetch failed with status: ${response.status}`);
+                    const text = await response.text();
+                    console.error(`[Webhook] Fetch response: ${text.slice(0, 100)}`);
+                }
+
                 // Update the database with the result
                 const { error: updateError } = await supabase
                     .from('webhooks')
@@ -98,11 +106,11 @@ export async function triggerWebhooks(eventName, payload) {
 
                 if (updateError) {
                     console.error(`[Webhook] Supabase update failed (RLS blocked?):`, updateError);
-                } else {
+                } else if (response.ok) {
                     console.log(`[Webhook] Success: ${h.url} -> ${response.status}`);
                 }
             } catch (err) {
-                console.error(`[Webhook] Failed to trigger ${h.url}:`, err);
+                console.error(`[Webhook] Failed to trigger (Network error?):`, err);
             }
         });
 

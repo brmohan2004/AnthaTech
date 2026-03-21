@@ -51,7 +51,10 @@ export async function triggerWebhooks(eventName, payload) {
 
                     console.log(`[Webhook] Sending to Twilio: ${sid} -> ${recipient}`);
 
-                    response = await fetch(h.url, {
+                    // Use a proxy because Twilio API blocks CORS from browsers
+                    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(h.url);
+
+                    response = await fetch(proxyUrl, {
                         method: 'POST',
                         headers: {
                             'Authorization': `Basic ${auth}`,
@@ -85,7 +88,7 @@ export async function triggerWebhooks(eventName, payload) {
                 }
 
                 // Update the database with the result
-                await supabase
+                const { error: updateError } = await supabase
                     .from('webhooks')
                     .update({ 
                         last_triggered_at: new Date().toISOString(),
@@ -93,7 +96,11 @@ export async function triggerWebhooks(eventName, payload) {
                     })
                     .eq('id', h.id);
 
-                console.log(`[Webhook] Success: ${h.url} -> ${response.status}`);
+                if (updateError) {
+                    console.error(`[Webhook] Supabase update failed (RLS blocked?):`, updateError);
+                } else {
+                    console.log(`[Webhook] Success: ${h.url} -> ${response.status}`);
+                }
             } catch (err) {
                 console.error(`[Webhook] Failed to trigger ${h.url}:`, err);
             }

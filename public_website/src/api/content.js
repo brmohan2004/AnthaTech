@@ -418,8 +418,6 @@ export async function submitContactMessage(message) {
   updateSubmissionTime();
 
   // Trigger webhook notifications
-  const isQuote = message.message && message.message.startsWith('Quote Request');
-  const isBooking = message.message && message.message.startsWith('Booking Request');
   const eventName = isQuote ? 'quotation_requested' : isBooking ? 'call_scheduled' : 'new_message';
 
   triggerWebhooks(eventName, {

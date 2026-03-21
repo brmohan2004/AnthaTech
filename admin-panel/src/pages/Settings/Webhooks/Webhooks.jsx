@@ -465,7 +465,7 @@ const Webhooks = () => {
                                         type={showSecret ? 'text' : 'password'}
                                         className="form-input font-mono secret-input"
                                         value={form.secret}
-                                        readOnly
+                                        onChange={(e) => setField('secret', e.target.value)}
                                     />
                                     <button
                                         className="secret-btn"

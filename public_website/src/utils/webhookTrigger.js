@@ -7,55 +7,101 @@ import supabase from '../config/supabaseClient';
  */
 export async function triggerWebhooks(eventName, payload) {
     try {
+        console.log(`[Webhook] Fetching hooks for event: ${eventName}`);
+        
         // 1. Fetch active webhooks for this event
-        // Note: For this to work for public users, you MUST add a SELECT policy
-        // to the 'webhooks' table for 'anon' role (public).
         const { data: hooks, error } = await supabase
             .from('webhooks')
-            .select('url, secret')
-            .eq('status', 'active')
-            .contains('events', [eventName]);
+            .select('id, url, secret, events')
+            .eq('status', 'active');
 
         if (error) {
-            console.error('Error fetching webhooks:', error);
+            console.error('[Webhook] Error fetching webhooks:', error);
             return;
         }
 
-        if (!hooks || hooks.length === 0) return;
+        // Filter hooks subscribed to this event manually for safety
+        const activeHooks = hooks.filter(h => h.events && h.events.includes(eventName));
+        
+        if (!activeHooks || activeHooks.length === 0) {
+            console.log('[Webhook] No active webhooks found for this event.');
+            return;
+        }
 
-        console.log(`Triggering ${hooks.length} webhooks for event: ${eventName}`);
+        console.log(`[Webhook] Triggering ${activeHooks.length} webhooks...`);
 
-        // 2. Fire and forget requests to each webhook
-        const promises = hooks.map(async (h) => {
+        // 2. Fire requests to each webhook
+        const promises = activeHooks.map(async (h) => {
             try {
-                const response = await fetch(h.url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Webhook-Event': eventName,
-                        'X-Webhook-Secret': h.secret || '',
-                    },
-                    body: JSON.stringify({
-                        event: eventName,
-                        timestamp: new Date().toISOString(),
-                        data: payload
-                    }),
-                });
+                let response;
+                
+                // TWILIO PRO LOGIC
+                if (h.url.includes('api.twilio.com')) {
+                    const sid = h.url.split('/Accounts/')[1].split('/')[0];
+                    const auth = btoa(`${sid}:${h.secret}`);
+                    
+                    // Try to get recipient number from URL query, fallback to payload or hardcoded
+                    const urlObj = new URL(h.url);
+                    const recipient = urlObj.searchParams.get('to') || '+919962442165'; 
 
-                // We don't wait for response in production for better performance,
-                // but we might want to log failures.
-                if (!response.ok) {
-                    console.warn(`Webhook ${h.url} returned status ${response.status}`);
+                    const msg = `🔔 *New ${eventName.replace('_', ' ')}!*
+                    👤 Name: ${payload.name}
+                    📞 Contact: ${payload.email}
+                    📝 Info: ${payload.message}`.slice(0, 1600);
+
+                    console.log(`[Webhook] Sending to Twilio: ${sid} -> ${recipient}`);
+
+                    response = await fetch(h.url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Basic ${auth}`,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            'From': 'whatsapp:+14155238886',
+                            'To': `whatsapp:${recipient}`,
+                            'Body': msg
+                        })
+                    });
+                } 
+                // CALLMEBOT / GET LOGIC
+                else if (h.url.includes('whatsapp.php')) {
+                    const msg = `New ${eventName}: ${payload.name} (${payload.email}) - ${payload.message}`.slice(0, 500);
+                    const finalUrl = `${h.url}&text=${encodeURIComponent(msg)}`;
+                    response = await fetch(finalUrl, { method: 'GET' });
                 }
+                // GENERIC POST / ZAPIER LOGIC
+                else {
+                    response = await fetch(h.url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            event: eventName,
+                            secret: h.secret,
+                            timestamp: new Date().toISOString(),
+                            data: payload
+                        }),
+                    });
+                }
+
+                // Update the database with the result
+                await supabase
+                    .from('webhooks')
+                    .update({ 
+                        last_triggered_at: new Date().toISOString(),
+                        last_result: response.ok ? 'ok' : 'error' 
+                    })
+                    .eq('id', h.id);
+
+                console.log(`[Webhook] Success: ${h.url} -> ${response.status}`);
             } catch (err) {
-                console.error(`Failed to trigger webhook ${h.url}:`, err);
+                console.error(`[Webhook] Failed to trigger ${h.url}:`, err);
             }
         });
 
-        // Fire all requests in parallel without blocking the main UI too much
-        Promise.all(promises).catch(e => console.error('Error in webhook promises:', e));
+        await Promise.all(promises);
 
     } catch (err) {
-        console.error('Fatal error in triggerWebhooks:', err);
+        console.error('[Webhook] Fatal error:', err);
     }
 }

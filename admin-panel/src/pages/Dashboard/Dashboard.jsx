@@ -4,7 +4,7 @@ import './Dashboard.css';
 import {
     Folder, FileText, Mail, Users,
     Plus, Edit, Image as ImageIcon, Settings,
-    ArrowUpRight, ArrowRight, Minus, Loader2
+    ArrowUpRight, ArrowRight, Minus, Loader2, AlertCircle, X
 } from 'lucide-react';
 import { getDashboardStats, getContactMessages, getAuditLog } from '../../api/content';
 
@@ -20,6 +20,10 @@ const Dashboard = () => {
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [pendingApps, setPendingApps] = useState(0);
+    const [unreadMsgs, setUnreadMsgs] = useState(0);
+    const [showAlert1, setShowAlert1] = useState(true);
+    const [showAlert2, setShowAlert2] = useState(true);
 
     useEffect(() => {
         async function loadDashboard() {
@@ -37,6 +41,9 @@ const Dashboard = () => {
                     { label: 'Unread Messages', value: `${dashStats.unreadMessages} new`, trend: '', trendUp: dashStats.unreadMessages > 0, icon: <Mail /> },
                     { label: 'Community Members', value: String(dashStats.communityMembers), trend: '', trendUp: null, icon: <Users /> }
                 ]);
+                
+                setPendingApps(dashStats.pendingApplications || 0);
+                setUnreadMsgs(dashStats.unreadMessages || 0);
 
                 setRecentMessages((messages || []).slice(0, 5).map(m => ({
                     name: m.name || m.sender_name || 'Unknown',
@@ -80,6 +87,36 @@ const Dashboard = () => {
                     <strong>Error:</strong> {error}
                 </div>
             )}
+
+            {/* Floating Alerts */}
+            <div style={{ position: 'fixed', top: '80px', right: '20px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {pendingApps > 0 && showAlert1 && (
+                    <div className="alert-card" style={{ background: 'var(--bg-card)', borderLeft: '4px solid #F59E0B', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '320px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                            <AlertCircle size={20} color="#F59E0B" style={{marginTop: '2px'}} />
+                            <div>
+                                <h4 style={{ margin: 0, fontSize: '14px', color: 'var(--text-main)' }}>New Applications</h4>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>You received <b>{pendingApps}</b> new application(s), please check the view application button.</p>
+                                <button className="view-all-btn" style={{marginTop: '10px', padding: '5px 10px', fontSize: '12px'}} onClick={() => navigate('/admin/community/applications')}>View Applications</button>
+                            </div>
+                        </div>
+                        <button onClick={() => setShowAlert1(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={16} /></button>
+                    </div>
+                )}
+                {unreadMsgs > 0 && showAlert2 && (
+                    <div className="alert-card" style={{ background: 'var(--bg-card)', borderLeft: '4px solid #3B82F6', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '320px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                            <AlertCircle size={20} color="#3B82F6" style={{marginTop: '2px'}} />
+                            <div>
+                                <h4 style={{ margin: 0, fontSize: '14px', color: 'var(--text-main)' }}>New Messages</h4>
+                                <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: 'var(--text-secondary)' }}>You received <b>{unreadMsgs}</b> new message(s), please check the message inbox button.</p>
+                                <button className="view-all-btn" style={{marginTop: '10px', padding: '5px 10px', fontSize: '12px'}} onClick={() => navigate('/admin/messages')}>Message Inbox</button>
+                            </div>
+                        </div>
+                        <button onClick={() => setShowAlert2(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={16} /></button>
+                    </div>
+                )}
+            </div>
 
             {/* Stats Row */}
             <section className="stats-row">

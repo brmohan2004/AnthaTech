@@ -20,6 +20,14 @@ const defaultValues = {
         facebook: '',
         youtube: '',
     },
+    emails: {
+        quotation_subject: 'Thank you for your Quote Request',
+        quotation_body: 'Hi {name},\n\nWe have received your quotation request and our team is reviewing it. We will get back to you shortly.',
+        meeting_subject: 'Meeting Request Received',
+        meeting_body: 'Hi {name},\n\nWe have received your meeting request. We will review our schedule and send you a confirmation link soon.',
+        application_subject: 'Welcome to Antha Tech Community!',
+        application_body: 'Hi {name},\n\nYour application has been received successfully. We will review your profile and update you on the status shortly.'
+    }
 };
 
 const SiteSettings = ({ defaultTab = 'contact' }) => {
@@ -46,6 +54,7 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                 const loaded = {
                     contact: configMap.contact ? (typeof configMap.contact === 'string' ? JSON.parse(configMap.contact) : configMap.contact) : defaultValues.contact,
                     social: configMap.social ? (typeof configMap.social === 'string' ? JSON.parse(configMap.social) : configMap.social) : defaultValues.social,
+                    emails: configMap.emails ? (typeof configMap.emails === 'string' ? JSON.parse(configMap.emails) : configMap.emails) : defaultValues.emails,
                 };
                 setData(loaded);
                 setSavedData(loaded);
@@ -149,6 +158,12 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                     onClick={() => setActiveTab('social')}
                 >
                     Social Links
+                </button>
+                <button
+                    className={activeTab === 'emails' ? 'tab active' : 'tab'}
+                    onClick={() => setActiveTab('emails')}
+                >
+                    Auto-Reply Emails
                 </button>
                 <button
                     className={activeTab === 'pricing' ? 'tab active' : 'tab'}
@@ -264,6 +279,46 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                                 value={data.social.youtube}
                                 onChange={(e) => handleChange('social', 'youtube', e.target.value)}
                             />
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'emails' && (
+                    <div className="tab-content" style={{ display: 'grid', gap: '24px' }}>
+                        <div className="settings-section" style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ marginBottom: '15px' }}>Quotation Requests</h4>
+                            <div className="form-group">
+                                <label>Subject</label>
+                                <input className="form-input" value={data.emails.quotation_subject} onChange={(e) => handleChange('emails', 'quotation_subject', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label>Body Template (Use {`{name}`} for client name)</label>
+                                <textarea rows="4" className="form-input" value={data.emails.quotation_body} onChange={(e) => handleChange('emails', 'quotation_body', e.target.value)} />
+                            </div>
+                        </div>
+
+                        <div className="settings-section" style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ marginBottom: '15px' }}>Meeting Bookings</h4>
+                            <div className="form-group">
+                                <label>Subject</label>
+                                <input className="form-input" value={data.emails.meeting_subject} onChange={(e) => handleChange('emails', 'meeting_subject', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label>Body Template (Use {`{name}`} for client name)</label>
+                                <textarea rows="4" className="form-input" value={data.emails.meeting_body} onChange={(e) => handleChange('emails', 'meeting_body', e.target.value)} />
+                            </div>
+                        </div>
+
+                        <div className="settings-section" style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ marginBottom: '15px' }}>Community Applications</h4>
+                            <div className="form-group">
+                                <label>Subject</label>
+                                <input className="form-input" value={data.emails.application_subject} onChange={(e) => handleChange('emails', 'application_subject', e.target.value)} />
+                            </div>
+                            <div className="form-group">
+                                <label>Body Template (Use {`{name}`} for client name)</label>
+                                <textarea rows="4" className="form-input" value={data.emails.application_body} onChange={(e) => handleChange('emails', 'application_body', e.target.value)} />
+                            </div>
                         </div>
                     </div>
                 )}

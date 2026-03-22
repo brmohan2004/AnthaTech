@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Inbox.css';
 import {
     Search, Trash2, Eye, Mail, MailOpen,
-    CheckCircle2, X, Send, MoreVertical, Archive, Loader2
+    CheckCircle2, X, Send, MoreVertical, Archive, Loader2, MessageSquare, Phone, Link
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
@@ -12,6 +12,7 @@ const Inbox = () => {
     const [messages, setMessages] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState('All');
+    const [activeTab, setActiveTab] = useState('Quotes');
     const [selectedMsg, setSelectedMsg] = useState(null);
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -30,11 +31,39 @@ const Inbox = () => {
 
     useEffect(() => { loadMessages(); }, []);
 
-    const filtered = messages.filter(m => {
+    const isQuoteMsg = (msg) => msg.content && msg.content.startsWith('Quote Request');
+    const isBookingMsg = (msg) => msg.content && msg.content.startsWith('Booking Request');
+
+    const quotesMessages = messages.filter(m => isQuoteMsg(m));
+    const meetingsMessages = messages.filter(m => isBookingMsg(m));
+    const generalMessages = messages.filter(m => !isQuoteMsg(m) && !isBookingMsg(m));
+
+    const newQuotesCount = quotesMessages.filter(m => m.status === 'New' || m.status === 'new').length;
+    const newMeetingsCount = meetingsMessages.filter(m => m.status === 'New' || m.status === 'new').length;
+    const newGeneralCount = generalMessages.filter(m => m.status === 'New' || m.status === 'new').length;
+
+    let currentMessages = messages;
+    if (activeTab === 'Quotes') currentMessages = quotesMessages;
+    else if (activeTab === 'Meetings') currentMessages = meetingsMessages;
+    else if (activeTab === 'General') currentMessages = generalMessages;
+
+    const filtered = currentMessages.filter(m => {
         const matchesSearch = m.sender.toLowerCase().includes(searchQuery.toLowerCase()) || m.preview.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFilter = filter === 'All' || (filter === 'New' && (m.status === 'New' || m.status === 'new')) || (filter === 'Read' && (m.status === 'Read' || m.status === 'read'));
         return matchesSearch && matchesFilter;
     });
+
+    const getMessageLinks = (msg) => {
+        const isQuote = isQuoteMsg(msg);
+        const isBooking = isBookingMsg(msg);
+        const mMatch = typeof msg.content === 'string' && msg.content.match(/(?:Mobile|Phone):\s*([+0-9\s()-]+)/i);
+        const phone = mMatch ? mMatch[1].replace(/[^0-9+]/g, '') : '';
+        const waLink = phone ? `https://wa.me/${phone}` : '';
+        const callLink = phone ? `tel:${phone}` : '';
+        const emailLink = `mailto:${msg.email}`;
+        const meetingLinkEmail = `mailto:${msg.email}?subject=Meeting%20Link&body=Hi%20${encodeURIComponent(msg.sender)},%0A%0AHere%20is%20the%20link%20for%20our%20meeting:%20`;
+        return { isQuote, isBooking, waLink, callLink, emailLink, meetingLinkEmail, phone };
+    };
 
     const handleOpen = async (msg) => {
         setSelectedMsg(msg);
@@ -86,6 +115,30 @@ const Inbox = () => {
                 </div>
             </header>
 
+            <div className="inbox-tabs-container">
+                <button 
+                    className={`inbox-tab-btn tab-quotes ${activeTab === 'Quotes' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('Quotes')}
+                >
+                    Quotes Inbox 
+                    {newQuotesCount > 0 && <span className="tab-badge">{newQuotesCount} new</span>}
+                </button>
+                <button 
+                    className={`inbox-tab-btn tab-meetings ${activeTab === 'Meetings' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('Meetings')}
+                >
+                    Meeting Inbox
+                    {newMeetingsCount > 0 && <span className="tab-badge">{newMeetingsCount} new</span>}
+                </button>
+                <button 
+                    className={`inbox-tab-btn tab-general ${activeTab === 'General' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('General')}
+                >
+                    General Inbox
+                    {newGeneralCount > 0 && <span className="tab-badge">{newGeneralCount} new</span>}
+                </button>
+            </div>
+
             <div className="table-toolbar">
                 <div className="search-box">
                     <Search size={16} className="search-icon" />
@@ -116,7 +169,7 @@ const Inbox = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filtered.map((msg, i) => (
+                        {filtered.length > 0 ? filtered.map((msg, i) => (
                             <tr key={msg.id} className={(msg.status === 'New' || msg.status === 'new') ? 'row-unread' : ''} onClick={() => handleOpen(msg)}>
                                 <td className="text-secondary">{i + 1}</td>
                                 <td>
@@ -127,12 +180,31 @@ const Inbox = () => {
                                 <td className="text-secondary">{msg.date}</td>
                                 <td>
                                     <div className="row-actions" onClick={e => e.stopPropagation()}>
-                                        <button className="action-btn" onClick={() => handleOpen(msg)}><Eye size={16} /></button>
-                                        <button className="action-btn text-danger" onClick={() => deleteMessageHandler(msg.id)}><Trash2 size={16} /></button>
+                                        {(() => {
+                                            const links = getMessageLinks(msg);
+                                            return (
+                                                <>
+                                                    {links.isBooking && <a href={links.meetingLinkEmail} className="action-btn" style={{color:'#3B82F6'}} title="Send Meeting Link"><Link size={16} /></a>}
+                                                    {(links.isQuote || links.isBooking) && links.phone && (
+                                                        <>
+                                                            <a href={links.callLink} className="action-btn" style={{color:'#10B981'}} title="Call"><Phone size={16} /></a>
+                                                            <a href={links.waLink} target="_blank" rel="noreferrer" className="action-btn" style={{color:'#10B981'}} title="Message"><MessageSquare size={16} /></a>
+                                                        </>
+                                                    )}
+                                                    {(links.isQuote || links.isBooking || true) && <a href={links.emailLink} className="action-btn" style={{color:'#3B82F6'}} title="Email"><Mail size={16} /></a>}
+                                                </>
+                                            )
+                                        })()}
+                                        <button className="action-btn" title="View Details" onClick={() => handleOpen(msg)}><Eye size={16} /></button>
+                                        <button className="action-btn text-danger" title="Delete" onClick={() => deleteMessageHandler(msg.id)}><Trash2 size={16} /></button>
                                     </div>
                                 </td>
                             </tr>
-                        ))}
+                        )) : (
+                            <tr>
+                                <td colSpan="6" style={{textAlign: 'center', padding: '20px'}}>No messages found in {activeTab}.</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -168,17 +240,111 @@ const Inbox = () => {
                                 {selectedMsg.content}
                             </div>
 
-                            <div className="drawer-actions">
-                                <Button
-                                    variant="primary"
-                                    icon={<Send size={16} />}
-                                    onClick={() => window.location.href = `mailto:${selectedMsg.email}?subject=Re: Application Inquiry - ANTHA Tech&body=Hi ${selectedMsg.sender},%0D%0A%0D%0AThank you for reaching out to us.%0D%0A%0D%0A--- Original Message ---%0D%0A${selectedMsg.content}`}
-                                >
-                                    Reply via Email
-                                </Button>
-                                <div className="action-group-right">
-                                    <button className="drawer-action-btn"><Archive size={18} /> <span>Archive</span></button>
-                                    <button className="drawer-action-btn text-danger" onClick={() => deleteMessageHandler(selectedMsg.id)}><Trash2 size={18} /> <span>Delete</span></button>
+{/* Dynamic Custom Reply System */}
+                            <div className="custom-reply-section" style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+                                <h4 style={{ marginBottom: '15px', color: 'var(--text-primary)' }}>Compose Custom Reply</h4>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Subject (for Emails)" 
+                                        className="form-input"
+                                        id="reply-subject"
+                                        defaultValue={`Re: Your inquiry at Antha Tech`}
+                                    />
+                                    <textarea 
+                                        placeholder="Type your custom message here..." 
+                                        className="form-input" 
+                                        rows="5"
+                                        id="reply-body"
+                                    ></textarea>
+                                    
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <input type="file" id="reply-file" className="form-input" style={{ flex: 1 }} />
+                                        <span className="text-secondary" style={{ fontSize: '12px' }}>*Files valid for Email only</span>
+                                    </div>
+
+                                    <div className="drawer-actions" style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                                        <Button 
+                                            variant="primary" 
+                                            icon={<Mail size={16} />} 
+                                            onClick={async () => {
+                                                const subject = document.getElementById('reply-subject').value;
+                                                const body = document.getElementById('reply-body').value;
+                                                const fileInput = document.getElementById('reply-file');
+                                                
+                                                if (!body) return setToast({ type: 'error', message: 'Message body cannot be empty.' });
+                                                
+                                                const btn = document.getElementById('btn-send-email');
+                                                btn.innerHTML = 'Sending...';
+                                                btn.disabled = true;
+
+                                                try {
+                                                    const { sendBrevoEmail } = await import('../../api/brevo.js');
+                                                    let attachments = [];
+                                                    
+                                                    if (fileInput.files.length > 0) {
+                                                        const file = fileInput.files[0];
+                                                        const base64 = await new Promise((resolve) => {
+                                                            const reader = new FileReader();
+                                                            reader.onload = () => resolve(reader.result.split(',')[1]);
+                                                            reader.readAsDataURL(file);
+                                                        });
+                                                        attachments.push({ name: file.name, base64Content: base64 });
+                                                    }
+
+                                                    await sendBrevoEmail({
+                                                        to: selectedMsg.email,
+                                                        subject: subject,
+                                                        htmlContent: `<p>${body.replace(/\n/g, '<br>')}</p>`,
+                                                        attachments: attachments
+                                                    });
+                                                    
+                                                    setToast({ type: 'success', message: 'Email sent successfully via Brevo!' });
+                                                    document.getElementById('reply-body').value = '';
+                                                    fileInput.value = '';
+                                                } catch (err) {
+                                                    setToast({ type: 'error', message: err.message });
+                                                } finally {
+                                                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Send Email';
+                                                    btn.disabled = false;
+                                                }
+                                            }}
+                                            id="btn-send-email"
+                                        >
+                                            Send Email
+                                        </Button>
+                                        
+                                        {(()=>{
+                                            const links = getMessageLinks(selectedMsg);
+                                            return links.phone ? (
+                                                <Button 
+                                                    variant="secondary" 
+                                                    icon={<MessageSquare size={16} />} 
+                                                    onClick={() => {
+                                                        const body = document.getElementById('reply-body').value;
+                                                        if (!body) return setToast({ type: 'error', message: 'Type a message first.' });
+                                                        window.open(`https://wa.me/${links.phone}?text=${encodeURIComponent(body)}`, '_blank');
+                                                    }}
+                                                >
+                                                    Send to WhatsApp
+                                                </Button>
+                                            ) : null;
+                                        })()}
+
+                                        {(() => {
+                                            const links = getMessageLinks(selectedMsg);
+                                            return links.phone ? (
+                                                <Button variant="ghost" icon={<Phone size={16} />} onClick={() => window.location.href = links.callLink}>
+                                                    Normal Call
+                                                </Button>
+                                            ) : null;
+                                        })()}
+
+                                        <div className="action-group-right" style={{marginLeft: 'auto', display: 'flex', gap: '10px'}}>
+                                            <button className="drawer-action-btn text-danger" onClick={() => deleteMessageHandler(selectedMsg.id)}><Trash2 size={18} /> <span>Delete Leads</span></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -349,6 +349,21 @@ export async function submitCommunityApplication(application) {
     message: application.message
   });
 
+  // Auto-Responder Email
+  try {
+    const config = await fetchSiteConfig();
+    const emailsStr = config.emails || '{}';
+    const emailTpl = typeof emailsStr === 'string' ? JSON.parse(emailsStr) : emailsStr;
+    const { sendBrevoEmail } = await import('./brevo');
+
+    if (emailTpl.application_subject && emailTpl.application_body) {
+      const finalBody = emailTpl.application_body.replace(/{name}/g, application.full_name).replace(/\n/g, '<br>');
+      await sendBrevoEmail({ to: application.email, subject: emailTpl.application_subject, htmlContent: `<p>${finalBody}</p>` });
+    }
+  } catch (err) {
+    console.error('AutoResponder Failed:', err);
+  }
+
   return true;
 }
 
@@ -428,6 +443,32 @@ export async function submitContactMessage(message) {
     message: message.message,
     type: isQuote ? 'quote' : isBooking ? 'booking' : 'general'
   });
+
+  // Auto-Responder Email
+  try {
+    const config = await fetchSiteConfig();
+    const emailsStr = config.emails || '{}';
+    const emailTpl = typeof emailsStr === 'string' ? JSON.parse(emailsStr) : emailsStr;
+    const { sendBrevoEmail } = await import('./brevo');
+
+    let tSubject = '';
+    let tBody = '';
+
+    if (isQuote) {
+      tSubject = emailTpl.quotation_subject;
+      tBody = emailTpl.quotation_body;
+    } else if (isBooking) {
+      tSubject = emailTpl.meeting_subject;
+      tBody = emailTpl.meeting_body;
+    }
+
+    if (tSubject && tBody) {
+      const finalBody = tBody.replace(/{name}/g, message.name).replace(/\n/g, '<br>');
+      await sendBrevoEmail({ to: message.email, subject: tSubject, htmlContent: `<p>${finalBody}</p>` });
+    }
+  } catch (err) {
+    console.error('AutoResponder Failed:', err);
+  }
 
   return true;
 }

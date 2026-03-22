@@ -101,21 +101,13 @@ export async function triggerWebhooks(eventName, payload) {
                     let inlineKeyboard = [];
                     if (eventName === 'quotation_requested' || eventName === 'new_application') {
                         inlineKeyboard = [[
-                            { text: '💬 Message', url: waLink },
-                            { text: '📞 Call', url: callLink },
-                            { text: '✉️ Email', url: emailLink }
+                            { text: '💬 WhatsApp', url: waLink }
                         ]];
                     } else if (eventName === 'call_scheduled') {
-                        inlineKeyboard = [
-                            [
-                                { text: '🔗 Send Meeting Link', url: meetingLinkEmail },
-                                { text: '📞 Call', url: callLink }
-                            ],
-                            [
-                                { text: '💬 Message', url: waLink },
-                                { text: '✉️ Email', url: emailLink }
-                            ]
-                        ];
+                        inlineKeyboard = [[
+                            { text: '🔗 Send Meet Link', url: `https://mail.google.com/mail/?view=cm&fs=1&to=${pEmail}&su=Meeting+Link` },
+                            { text: '💬 WhatsApp', url: waLink }
+                        ]];
                     }
 
                     let finalUrl = `${h.url}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;

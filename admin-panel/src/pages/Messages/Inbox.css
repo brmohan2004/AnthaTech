@@ -10,7 +10,87 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+}
+
+/* Inbox Tabs Premium Redesign */
+.inbox-tabs-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.inbox-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.inbox-tab-btn:hover {
+    border-color: var(--text-tertiary);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.inbox-tab-btn.active {
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.inbox-tab-btn.active.tab-quotes {
+    background: linear-gradient(135deg, #F87171, #EF4444);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.inbox-tab-btn.active.tab-meetings {
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.inbox-tab-btn.active.tab-general {
+    background: linear-gradient(135deg, #34D399, #10B981);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.tab-badge {
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    transition: all 0.3s ease;
+}
+
+.inbox-tab-btn.active .tab-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+.tab-quotes:not(.active) .tab-badge {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+.tab-meetings:not(.active) .tab-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.tab-general:not(.active) .tab-badge {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
 }
 
 .header-breadcrumbs {

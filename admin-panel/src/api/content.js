@@ -212,6 +212,11 @@ export async function updateApplicationStatus(id, status) {
   return data;
 }
 
+export async function deleteCommunityApplication(id) {
+  const { error } = await supabase.from('community_applications').delete().eq('id', id);
+  if (error) throw error;
+}
+
 // ─── Blog Posts ──────────────────────────────────────────────
 export async function getBlogPosts() {
   const { data, error } = await supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
@@ -607,11 +612,12 @@ export async function upsertLegalPage(slug, updates) {
 // ─── Dashboard Stats ─────────────────────────────────────────
 export async function getDashboardStats() {
   return withCache('dashboard_stats', async () => {
-    const [projects, blogs, messages, applications] = await Promise.all([
+    const [projects, blogs, messages, applications, pendingApps] = await Promise.all([
       supabase.from('projects').select('id', { count: 'exact', head: true }),
       supabase.from('blog_posts').select('id', { count: 'exact', head: true }),
       supabase.from('contact_messages').select('id', { count: 'exact', head: true }).eq('status', 'new'),
       supabase.from('community_applications').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+      supabase.from('community_applications').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     ]);
 
     return {
@@ -619,6 +625,7 @@ export async function getDashboardStats() {
       totalBlogPosts: blogs.count || 0,
       unreadMessages: messages.count || 0,
       communityMembers: applications.count || 0,
+      pendingApplications: pendingApps.count || 0,
     };
   }, 120000); // 2 minutes
 }

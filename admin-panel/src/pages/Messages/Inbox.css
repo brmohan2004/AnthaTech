@@ -284,16 +284,18 @@
 }
 
 .detail-drawer {
-    position: absolute;
+    position: fixed;
     top: 0;
-    right: -500px;
-    width: 500px;
+    right: -600px;
+    width: 600px;
+    max-width: 90%;
     height: 100vh;
     background: var(--bg-card);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    z-index: 2001;
 }
 
 .drawer-overlay.open .detail-drawer {
@@ -330,6 +332,7 @@
 .drawer-body {
     padding: 32px;
     flex: 1;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
@@ -360,8 +363,11 @@
     font-size: 16px;
     line-height: 1.8;
     color: var(--text-primary);
-    flex: 1;
     white-space: pre-wrap;
+    background: var(--bg-hover);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
 }
 
 .drawer-actions {

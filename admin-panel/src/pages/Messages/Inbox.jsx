@@ -17,7 +17,7 @@ const Inbox = () => {
     const [selectedMsg, setSelectedMsg] = useState(null);
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [siteEmails, setSiteEmails] = useState({});
+    const [fullConfig, setFullConfig] = useState({});
 
     const loadMessages = async () => {
         try {
@@ -27,9 +27,7 @@ const Inbox = () => {
                 getSiteConfig()
             ]);
             setMessages(data || []);
-            if (config.emails) {
-                setSiteEmails(typeof config.emails === 'string' ? JSON.parse(config.emails) : config.emails);
-            }
+            setFullConfig(config);
         } catch (err) {
             setToast({ type: 'error', message: err.message || 'Failed to load messages.' });
         } finally {
@@ -192,14 +190,16 @@ const Inbox = () => {
                                             const links = getMessageLinks(msg);
                                             return (
                                                 <>
-                                                    {links.isBooking && <a href={links.meetingLinkEmail} className="action-btn" style={{color:'#3B82F6'}} title="Send Meeting Link"><Link size={16} /></a>}
-                                                    {(links.isQuote || links.isBooking) && links.phone && (
-                                                        <>
-                                                            <a href={links.callLink} className="action-btn" style={{color:'#10B981'}} title="Call"><Phone size={16} /></a>
-                                                            <a href={links.waLink} target="_blank" rel="noreferrer" className="action-btn" style={{color:'#10B981'}} title="Message"><MessageSquare size={16} /></a>
-                                                        </>
+                                                    {(links.isQuote || links.isBooking || true) && (
+                                                        <button 
+                                                            className="action-btn" 
+                                                            onClick={() => handleOpen(msg)} 
+                                                            style={{color:'#3B82F6'}} 
+                                                            title="Custom Email Reply"
+                                                        >
+                                                            <Mail size={16} />
+                                                        </button>
                                                     )}
-                                                    {(links.isQuote || links.isBooking || true) && <a href={links.emailLink} className="action-btn" style={{color:'#3B82F6'}} title="Email"><Mail size={16} /></a>}
                                                 </>
                                             )
                                         })()}
@@ -301,7 +301,7 @@ const Inbox = () => {
                                                         attachments.push({ name: file.name, base64Content: base64 });
                                                     }
 
-                                                    const htmlContent = generateBrandedEmailHtml(siteEmails, body);
+                                                    const htmlContent = generateBrandedEmailHtml(fullConfig, body);
 
                                                     await sendBrevoEmail({
                                                         to: selectedMsg.email,

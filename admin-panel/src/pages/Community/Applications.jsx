@@ -19,7 +19,7 @@ const CommunityApplications = () => {
     const [filterStatus, setFilterStatus] = useState('all');
     const [selectedMember, setSelectedMember] = useState(null);
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, name: '' });
-    const [siteEmails, setSiteEmails] = useState({});
+    const [fullConfig, setFullConfig] = useState({});
 
     const deleteMember = async () => {
         const { id, name } = deleteModal;
@@ -68,9 +68,7 @@ const CommunityApplications = () => {
                 getSiteConfig()
             ]);
             setMembers(apps);
-            if (config.emails) {
-                setSiteEmails(typeof config.emails === 'string' ? JSON.parse(config.emails) : config.emails);
-            }
+            setFullConfig(config);
         } catch (err) {
             setToast({ type: 'error', message: 'Failed to load community data.' });
         } finally {
@@ -231,7 +229,14 @@ const CommunityApplications = () => {
                                                         <>
                                                             {links.finalPhone && <a href={links.waLink} target="_blank" rel="noreferrer" className="action-btn" style={{color:'#10B981'}} title="Message"><MessageSquare size={16} /></a>}
                                                             {links.finalPhone && <a href={links.callLink} className="action-btn" style={{color:'#10B981'}} title="Call"><Phone size={16} /></a>}
-                                                            <a href={links.emailLink} className="action-btn" style={{color:'#3B82F6'}} title="Email"><Mail size={16} /></a>
+                                                            <button 
+                                                                className="action-btn" 
+                                                                onClick={() => setSelectedMember(m)} 
+                                                                style={{color:'#3B82F6'}} 
+                                                                title="Custom Email Reply"
+                                                            >
+                                                                <Mail size={16} />
+                                                            </button>
                                                         </>
                                                     );
                                                 })()}
@@ -275,12 +280,12 @@ const CommunityApplications = () => {
                                 <div className="info-row"><span className="info-label">Applied:</span> <span className="info-value">{new Date(selectedMember.applied_at).toLocaleString()}</span></div>
                                 <div className="info-row"><span className="info-label">Status:</span> <span className="info-value">{selectedMember.status}</span></div>
                             </div>
-                            <div className="msg-content" style={{marginTop: '20px', padding: '15px', background: 'var(--bg-card)', borderRadius: '8px', border: '1px solid var(--border-color)', minHeight: '100px'}}>
+                            <div className="msg-content">
                                 <h4 style={{marginBottom: '10px', fontSize: '14px', color: 'var(--text-secondary)'}}>Application Message / Info</h4>
                                 {selectedMember.message || 'No additional message provided.'}
                             </div>
-{/* Dynamic Custom Reply System */}
-                            <div className="custom-reply-section" style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+                            {/* Dynamic Custom Reply System */}
+                            <div className="custom-reply-section">
                                 <h4 style={{ marginBottom: '15px', color: 'var(--text-primary)' }}>Compose Custom Reply</h4>
                                 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -332,7 +337,7 @@ const CommunityApplications = () => {
                                                         attachments.push({ name: file.name, base64Content: base64 });
                                                     }
 
-                                                    const htmlContent = generateBrandedEmailHtml(siteEmails, body);
+                                                    const htmlContent = generateBrandedEmailHtml(fullConfig, body);
 
                                                     await sendBrevoEmail({
                                                         to: selectedMember.email,

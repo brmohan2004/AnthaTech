@@ -221,70 +221,34 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                 )}
 
                 {activeTab === 'social' && (
-                    <div className="tab-content">
-                        <div className="form-group">
-                            <label>Instagram URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.instagram}
-                                onChange={(e) => handleChange('social', 'instagram', e.target.value)}
-                            />
+                    <div className="tab-content" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div style={{ gridColumn: 'span 2', marginBottom: '10px' }}>
+                            <p className="tab-hint">Enter your social media links and a short, one-line slogan for each. These slogans will appear in your corporate email signatures.</p>
                         </div>
-                        <div className="form-group">
-                            <label>LinkedIn URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.linkedin}
-                                onChange={(e) => handleChange('social', 'linkedin', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Twitter/X URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.twitter}
-                                onChange={(e) => handleChange('social', 'twitter', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Behance URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.behance}
-                                onChange={(e) => handleChange('social', 'behance', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>GitHub URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.github}
-                                onChange={(e) => handleChange('social', 'github', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Facebook URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.facebook}
-                                onChange={(e) => handleChange('social', 'facebook', e.target.value)}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>YouTube URL</label>
-                            <input
-                                type="url"
-                                className="form-input"
-                                value={data.social.youtube}
-                                onChange={(e) => handleChange('social', 'youtube', e.target.value)}
-                            />
-                        </div>
+                        {['instagram', 'linkedin', 'twitter', 'behance', 'github', 'facebook', 'youtube'].map((platform) => (
+                            <React.Fragment key={platform}>
+                                <div className="form-group">
+                                    <label style={{ textTransform: 'capitalize' }}>{platform} URL</label>
+                                    <input
+                                        type="url"
+                                        className="form-input"
+                                        value={data.social[platform] || ''}
+                                        onChange={(e) => handleChange('social', platform, e.target.value)}
+                                        placeholder={`https://${platform}.com/your-brand`}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label style={{ textTransform: 'capitalize' }}>{platform} Slogan</label>
+                                    <input
+                                        type="text"
+                                        className="form-input"
+                                        value={data.social[`${platform}_slogan`] || ''}
+                                        onChange={(e) => handleChange('social', `${platform}_slogan`, e.target.value)}
+                                        placeholder={`e.g. Follow us on ${platform}`}
+                                    />
+                                </div>
+                            </React.Fragment>
+                        ))}
                     </div>
                 )}
 

@@ -1,4 +1,5 @@
 import supabase from '../config/supabaseClient';
+import { fetchSiteConfig } from '../api/content';
 
 /**
  * Triggers all active webhooks subscribed to a specific event.
@@ -61,19 +62,34 @@ export async function triggerWebhooks(eventName, payload) {
                 if (h.url.includes('api.twilio.com')) {
                     const sid = h.url.split('/Accounts/')[1].split('/')[0];
                     const auth = btoa(`${sid}:${h.secret}`);
-                    
-                    // Get recipient number and ensure it keeps the + sign (URL params decode + to space)
+                                       // 1. Determine recipient
                     const urlObj = new URL(h.url);
-                    let recipient = urlObj.searchParams.get('to') || '+919962442165'; 
-                    recipient = recipient.replace(/\s+/g, '+'); // Fix + becoming space
+                    let recipient = urlObj.searchParams.get('to');
+                    
+                    if (!recipient) {
+                        try {
+                           const config = await fetchSiteConfig();
+                           const contactStr = config.contact || '{}';
+                           const contact = typeof contactStr === 'string' ? JSON.parse(contactStr) : contactStr;
+                           recipient = contact.phone || '+919962442165';
+                        } catch (e) {
+                           console.warn('[Webhook] Failed to fetch fallback phone:', e);
+                           recipient = '+919962442165';
+                        }
+                    }
+
+                    // 2. Determine Sender (Twilio Sandbox default or custom)
+                    const sender = urlObj.searchParams.get('from') || 'whatsapp:+14155238886';
+
+                    recipient = recipient.replace(/\s+/g, '+'); 
                     if (!recipient.startsWith('+')) recipient = '+' + recipient;
 
                     const msg = `🔔 *New ${eventName.replace('_', ' ')}!*\n👤 Name: ${pName}\n📧 Email: ${pEmail}\n📝 Info: ${pMsg}${linkText}`.slice(0, 1600);
 
-                    console.log(`[Webhook] Sending to Twilio: ${sid} -> ${recipient}`);
+                    console.log(`[Webhook] Sending to Twilio: ${sid} -> ${recipient} (From: ${sender})`);
 
                     // Use a proxy because Twilio API blocks CORS from browsers
-                    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(h.url);
+                    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(h.url.split('?')[0]);
 
                     response = await fetch(proxyUrl, {
                         method: 'POST',
@@ -82,7 +98,7 @@ export async function triggerWebhooks(eventName, payload) {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
                         body: new URLSearchParams({
-                            'From': 'whatsapp:+14155238886',
+                            'From': sender.startsWith('whatsapp:') ? sender : `whatsapp:${sender}`,
                             'To': `whatsapp:${recipient}`,
                             'Body': msg
                         })

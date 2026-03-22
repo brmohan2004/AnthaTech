@@ -6,7 +6,8 @@ import {
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
-import { getContactMessages, updateMessageStatus, deleteMessage as apiDeleteMessage, markAllMessagesRead } from '../../api/content';
+import { getContactMessages, updateMessageStatus, deleteMessage as apiDeleteMessage, markAllMessagesRead, getSiteConfig } from '../../api/content';
+import { generateBrandedEmailHtml } from '../../api/emailTemplates';
 
 const Inbox = () => {
     const [messages, setMessages] = useState([]);
@@ -16,12 +17,19 @@ const Inbox = () => {
     const [selectedMsg, setSelectedMsg] = useState(null);
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [siteEmails, setSiteEmails] = useState({});
 
     const loadMessages = async () => {
         try {
             setLoading(true);
-            const data = await getContactMessages('All');
+            const [data, config] = await Promise.all([
+                getContactMessages('All'),
+                getSiteConfig()
+            ]);
             setMessages(data || []);
+            if (config.emails) {
+                setSiteEmails(typeof config.emails === 'string' ? JSON.parse(config.emails) : config.emails);
+            }
         } catch (err) {
             setToast({ type: 'error', message: err.message || 'Failed to load messages.' });
         } finally {
@@ -293,10 +301,12 @@ const Inbox = () => {
                                                         attachments.push({ name: file.name, base64Content: base64 });
                                                     }
 
+                                                    const htmlContent = generateBrandedEmailHtml(siteEmails, body);
+
                                                     await sendBrevoEmail({
                                                         to: selectedMsg.email,
                                                         subject: subject,
-                                                        htmlContent: `<p>${body.replace(/\n/g, '<br>')}</p>`,
+                                                        htmlContent: htmlContent,
                                                         attachments: attachments
                                                     });
                                                     

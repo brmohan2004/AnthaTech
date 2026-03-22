@@ -7,7 +7,8 @@ import {
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
 import ConfirmModal from '../../components/ui/ConfirmModal';
-import { getCommunityApplications, updateApplicationStatus, insertAuditLog, deleteCommunityApplication } from '../../api/content';
+import { getCommunityApplications, updateApplicationStatus, insertAuditLog, deleteCommunityApplication, getSiteConfig } from '../../api/content';
+import { generateBrandedEmailHtml } from '../../api/emailTemplates';
 import { getCurrentUser } from '../../api/auth';
 
 const CommunityApplications = () => {
@@ -18,6 +19,7 @@ const CommunityApplications = () => {
     const [filterStatus, setFilterStatus] = useState('all');
     const [selectedMember, setSelectedMember] = useState(null);
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, name: '' });
+    const [siteEmails, setSiteEmails] = useState({});
 
     const deleteMember = async () => {
         const { id, name } = deleteModal;
@@ -61,8 +63,14 @@ const CommunityApplications = () => {
     const loadData = async () => {
         try {
             setLoading(true);
-            const apps = await getCommunityApplications();
+            const [apps, config] = await Promise.all([
+                getCommunityApplications(),
+                getSiteConfig()
+            ]);
             setMembers(apps);
+            if (config.emails) {
+                setSiteEmails(typeof config.emails === 'string' ? JSON.parse(config.emails) : config.emails);
+            }
         } catch (err) {
             setToast({ type: 'error', message: 'Failed to load community data.' });
         } finally {
@@ -324,10 +332,12 @@ const CommunityApplications = () => {
                                                         attachments.push({ name: file.name, base64Content: base64 });
                                                     }
 
+                                                    const htmlContent = generateBrandedEmailHtml(siteEmails, body);
+
                                                     await sendBrevoEmail({
                                                         to: selectedMember.email,
                                                         subject: subject,
-                                                        htmlContent: `<p>${body.replace(/\n/g, '<br>')}</p>`,
+                                                        htmlContent: htmlContent,
                                                         attachments: attachments
                                                     });
                                                     

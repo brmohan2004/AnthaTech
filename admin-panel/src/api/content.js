@@ -213,8 +213,20 @@ export async function updateApplicationStatus(id, status) {
 }
 
 export async function deleteCommunityApplication(id) {
-  const { error } = await supabase.from('community_applications').delete().eq('id', id);
+  const { data, error } = await supabase
+    .from('community_applications')
+    .delete()
+    .eq('id', id)
+    .select();
+    
   if (error) throw error;
+  
+  // If no rows were returned/affected, it means RLS likely blocked the deletion
+  if (!data || data.length === 0) {
+    throw new Error('Deletion failed: No records were affected. This is likely due to Supabase RLS (Row Level Security) policies preventing deletions for this table.');
+  }
+  
+  return data;
 }
 
 // ─── Blog Posts ──────────────────────────────────────────────

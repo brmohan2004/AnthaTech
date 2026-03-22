@@ -51,9 +51,33 @@ function updateSubmissionTime() {
 // DB column names match admin panel writes. These mappers
 // translate to the names the public website components expect.
 
-// ─── Mapping helpers ─────────────────────────────────────────
-// DB column names match admin panel writes. These mappers
-// translate to the names the public website components expect.
+/**
+ * Generates a branded HTML email body for auto-responders
+ */
+function generateAutoReplyHtml(tpl, recipientName, rawBodyText) {
+  const finalBody = (rawBodyText || '').replace(/{name}/g, recipientName).replace(/\n/g, '<br>');
+  const logoHtml = tpl.logo_url ? `<div style="text-align: center; margin-bottom: 24px;"><img src="${tpl.logo_url}" alt="Logo" style="max-width: 150px; height: auto;"></div>` : '';
+  const buttonHtml = tpl.website_link ? `
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="${tpl.website_link.startsWith('http') ? tpl.website_link : 'https://' + tpl.website_link}" 
+         style="background-color: #1a365d; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 800; display: inline-block;">
+         Visit Our Website
+      </a>
+    </div>` : '';
+
+  return `
+    <div style="font-family: 'Inter', 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1a202c; line-height: 1.6;">
+      ${logoHtml}
+      <div style="background: #ffffff; border: 1px solid #edf2f7; border-radius: 12px; padding: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+        <div style="font-size: 16px; color: #4a5568;">${finalBody}</div>
+        ${buttonHtml}
+      </div>
+      <div style="text-align: center; margin-top: 24px; font-size: 11px; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em;">
+        &copy; ${new Date().getFullYear()} Antha Tech. All rights reserved.
+      </div>
+    </div>
+  `;
+}
 
 function mapHero(d) {
   if (!d) return null;
@@ -357,8 +381,8 @@ export async function submitCommunityApplication(application) {
     const { sendBrevoEmail } = await import('./brevo');
 
     if (emailTpl.application_subject && emailTpl.application_body) {
-      const finalBody = emailTpl.application_body.replace(/{name}/g, application.full_name).replace(/\n/g, '<br>');
-      await sendBrevoEmail({ to: application.email, subject: emailTpl.application_subject, htmlContent: `<p>${finalBody}</p>` });
+      const htmlContent = generateAutoReplyHtml(emailTpl, application.full_name, emailTpl.application_body);
+      await sendBrevoEmail({ to: application.email, subject: emailTpl.application_subject, htmlContent });
     }
   } catch (err) {
     console.error('AutoResponder Failed:', err);
@@ -463,8 +487,8 @@ export async function submitContactMessage(message) {
     }
 
     if (tSubject && tBody) {
-      const finalBody = tBody.replace(/{name}/g, message.name).replace(/\n/g, '<br>');
-      await sendBrevoEmail({ to: message.email, subject: tSubject, htmlContent: `<p>${finalBody}</p>` });
+        const htmlContent = generateAutoReplyHtml(emailTpl, message.name, tBody);
+        await sendBrevoEmail({ to: message.email, subject: tSubject, htmlContent });
     }
   } catch (err) {
     console.error('AutoResponder Failed:', err);

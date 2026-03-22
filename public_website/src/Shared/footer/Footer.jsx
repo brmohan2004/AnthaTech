@@ -54,10 +54,13 @@ export default function Footer() {
                     mergedContact.business_email = val;
                   }
                   
-                  if (keyLow.includes('email')) mergedContact.business_email = val;
-                  if (keyLow.includes('phone')) mergedContact.phone = val;
-                  if (keyLow.includes('address')) mergedContact.address = val;
-                  if (keyLow.includes('maplink') || keyLow.includes('googlemaps') || keyLow.includes('mapurl')) {
+                  // Refined fuzzy matching: skip 'emails' (templates) and ensure not JSON
+                  if (keyLow.includes('email') && k !== 'emails' && !val.includes('{') && !keyLow.includes('template')) {
+                    mergedContact.business_email = val;
+                  }
+                  if (keyLow.includes('phone') && !val.includes('{')) mergedContact.phone = val;
+                  if (keyLow.includes('address') && !val.includes('{')) mergedContact.address = val;
+                  if ((keyLow.includes('maplink') || keyLow.includes('googlemaps') || keyLow.includes('mapurl')) && !val.includes('{')) {
                     mergedContact.mapUrl = val;
                   }
                 });
@@ -68,7 +71,23 @@ export default function Footer() {
                 }
 
                 console.log('Final merged contact info:', mergedContact);
-                setContact(mergedContact);
+                
+                // Final cleanup: trim all values and ensure email is singular/clean
+                const finalContact = {};
+                Object.keys(mergedContact).forEach(key => {
+                  let val = mergedContact[key];
+                  if (typeof val === 'string') {
+                    val = val.trim();
+                    // If it's the email field, ensure it doesn't have multiple copies or trailing commas
+                    if (key === 'business_email' || key === 'email') {
+                       // Take only the first address if multiple are provided
+                       val = val.split(/[,\s;]/)[0];
+                    }
+                  }
+                  finalContact[key] = val;
+                });
+
+                setContact(finalContact);
             })
 
 
@@ -133,7 +152,7 @@ export default function Footer() {
                         {(contact.business_email || contact.email) && (
                             <div className="footer-contact-item">
                                 <Mail size={18} className="contact-icon" />
-                                <a href={`mailto:${contact.business_email || contact.email}`}>
+                                <a href={`mailto:${(contact.business_email || contact.email).trim()}`}>
                                     {contact.business_email || contact.email}
                                 </a>
                             </div>

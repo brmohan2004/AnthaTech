@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './SiteSettings.css';
 import Button from '../../../components/ui/Button';
 import ToastMessage from '../../../components/ui/ToastMessage';
+import MediaPickerModal from '../../../components/ui/MediaPickerModal';
+import { Image as ImageIcon, Globe, Mail, Phone, MapPin, ExternalLink, X } from 'lucide-react';
 import { getSiteConfig, updateSiteConfigBatch, getCountrySettings, updateCountrySettings, deleteCountrySetting } from '../../../api/content';
 
 const defaultValues = {
@@ -21,12 +23,14 @@ const defaultValues = {
         youtube: '',
     },
     emails: {
+        logo_url: '',
+        website_link: 'anthatech.me',
         quotation_subject: 'Thank you for your Quote Request',
-        quotation_body: 'Hi {name},\n\nWe have received your quotation request and our team is reviewing it. We will get back to you shortly.',
+        quotation_body: 'Hi {name},\n\nThank you for reaching out to Antha Tech! We have received your quotation request and our team is already reviewing the details to provide you with a tailored estimate.\n\nWe pride ourselves on our attention to detail and will get back to you within 24-48 business hours with the next steps.\n\nIn the meantime, feel free to check out our latest projects or follow us on our social channels for more insights.',
         meeting_subject: 'Meeting Request Received',
-        meeting_body: 'Hi {name},\n\nWe have received your meeting request. We will review our schedule and send you a confirmation link soon.',
+        meeting_body: 'Hi {name},\n\nWe have received your meeting request! One of our experts will review your availability and send you a calendar invitation or confirmation link shortly.\n\nOur discovery calls are designed to understand your goals and explore how we can help you scale effectively. Please keep an eye on your inbox for the official invite.\n\nWe look forward to connecting with you!',
         application_subject: 'Welcome to Antha Tech Community!',
-        application_body: 'Hi {name},\n\nYour application has been received successfully. We will review your profile and update you on the status shortly.'
+        application_body: 'Hi {name},\n\nYour application to join the Antha Tech Community has been received successfully. We are excited to see your interest in collaborating with us!\n\nOur community management team will review your profile and background to see how you can best benefit from and contribute to our ecosystem. You will receive an update on your status shortly.\n\nWelcome to the journey!'
     }
 };
 
@@ -41,6 +45,7 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
     const [toast, setToast] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -286,6 +291,64 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
                 {activeTab === 'emails' && (
                     <div className="tab-content" style={{ display: 'grid', gap: '24px' }}>
                         <div className="settings-section" style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                            <h4 style={{ marginBottom: '20px' }}>Global Branding (Logo & Link)</h4>
+                            
+                            <div className="form-group mb-4">
+                                <label>Company Logo</label>
+                                <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                                    <div style={{ 
+                                        width: '120px', 
+                                        height: '120px', 
+                                        background: 'var(--bg-primary)', 
+                                        border: '2px dashed var(--border-color)', 
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        overflow: 'hidden'
+                                    }}>
+                                        {data.emails.logo_url ? (
+                                            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                                <img src={data.emails.logo_url} alt="Logo Preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                <button 
+                                                    onClick={() => handleChange('emails', 'logo_url', '')}
+                                                    style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(255,68,68,0.8)', border: 'none', borderRadius: '50%', color: 'white', padding: '4px', cursor: 'pointer' }}
+                                                ><X size={12} /></button>
+                                            </div>
+                                        ) : (
+                                            <ImageIcon size={32} style={{ opacity: 0.3 }} />
+                                        )}
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                            <input 
+                                                className="form-input" 
+                                                placeholder="https://yourdomain.com/logo.png"
+                                                value={data.emails.logo_url} 
+                                                onChange={(e) => handleChange('emails', 'logo_url', e.target.value)} 
+                                            />
+                                            <Button variant="secondary" size="md" onClick={() => setIsLogoModalOpen(true)}>
+                                                📁 Media Library
+                                            </Button>
+                                        </div>
+                                        <p className="text-secondary" style={{ fontSize: '12px' }}>This logo will appear at the top of all automated notification emails.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Website Link (Button Destination)</label>
+                                <input 
+                                    className="form-input" 
+                                    placeholder="e.g. https://anthatech.me"
+                                    value={data.emails.website_link} 
+                                    onChange={(e) => handleChange('emails', 'website_link', e.target.value)} 
+                                />
+                                <p className="text-secondary mt-1" style={{ fontSize: '12px' }}>The "Visit Our Website" button in emails will link to this URL.</p>
+                            </div>
+                        </div>
+
+                        <div className="settings-section" style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                             <h4 style={{ marginBottom: '15px' }}>Quotation Requests</h4>
                             <div className="form-group">
                                 <label>Subject</label>
@@ -441,6 +504,16 @@ const SiteSettings = ({ defaultTab = 'contact' }) => {
             </div>
 
             {toast && <ToastMessage type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
+            
+            <MediaPickerModal 
+                isOpen={isLogoModalOpen}
+                onClose={() => setIsLogoModalOpen(false)}
+                onSelect={(url) => {
+                    handleChange('emails', 'logo_url', url);
+                    setIsLogoModalOpen(false);
+                    setToast({ type: 'success', message: 'Logo selected from library.' });
+                }}
+            />
         </div>
     );
 };

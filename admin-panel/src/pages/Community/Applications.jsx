@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import ToastMessage from '../../components/ui/ToastMessage';
+import ConfirmModal from '../../components/ui/ConfirmModal';
 import { getCommunityApplications, updateApplicationStatus, insertAuditLog, deleteCommunityApplication } from '../../api/content';
 import { getCurrentUser } from '../../api/auth';
 
@@ -16,15 +17,33 @@ const CommunityApplications = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [selectedMember, setSelectedMember] = useState(null);
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, name: '' });
 
-    const deleteMember = async (id) => {
+    const deleteMember = async () => {
+        const { id, name } = deleteModal;
         try {
             await deleteCommunityApplication(id);
-            setMembers(members.filter(m => m.id !== id));
+            
+            // Add Audit Log Entry
+            try {
+                const user = await getCurrentUser();
+                await insertAuditLog({
+                    admin_id: user?.id,
+                    event_type: 'content',
+                    description: `Deleted Community Application: ${name || id}`,
+                    result: 'success'
+                });
+            } catch (auditErr) {
+                console.warn('Failed to log deletion:', auditErr);
+            }
+
+            setMembers(prev => prev.filter(m => m.id !== id));
             setToast({ type: 'success', message: 'Application deleted.' });
             if (selectedMember?.id === id) setSelectedMember(null);
         } catch (err) {
-            setToast({ type: 'error', message: 'Failed to delete application.' });
+            setToast({ type: 'error', message: err.message || 'Failed to delete application.' });
+        } finally {
+            setDeleteModal({ isOpen: false, id: null, name: '' });
         }
     };
 
@@ -215,7 +234,7 @@ const CommunityApplications = () => {
                                                     </>
                                                 )}
                                                 <button className="action-btn" title="View Details" onClick={() => setSelectedMember(m)}><Eye size={16} /></button>
-                                                <button className="action-btn danger" title="Delete" onClick={() => deleteMember(m.id)}><Trash2 size={16} /></button>
+                                                <button className="action-btn danger" title="Delete" onClick={() => setDeleteModal({ isOpen: true, id: m.id, name: m.name })}><Trash2 size={16} /></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -366,7 +385,7 @@ const CommunityApplications = () => {
                                                     </button>
                                                 </>
                                             )}
-                                            <button className="drawer-action-btn text-danger" onClick={() => deleteMember(selectedMember.id)}>
+                                             <button className="drawer-action-btn text-danger" onClick={() => setDeleteModal({ isOpen: true, id: selectedMember.id, name: selectedMember.name })}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                                 <span>Delete</span>
                                             </button>
@@ -380,6 +399,16 @@ const CommunityApplications = () => {
             )}
 
             {toast && <ToastMessage type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
+
+            <ConfirmModal 
+                isOpen={deleteModal.isOpen}
+                title="Delete Application?"
+                message={`Are you sure you want to delete the application from "${deleteModal.name}"? This action cannot be undone.`}
+                confirmText="Delete Permanently"
+                onCancel={() => setDeleteModal({ isOpen: false, id: null, name: '' })}
+                onConfirm={deleteMember}
+                requireTyping={false}
+            />
         </div>
     );
 };

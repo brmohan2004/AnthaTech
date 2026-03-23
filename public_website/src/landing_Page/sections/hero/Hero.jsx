@@ -13,6 +13,7 @@ export default function Hero() {
     const [hero, setHero] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showOnboarding, setShowOnboarding] = useState(false);
 
     const loadHero = () => {
         setLoading(true);
@@ -43,7 +44,21 @@ export default function Hero() {
                     setLoading(false);
                 }
             });
-        return () => { isMounted = false; };
+
+        // Show onboarding after a short delay, then hide after 5 seconds
+        let hideTimer;
+        const timer = setTimeout(() => {
+            setShowOnboarding(true);
+            hideTimer = setTimeout(() => {
+                setShowOnboarding(false);
+            }, 10000);
+        }, 1500);
+
+        return () => { 
+            isMounted = false; 
+            clearTimeout(timer);
+            if (hideTimer) clearTimeout(hideTimer);
+        };
     }, []);
 
     if (loading) {
@@ -93,7 +108,20 @@ export default function Hero() {
 
                 <div className="hero-cta-group fade-in-up delay-3">
                     <button onClick={() => navigate(hero.cta_primary_route)} className="btn btn-primary">{hero.cta_primary_text}</button>
-                    <button onClick={openContactModal} className="btn btn-secondary" style={{ border: 'none', cursor: 'pointer' }}>{hero.cta_secondary_text}</button>
+                    <div className="cta-wrapper">
+                        <button onClick={openContactModal} className="btn btn-secondary" style={{ border: 'none', cursor: 'pointer' }}>
+                            {hero.cta_secondary_text}
+                        </button>
+                        {showOnboarding && (
+                            <div className="onboarding-tooltip">
+                                <div className="tooltip-content">
+                                    <span className="tooltip-pulse"></span>
+                                    Click here to request & book a free meeting
+                                </div>
+                                <div className="tooltip-arrow"></div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

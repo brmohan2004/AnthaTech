@@ -147,7 +147,7 @@ const Header = () => {
                 </nav>
 
                 <div className="header-actions">
-                    <ThemeToggle className="desktop-toggle" />
+                    <ThemeToggle className="header-toggle" />
                     <button
                         className="btn-get-in-touch"
                         onClick={openContactModal}
@@ -193,9 +193,7 @@ const Header = () => {
                         <li className="mobile-nav-item">
                             <NavLink to="/privacy-policy" onClick={() => setIsMenuOpen(false)}>Legal</NavLink>
                         </li>
-                        <li className="mobile-nav-item">
-                            <ThemeToggle className="mobile-theme-toggle" />
-                        </li>
+
                         <li className="mobile-nav-item mobile-cta-item">
                             <button className="mobile-cta-btn" onClick={() => { setIsMenuOpen(false); openContactModal(); }}>
                                 Get in Touch

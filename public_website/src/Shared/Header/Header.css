@@ -186,8 +186,13 @@
         display: flex;
     }
 
-    .desktop-toggle {
-        display: none !important;
+    .header-toggle {
+        display: flex !important;
+        margin: 0;
+    }
+
+    .hamburger-menu {
+        margin-left: 0;
     }
 }
 

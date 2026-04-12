@@ -32,9 +32,7 @@ const AboutHero = () => {
             <section className="about-hero-section">
                 <BackgroundAnimation />
                 <div className="ah-container">
-                    <div className="skeleton skeleton-badge"></div>
-                    <div className="skeleton skeleton-title"></div>
-                    <div className="skeleton skeleton-subtitle"></div>
+                    <div className="ah-loading">Loading Header...</div>
                 </div>
             </section>
         );

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Bell, Sun, Moon, ChevronDown, LogOut, User, KeyRound } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { signOut } from '../../api/auth';
-import { getNotifications } from '../../api/content';
 import NotificationCenter from '../ui/NotificationCenter/NotificationCenter';
 import ProfileSettings from '../../pages/Auth/ProfileSettings';
 import './TopBar.css';
@@ -12,21 +11,8 @@ const TopBar = ({ pageTitle = 'Dashboard', collapsed }) => {
     const [showNotifs, setShowNotifs] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [profilePopup, setProfilePopup] = useState({ open: false, tab: 'profile' });
-    const [unreadCount, setUnreadCount] = useState(0);
 
-    useEffect(() => {
-        let mounted = true;
-        const fetchNotifs = async () => {
-            try {
-                const data = await getNotifications();
-                if (data && mounted) {
-                    setUnreadCount(data.filter(n => !n.is_read).length);
-                }
-            } catch (err) {}
-        };
-        fetchNotifs();
-        return () => { mounted = false; };
-    }, [showNotifs]);
+    const unreadCount = 3;
 
     return (
         <header className={`topbar ${collapsed ? 'topbar--collapsed' : ''}`}>
